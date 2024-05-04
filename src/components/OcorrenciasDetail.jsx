@@ -44,8 +44,11 @@ function OcorrenciasDetail() {
 
     const openMaps = () => {
         const address = item.morada + ', ' + item.localidade_morada;
+        const coordinates = item.sado_latitude_gps + ', ' + item.sado_longitude_gps;
         const encodedAddress = encodeURIComponent(address);
-        window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
+        const encodedCoordinates = encodeURIComponent(coordinates);
+        //window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
+        window.open(`https://www.google.com/maps/search/?q=${encodedCoordinates}`, '_blank');
     };
 
     if (!state) {
@@ -126,8 +129,7 @@ function OcorrenciasDetail() {
                     <p style={styles.buttonText}>Saída do Local</p>
                     <p style={styles.buttonText}>{currentTime}</p>
                 </button>
-                <button style={styles.button_ChegadaLocal}
-                    onClick={() => navigate('POSIT')}>
+                <button style={styles.button_ChegadaLocal}>
                     <p style={styles.buttonText}>Fotos</p>
                     <p style={styles.buttonTextOther}>.</p>
                 </button>
@@ -140,8 +142,7 @@ function OcorrenciasDetail() {
                         <p style={styles.buttonText}>Chegada à Unidade</p>
                         <p style={styles.buttonText}>{currentTime}</p>
                     </button>
-                    <button style={styles.button_ChegadaLocal}
-                        onClick={() => navigate('POSIT')}>
+                    <button style={styles.button_ChegadaLocal}>
                         <p style={styles.buttonText}>Anexos</p>
                         <p style={styles.buttonTextOther}>.</p>
                     </button>
