@@ -29,7 +29,7 @@ function OcorrenciasDetail() {
 
     const handleSetTime = () => {
         //setCurrentTime(new Date().toLocaleTimeString());
-        setIsTimerRunning(false); // Stop the timer
+        //setIsTimerRunning(false); // Stop the timer
         console.log(currentTime)
     };
 
@@ -108,7 +108,7 @@ function OcorrenciasDetail() {
 
             <div style={styles.row}>
                 <button style={styles.button_ChegadaLocal}
-                    onClick={() => openMaps()}>
+                    onClick={() => handleSetTime()}>
                     <p style={styles.buttonText}>Chegada ao Local</p>
                     <p style={styles.buttonText}>{currentTime}</p>
                 </button>
@@ -122,7 +122,7 @@ function OcorrenciasDetail() {
 
             <div style={styles.row}>
                 <button style={styles.button_ChegadaLocal}
-                    onClick={() => openMaps()}>
+                    onClick={() => handleSetTime()}>
                     <p style={styles.buttonText}>Saída do Local</p>
                     <p style={styles.buttonText}>{currentTime}</p>
                 </button>
