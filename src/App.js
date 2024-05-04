@@ -5,6 +5,7 @@ import HomePage from './components/HomePage';
 import Ocorrencias from './components/Occorencias'
 import OcorrenciasDetail from './components/OcorrenciasDetail';
 import CheckList from './components/Checklist';
+import Posit from './components/Posit'
 
 const isAuthenticated = () => {
   // Check if the user is authenticated
@@ -21,6 +22,7 @@ function App() {
         <Route path="/ocorrencias" element={<Ocorrencias />} />
         <Route path="/ocorrenciasDetail/:id" element={<OcorrenciasDetail />} />
         <Route path="/checklist" element={<CheckList />} />
+        <Route path="/posit" element={<Posit />} />
       </Routes>
     </Router>
   );

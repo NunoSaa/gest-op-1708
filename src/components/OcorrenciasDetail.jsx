@@ -117,7 +117,7 @@ function OcorrenciasDetail() {
                 </button>
                 
                 <button style={styles.button_POSIT}
-                    onClick={() => navigate('POSIT')}>
+                    onClick={() => navigate('/posit',{state: item})}>
                     <p style={styles.buttonText}>POSIT</p>
                     <p style={styles.buttonTextPosit}>.</p>
                 </button>
@@ -214,33 +214,32 @@ const styles = {
         paddingRight: 25
     },
     button_ChegadaLocal: {
-        width: "45%", // Set the width and height to create square buttons
+        width: "45%", 
         height: 75,
         backgroundColor: '#A0A0A0',
         borderRadius: 10,
-        flex: 1, // Each button takes up equal space within the row
+        flex: 1, 
         justifyContent: 'center',
         alignItems: 'center',
         marginLeft: 15
     },
     button_POSIT: {
-        width: "45%", // Set the width and height to create square buttons
+        width: "45%", 
         height: 75,
         backgroundColor: '#FF6666',
         borderRadius: 10,
-        flex: 1, // Each button takes up equal space within the row
-        justifyContent: 'center',
+        flex: 1, 
         alignItems: 'center',
         marginLeft: 15,
     },
     button_LocTrajeto: {
-        width: "91%", // Set the width and height to create square buttons
+        width: "91%", 
         height: "10%",
         backgroundColor: '#A0A0A0',
         padding: 20,
         borderRadius: 10,
         alignSelf: "center",
-        flex: 1, // Each button takes up equal space within the row
+        flex: 1, 
         justifyContent: 'center',
         alignItems: 'center',
         display: 'flex',
@@ -249,14 +248,10 @@ const styles = {
         marginTop: 25,
     },
     button_Inserir: {
-        width: "45%", // Set the width and height to create square buttons
+        width: "45%", 
         height: 50,
         backgroundColor: '#A0A0A0',
-        //padding: 20,
-        //marginHorizontal: 20,
-        //marginVertical: 20,
         borderRadius: 10,
-        //flex: 1, // Each button takes up equal space within the row
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -289,8 +284,6 @@ const styles = {
         paddingHorizontal: 10,
         marginLeft: 15,
         marginRight: 15
-        //marginTop: 25
-        //marginBottom: 20,
     },
 };
 
