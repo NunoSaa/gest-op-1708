@@ -28,7 +28,7 @@ function Ocorrencias() {
     }, []);
 
     const renderItem = (item) => (
-        <div key={item.id} style={styles.item} onClick={() => navigate(`/ocorrenciasDetail/${item.id}`, {state: item})}>
+        <div key={item.id} style={styles.item} onClick={() => navigate(`/ocorrenciasDetail/${item}`, {state: item})}>
             
           <div style={styles.content}>
             <h3 style={styles.title}>{item.morada}</h3>
