@@ -1,0 +1,29 @@
+.login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-content {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.login-image {
+    width: 200px;
+    height: 200px;
+}
+
+.login-form {
+    /* Add your login form styles */
+}
+
+.input {
+    width: 250;
+    height: 40;
+    border-radius: 1;
+    border-color: '#ccc';
+    margin-bottom: 10;
+  }
