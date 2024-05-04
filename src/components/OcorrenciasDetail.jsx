@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import logo from '../assets/Logo.png'
 import '../css/Login.css';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import { useLocation } from 'react-router-dom';
 
@@ -15,7 +12,26 @@ function OcorrenciasDetail() {
     let navigate = useNavigate()
     const location = useLocation();
     const { state } = location;
-    const currentTime = new Date().toLocaleTimeString();
+    const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
+    const [isTimerRunning, setIsTimerRunning] = useState(true);
+
+
+
+    useEffect(() => {
+        let intervalId;
+        if (isTimerRunning) {
+            intervalId = setInterval(() => {
+                setCurrentTime(new Date().toLocaleTimeString());
+            }, 1000);
+        }
+        return () => clearInterval(intervalId);
+    }, [isTimerRunning]);
+
+    const handleSetTime = () => {
+        //setCurrentTime(new Date().toLocaleTimeString());
+        setIsTimerRunning(false); // Stop the timer
+        console.log(currentTime)
+    };
 
     const [inputValue, setInputValue] = useState('');
     const handleInputChange = (e) => {
@@ -36,10 +52,16 @@ function OcorrenciasDetail() {
     }
     const item = state;
     console.log(item);
+    const array = item.viaturas;
+    const viaturas = array.join(', ');
+
 
     return (
         <div style={styles.container}>
-            <h1 style={styles.title}>{item.desc_classificacao}</h1>
+
+            <div>
+                <h3 style={styles.title}>{item.desc_classificacao}</h3>
+            </div>
 
             <div style={styles.rowInfo}>
                 <span style={styles.infoProp}>Data: </span>
@@ -50,6 +72,10 @@ function OcorrenciasDetail() {
                 <span style={styles.info}>{item.desc_classificacao}</span>
             </div>
             <div style={styles.rowInfo}>
+                <span style={styles.infoProp}>Estado: </span>
+                <span style={styles.info}>{item.estado}</span>
+            </div>
+            <div style={styles.rowInfo}>
                 <span style={styles.infoProp}>Local: </span>
                 <span style={styles.info}>{item.morada}</span>
             </div>
@@ -57,58 +83,76 @@ function OcorrenciasDetail() {
                 <span style={styles.infoProp}>Localidade: </span>
                 <span style={styles.info}>{item.localidade_morada}</span>
             </div>
+            <div style={styles.rowInfo}>
+                <span style={styles.infoProp}>Latitude: </span>
+                <span style={styles.info}>{item.sado_latitude_gps}</span>
+                <span style={styles.infoProp}>Longitude: </span>
+                <span style={styles.info}>{item.sado_longitude_gps}</span>
+            </div>
+            <div style={styles.rowInfo}>
+                <span style={styles.infoProp}>Número de elementos: </span>
+                <span style={styles.info}>{item.n_bombeiros}</span>
+            </div>
+            <div style={styles.rowInfo}>
+                <span style={styles.infoProp}>Veiculos: </span>
+
+                <span style={styles.info}>{viaturas}</span>
+            </div>
 
             <div style={styles.row}>
-                <div>
                 <button title="Localizar Trajecto" style={styles.button_LocTrajeto}
                     onClick={() => openMaps()}>
-                    Localizar Trajecto
+                    <p style={styles.buttonText}>Localizar Trajecto</p>
                 </button>
-                </div>
+            </div>
+
+            <div style={styles.row}>
+                <button style={styles.button_ChegadaLocal}
+                    onClick={() => openMaps()}>
+                    <p style={styles.buttonText}>Chegada ao Local</p>
+                    <p style={styles.buttonText}>{currentTime}</p>
+                </button>
+                
+                <button style={styles.button_POSIT}
+                    onClick={() => navigate('POSIT')}>
+                    <p style={styles.buttonText}>POSIT</p>
+                    <p style={styles.buttonTextPosit}>.</p>
+                </button>
+            </div>
+
+            <div style={styles.row}>
+                <button style={styles.button_ChegadaLocal}
+                    onClick={() => openMaps()}>
+                    <p style={styles.buttonText}>Saída do Local</p>
+                    <p style={styles.buttonText}>{currentTime}</p>
+                </button>
+                <button style={styles.button_ChegadaLocal}
+                    onClick={() => navigate('POSIT')}>
+                    <p style={styles.buttonText}>Fotos</p>
+                    <p style={styles.buttonTextOther}>.</p>
+                </button>
             </div>
 
             <div style={styles.row}>
                 <div>
-                <button style={styles.button_ChegadaLocal}
-                        onClick={() => openMaps()}>
-                     Chegada ao Local
-                    </button>
-                    <button style={styles.button_POSIT}
-                        onClick={() => navigate('POSIT')}>
-                        POSIT
-                    </button>
-                </div>
-            </div>
-            <div style={styles.row}>
-                <div>
-                <button style={styles.button_ChegadaLocal}
-                        onClick={() => openMaps()}>
-                     Saída do Local
+                    <button style={styles.button_ChegadaLocal}
+                        onClick={() => handleSetTime()}>
+                        <p style={styles.buttonText}>Chegada à Unidade</p>
+                        <p style={styles.buttonText}>{currentTime}</p>
                     </button>
                     <button style={styles.button_ChegadaLocal}
                         onClick={() => navigate('POSIT')}>
-                        Fotos
-                    </button>
-                </div>
-            </div>
-            <div style={styles.row}>
-                <div>
-                <button style={styles.button_ChegadaLocal}
-                        onClick={() => openMaps()}>
-                     Chegada à Unidade
-                    </button>
-                    <button style={styles.button_ChegadaLocal}
-                        onClick={() => navigate('POSIT')}>
-                        Anexos
+                        <p style={styles.buttonText}>Anexos</p>
+                        <p style={styles.buttonTextOther}>.</p>
                     </button>
                 </div>
             </div>
 
             <div style={styles.row}>
-                <TextField style={styles.input} label="Kms"/>   
+                <TextField style={styles.input} label="Kms" />
                 <button style={styles.button_Inserir}
                     onClick={handleSubmit}>
-                    Inserir
+                    <p style={styles.buttonText}>Inserir</p>
                 </button>
             </div>
         </div>
@@ -117,10 +161,13 @@ function OcorrenciasDetail() {
 
 const styles = {
     container: {
+        marginTop: 25,
         flex: 1,
-        //justifyContent: 'center',
-        //alignItems: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: "white",
+        marginLeft: 10,
+        marginRight: 10
     },
     scrollView: {
         marginHorizontal: 20,
@@ -137,6 +184,16 @@ const styles = {
     },
     buttonText: {
         color: 'white',
+        marginBottom: 5,
+        fontSize: 12,
+    },
+    buttonTextOther: {
+        color: '#A0A0A0',
+        marginBottom: 5,
+        fontSize: 12,
+    },
+    buttonTextPosit: {
+        color: '#FF6666',
         marginBottom: 5,
         fontSize: 12,
     },
@@ -157,11 +214,8 @@ const styles = {
     },
     button_ChegadaLocal: {
         width: "45%", // Set the width and height to create square buttons
-        height: "10%",
+        height: 75,
         backgroundColor: '#A0A0A0',
-        padding: 20,
-        marginHorizontal: 20,
-        marginVertical: 20,
         borderRadius: 10,
         flex: 1, // Each button takes up equal space within the row
         justifyContent: 'center',
@@ -170,32 +224,31 @@ const styles = {
     },
     button_POSIT: {
         width: "45%", // Set the width and height to create square buttons
-        height: "10%",
+        height: 75,
         backgroundColor: '#FF6666',
-        padding: 20,
-        marginHorizontal: 20,
-        marginVertical: 20,
         borderRadius: 10,
         flex: 1, // Each button takes up equal space within the row
         justifyContent: 'center',
         alignItems: 'center',
-        marginLeft:15,
+        marginLeft: 15,
     },
     button_LocTrajeto: {
-        width: "90%", // Set the width and height to create square buttons
+        width: "91%", // Set the width and height to create square buttons
         height: "10%",
         backgroundColor: '#A0A0A0',
         padding: 20,
         borderRadius: 10,
         alignSelf: "center",
-        //flex: 1, // Each button takes up equal space within the row
+        flex: 1, // Each button takes up equal space within the row
         justifyContent: 'center',
         alignItems: 'center',
         display: 'flex',
-        marginLeft: 15
+        marginLeft: 15,
+        marginRight: 25,
+        marginTop: 25,
     },
     button_Inserir: {
-        width: "15%", // Set the width and height to create square buttons
+        width: "45%", // Set the width and height to create square buttons
         height: 50,
         backgroundColor: '#A0A0A0',
         //padding: 20,
@@ -227,8 +280,8 @@ const styles = {
         color: "grey"
     },
     input: {
-        height: 45,
-        width: "15%",
+        height: 50,
+        width: "45%",
         borderColor: 'gray',
         borderWidth: 1,
         borderRadius: 10,
