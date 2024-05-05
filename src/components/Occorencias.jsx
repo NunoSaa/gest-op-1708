@@ -8,6 +8,7 @@ function Ocorrencias() {
 
     const [emergencies, setEmergencies] = useState([]);
     let navigate = useNavigate()
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -15,8 +16,10 @@ function Ocorrencias() {
                 const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getIncidentsByDate');
                 setEmergencies(response.data);
                 console.log(response.data);
+                setLoading(false); // Data loaded, set loading to false
             } catch (error) {
                 console.error('Error:', error);
+                setLoading(false); // Data loaded, set loading to false
             }
         };
 
@@ -24,25 +27,31 @@ function Ocorrencias() {
     }, []);
 
     const renderItem = (item) => (
-        <div key={item.id} style={styles.item} onClick={() => navigate(`/ocorrenciasDetail/${item.id}`, {state: item})}>
-            
-          <div style={styles.content}>
-            <h3 style={styles.title}>{item.morada}</h3>
-            <p style={styles.description}>{item.desc_classificacao}</p>
-            <p style={styles.vehicle}>{item.viaturas}</p>
-          </div>
-          <div style={styles.rightContainer}>
-            <span style={styles.timestamp}>{item.hora_alerta}</span>
-          </div>
+        <div key={item.id} style={styles.item} onClick={() => navigate(`/ocorrenciasDetail/${item.id}`, { state: item })}>
+
+            <div style={styles.content}>
+                <h3 style={styles.title}>{item.morada}</h3>
+                <p style={styles.description}>{item.desc_classificacao}</p>
+                <p style={styles.vehicle}>{item.viaturas}</p>
+            </div>
+            <div style={styles.rightContainer}>
+                <span style={styles.timestamp}>{item.hora_alerta}</span>
+            </div>
         </div>
-      );
-    
-      return (
+    );
+
+    return (
         <div style={styles.container}>
-          {emergencies.map(renderItem)}
+            {loading ? (
+                <div>A carregar...</div> // You can replace this with a loading icon
+            ) : emergencies.length === 0 ? (
+                <div>Não foram encontradas ocorrências.</div> // Render message if emergencies array is empty
+            ) : (
+                emergencies.map(renderItem)
+            )}
         </div>
-      );
-    };
+    );
+};
 
 const styles = {
     container: {
@@ -54,7 +63,7 @@ const styles = {
     content: {
         flex: 1,
         marginLeft: 25,
-      },
+    },
     item: {
         alignItems: 'center',
         backgroundColor: '#E0E0E0',
