@@ -5,10 +5,19 @@ import '../css/Login.css';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+
 
 function Login({ history }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
     let navigate = useNavigate()
 
     const handleSubmit = async (e) => {
@@ -35,7 +44,11 @@ function Login({ history }) {
                 <TextField style={styles.input} id="standard-basic" label="Username" variant="standard" value={username} onChange={(e) => setUsername(e.target.value)} />
             </div>
             <div>
-                <TextField style={styles.input} id="standard-basic" label="Password" variant="standard" value={password} onChange={(e) => setPassword(e.target.value)} />
+                <TextField style={styles.input} type={showPassword ? 'text' : 'password'} id="password" label="Password" variant="standard" value={password} onChange={(e) => setPassword(e.target.value)} />
+
+                <button type="button" onClick={handleShowPassword}>
+                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                </button>
             </div>
 
             <Button style={styles.button} variant="contained" onClick={handleSubmit}>Login</Button>
