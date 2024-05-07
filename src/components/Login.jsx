@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import logo from '../assets/Logo.png'
-import '../css/Login.css';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
-import { ClipLoader } from 'react-spinners';
+import ClipLoader from "react-spinners/ClipLoader";
 
 
 function Login({ history }) {
@@ -54,7 +53,7 @@ function Login({ history }) {
 
     return (
         <div style={styles.container}>
-            <img src={logo} style={styles.image} />
+            <img alt='Logo' src={logo} style={styles.image} />
             <div style={styles.title}>Bombeiros Vila Pouca de Aguiar</div>
             <div style={styles.title2}>Entrar</div>
             <div style={styles.title1}>Olá. Bem Vindo!</div>
