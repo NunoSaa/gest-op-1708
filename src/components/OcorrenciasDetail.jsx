@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../css/Login.css';
 import TextField from '@mui/material/TextField';
-import { useNavigate } from "react-router-dom";
-import { useLocation } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import { useNavigate, useLocation } from "react-router-dom";
 
 
 
@@ -60,115 +59,123 @@ function OcorrenciasDetail() {
 
 
     return (
-        <div style={styles.container}>
+        <div style={styles.center}>
+            <div style={styles.container}>
 
-            <div>
-                <h3 style={styles.title}>{item.desc_classificacao}</h3>
-            </div>
-
-            <div style={styles.rowInfo}>
-                <span style={styles.infoProp}>Data: </span>
-                <span style={styles.info}>{item.data_hora_alerta}</span>
-            </div>
-            <div style={styles.rowInfo}>
-                <span style={styles.infoProp}>Classifcação: </span>
-                <span style={styles.info}>{item.desc_classificacao}</span>
-            </div>
-            <div style={styles.rowInfo}>
-                <span style={styles.infoProp}>Estado: </span>
-                <span style={styles.info}>{item.estado}</span>
-            </div>
-            <div style={styles.rowInfo}>
-                <span style={styles.infoProp}>Local: </span>
-                <span style={styles.info}>{item.morada}</span>
-            </div>
-            <div style={styles.rowInfo}>
-                <span style={styles.infoProp}>Localidade: </span>
-                <span style={styles.info}>{item.localidade_morada}</span>
-            </div>
-            <div style={styles.rowInfo}>
-                <span style={styles.infoProp}>Latitude: </span>
-                <span style={styles.info}>{item.sado_latitude_gps}</span>
-                <span style={styles.infoProp}>Longitude: </span>
-                <span style={styles.info}>{item.sado_longitude_gps}</span>
-            </div>
-            <div style={styles.rowInfo}>
-                <span style={styles.infoProp}>Número de elementos: </span>
-                <span style={styles.info}>{item.n_bombeiros}</span>
-            </div>
-            <div style={styles.rowInfo}>
-                <span style={styles.infoProp}>Veiculos: </span>
-
-                <span style={styles.info}>{viaturas}</span>
-            </div>
-
-            <div style={styles.row}>
-                <button title="Localizar Trajecto" style={styles.button_LocTrajeto}
-                    onClick={() => openMaps()}>
-                    <p style={styles.buttonText}>Localizar Trajecto</p>
-                </button>
-            </div>
-
-            <div style={styles.row}>
-                <button style={styles.button_ChegadaLocal}
-                    onClick={() => handleSetTime()}>
-                    <p style={styles.buttonText}>Chegada ao Local</p>
-                    <p style={styles.buttonText}>{currentTime}</p>
-                </button>
-                
-                <button style={styles.button_POSIT}
-                    onClick={() => navigate('/posit',{state: item})}>
-                    <p style={styles.buttonText}>POSIT</p>
-                    <p style={styles.buttonTextPosit}>.</p>
-                </button>
-            </div>
-
-            <div style={styles.row}>
-                <button style={styles.button_ChegadaLocal}
-                    onClick={() => handleSetTime()}>
-                    <p style={styles.buttonText}>Saída do Local</p>
-                    <p style={styles.buttonText}>{currentTime}</p>
-                </button>
-                <button style={styles.button_ChegadaLocal}>
-                    <p style={styles.buttonText}>Fotos</p>
-                    <p style={styles.buttonTextOther}>.</p>
-                </button>
-            </div>
-
-            <div style={styles.row}>
                 <div>
-                    <button style={styles.button_ChegadaLocal}
-                        onClick={() => handleSetTime()}>
-                        <p style={styles.buttonText}>Chegada à Unidade</p>
-                        <p style={styles.buttonText}>{currentTime}</p>
-                    </button>
-                    <button style={styles.button_ChegadaLocal}>
-                        <p style={styles.buttonText}>Anexos</p>
-                        <p style={styles.buttonTextOther}>.</p>
-                    </button>
+                    <h3 style={styles.title}>{item.desc_classificacao}</h3>
                 </div>
-            </div>
 
-            <div style={styles.row}>
-                <TextField style={styles.input} label="Kms" />
-                <button style={styles.button_Inserir}
-                    onClick={handleSubmit}>
-                    <p style={styles.buttonText}>Inserir</p>
-                </button>
+                <div style={styles.rowInfo}>
+                    <span style={styles.infoProp}>Data: </span>
+                    <span style={styles.info}>{item.data_hora_alerta}</span>
+                </div>
+                <div style={styles.rowInfo}>
+                    <span style={styles.infoProp}>Classifcação: </span>
+                    <span style={styles.info}>{item.desc_classificacao}</span>
+                </div>
+                <div style={styles.rowInfo}>
+                    <span style={styles.infoProp}>Estado: </span>
+                    <span style={styles.info}>{item.estado}</span>
+                </div>
+                <div style={styles.rowInfo}>
+                    <span style={styles.infoProp}>Local: </span>
+                    <span style={styles.info}>{item.morada}</span>
+                </div>
+                <div style={styles.rowInfo}>
+                    <span style={styles.infoProp}>Localidade: </span>
+                    <span style={styles.info}>{item.localidade_morada}</span>
+                </div>
+                <div style={styles.rowInfo}>
+                    <span style={styles.infoProp}>Latitude: </span>
+                    <span style={styles.info}>{item.sado_latitude_gps}</span>
+                    <span style={styles.infoProp}>Longitude: </span>
+                    <span style={styles.info}>{item.sado_longitude_gps}</span>
+                </div>
+                <div style={styles.rowInfo}>
+                    <span style={styles.infoProp}>Número de elementos: </span>
+                    <span style={styles.info}>{item.n_bombeiros}</span>
+                </div>
+                <div style={styles.rowInfo}>
+                    <span style={styles.infoProp}>Veiculos: </span>
+
+                    <span style={styles.info}>{viaturas}</span>
+                </div>
+
+                <div style={styles.row}>
+                    <Button title="Localizar Trajecto" style={styles.button_LocTrajeto}
+                        onClick={() => openMaps()}>
+                        <p style={styles.buttonText}>Localizar Trajecto</p>
+                    </Button>
+                </div>
+
+                <div style={styles.row}>
+                    <Button style={styles.button_ChegadaLocal}
+                        onClick={() => handleSetTime()}>
+                        <p style={styles.buttonText}>Chegada ao Local</p>
+                        <p style={styles.buttonText}>{currentTime}</p>
+                    </Button>
+
+                    <Button style={styles.button_POSIT}
+                        onClick={() => navigate('/posit', { state: item })}>
+                        <p style={styles.buttonText}>POSIT</p>
+                        <p style={styles.buttonTextPosit}>.</p>
+                    </Button>
+                </div>
+
+                <div style={styles.row}>
+                    <Button style={styles.button_ChegadaLocal}
+                        onClick={() => handleSetTime()}>
+                        <p style={styles.buttonText}>Saída do Local</p>
+                        <p style={styles.buttonText}>{currentTime}</p>
+                    </Button>
+                    <Button style={styles.button_ChegadaLocal}>
+                        <p style={styles.buttonText}>Fotos</p>
+                        <p style={styles.buttonTextOther}>.</p>
+                    </Button>
+                </div>
+
+                <div style={styles.row}>
+                    <div>
+                        <Button style={styles.button_ChegadaLocal}
+                            onClick={() => handleSetTime()}>
+                            <p style={styles.buttonText}>Chegada à Unidade</p>
+                            <p style={styles.buttonText}>{currentTime}</p>
+                        </Button>
+                        <Button style={styles.button_ChegadaLocal}>
+                            <p style={styles.buttonText}>Anexos</p>
+                            <p style={styles.buttonTextOther}>.</p>
+                        </Button>
+                    </div>
+                </div>
+
+                <div style={styles.row}>
+                    <TextField style={styles.input} label="Kms" />
+                    <Button style={styles.button_Inserir}
+                        onClick={handleSubmit}>
+                        <p style={styles.buttonText}>Inserir</p>
+                    </Button>
+                </div>
             </div>
         </div>
     );
 };
 
 const styles = {
+    center: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+    },
     container: {
-        marginTop: 25,
+        marginTop: 10,
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: "white",
-        marginLeft: 10,
-        marginRight: 10
+        //marginLeft: 10,
+        //marginRight: 10
     },
     scrollView: {
         marginHorizontal: 20,
@@ -214,32 +221,32 @@ const styles = {
         paddingRight: 25
     },
     button_ChegadaLocal: {
-        width: "45%", 
+        width: "45%",
         height: 75,
         backgroundColor: '#A0A0A0',
         borderRadius: 10,
-        flex: 1, 
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         marginLeft: 15
     },
     button_POSIT: {
-        width: "45%", 
+        width: "45%",
         height: 75,
         backgroundColor: '#FF6666',
         borderRadius: 10,
-        flex: 1, 
+        flex: 1,
         alignItems: 'center',
         marginLeft: 15,
     },
     button_LocTrajeto: {
-        width: "91%", 
+        width: "91%",
         height: "10%",
         backgroundColor: '#A0A0A0',
         padding: 20,
         borderRadius: 10,
         alignSelf: "center",
-        flex: 1, 
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         display: 'flex',
@@ -248,7 +255,7 @@ const styles = {
         marginTop: 25,
     },
     button_Inserir: {
-        width: "45%", 
+        width: "45%",
         height: 50,
         backgroundColor: '#A0A0A0',
         borderRadius: 10,

@@ -10,50 +10,58 @@ function CheckList() {
     const openApoioDecisaoPage = () => {
         // Replace 'https://example.com' with the URL you want to open
         window.open('https://www.google.com/maps/d/viewer?mid=1hcFft-BfiEyawGCVxkRu2LgEd_cjte0&ll=41.519126909132694%2C-7.626061528903792&z=11', '_blank');
-      };
+    };
 
-      const handleClickOcorrencias = () => {
+    const handleClickOcorrencias = () => {
         // Navigate to the new page
         navigate('/ocorrencias');
-      };
+    };
 
-      const handleClickCheckList = () => {
+    const handleClickCheckList = () => {
         // Navigate to the new page
         navigate('/checklist');
-      };
+    };
 
-      const handleClickMateriasPerigosas = () => {
+    const handleClickMateriasPerigosas = () => {
         // Navigate to the new page
         navigate('/materiasperigosas');
-      };
+    };
 
     return (
-        <div style={styles.container}>
-            <div style={styles.row}>
-                <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickOcorrencias}>VECI 01</Button>
-                <Button style={styles.button_decisao} variant="contained" onClick={openApoioDecisaoPage}>VUCI 02</Button>
-            </div>
-            <div style={styles.row}>
-                <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickCheckList}>VFCI 06</Button>
-                <Button style={styles.button_decisao} variant="contained" onClick={handleClickMateriasPerigosas}>VFCI 07</Button>
-            </div>
-            <div style={styles.row}>
-                <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickCheckList}>VFCI 08</Button>
-                <Button style={styles.button_decisao} variant="contained" onClick={handleClickMateriasPerigosas}>VTTU 01</Button>
-            </div>
-            <div style={styles.row}>
-                <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickCheckList}>VCOT 01</Button>
-                <Button style={styles.button_decisao} variant="contained" onClick={handleClickMateriasPerigosas}>VCOT 02</Button>
-            </div>
-            <div style={styles.row}>
-                <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickCheckList}>VCOT 04</Button>
-                <Button style={styles.button_decisao} variant="contained" onClick={handleClickMateriasPerigosas}>VOPE 05</Button>
+        <div style={styles.center}>
+            <div style={styles.container}>
+                <div style={styles.row}>
+                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickOcorrencias}>VECI 01</Button>
+                    <Button style={styles.button_decisao} variant="contained" onClick={openApoioDecisaoPage}>VUCI 02</Button>
+                </div>
+                <div style={styles.row}>
+                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickCheckList}>VFCI 06</Button>
+                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickMateriasPerigosas}>VFCI 07</Button>
+                </div>
+                <div style={styles.row}>
+                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickCheckList}>VFCI 08</Button>
+                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickMateriasPerigosas}>VTTU 01</Button>
+                </div>
+                <div style={styles.row}>
+                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickCheckList}>VCOT 01</Button>
+                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickMateriasPerigosas}>VCOT 02</Button>
+                </div>
+                <div style={styles.row}>
+                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickCheckList}>VCOT 04</Button>
+                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickMateriasPerigosas}>VOPE 05</Button>
+                </div>
             </div>
         </div>
     );
 }
 
 const styles = {
+    center: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+    },
     container: {
         display: 'flex',
         flexDirection: 'column',
@@ -62,6 +70,7 @@ const styles = {
         //justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
+        marginTop: 30,
     },
     row: {
         flexDirection: 'row',

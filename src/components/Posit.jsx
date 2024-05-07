@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../css/Login.css';
 import TextField from '@mui/material/TextField';
-import { useNavigate } from "react-router-dom";
-import { useLocation } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import { useNavigate, useLocation } from "react-router-dom";
 
 
 
@@ -25,28 +25,28 @@ function Posit() {
         <div style={styles.container}>
 
             <div style={styles.row}>
-                <button style={styles.button_ChegadaLocal}>
+                <Button style={styles.button_ChegadaLocal}>
                     <p style={styles.buttonText}>Relatório</p>
 
-                </button>
+                </Button>
 
-                <button style={styles.button_POSIT}
+                <Button style={styles.button_POSIT}
                     onClick={() => navigate('/posit')}>
                     <p style={styles.buttonText}>POSIT</p>
-                </button>
+                </Button>
             </div>
 
             <div style={styles.center}>
                 <div style={styles.row}>
-                    <button style={styles.button_SIRESP}>
+                    <Button style={styles.button_SIRESP}>
                         <p style={styles.buttonText}>SIRESP</p>
 
-                    </button>
+                    </Button>
 
-                    <button style={styles.button_SIRESP}
+                    <Button style={styles.button_SIRESP}
                         onClick={() => navigate('/posit')}>
                         <p style={styles.buttonText}>Geográficas</p>
-                    </button>
+                    </Button>
                 </div>
             </div>
 
@@ -68,9 +68,9 @@ function Posit() {
 
             <div style={styles.center}>
                 <div style={styles.row}>
-                    <button style={styles.button_SAVE}>
+                    <Button style={styles.button_SAVE}>
                         <p>Guardar</p>
-                    </button>
+                    </Button>
                 </div>
             </div>
 

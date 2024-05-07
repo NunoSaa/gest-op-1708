@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../css/Login.css';
 import { useNavigate } from "react-router-dom";
+import { ClipLoader } from 'react-spinners';
 
 
 function Ocorrencias() {
@@ -19,7 +20,8 @@ function Ocorrencias() {
                 setLoading(false); // Data loaded, set loading to false
             } catch (error) {
                 console.error('Error:', error);
-                setLoading(false); // Data loaded, set loading to false
+            }finally {
+                setLoading(false);
             }
         };
 
@@ -30,7 +32,7 @@ function Ocorrencias() {
         <div key={item.id} style={styles.item} onClick={() => navigate(`/ocorrenciasDetail/${item.id}`, { state: item })}>
 
             <div style={styles.content}>
-                <h3 style={styles.title}>{item.morada}</h3>
+                <h3 style={styles.title}>{item.morada}, {item.localidade_morada}</h3>
                 <p style={styles.description}>{item.desc_classificacao}</p>
                 <p style={styles.vehicle}>{item.viaturas}</p>
             </div>
@@ -43,7 +45,9 @@ function Ocorrencias() {
     return (
         <div style={styles.container}>
             {loading ? (
-                <div>A carregar...</div> // You can replace this with a loading icon
+                <div style={styles.center}>
+                    <ClipLoader size={50} color="#C0C0C0" />
+                    A carregar...</div> // You can replace this with a loading icon
             ) : emergencies.length === 0 ? (
                 <div>Não foram encontradas ocorrências.</div> // Render message if emergencies array is empty
             ) : (
@@ -54,6 +58,12 @@ function Ocorrencias() {
 };
 
 const styles = {
+    center: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+    },
     container: {
         marginLeft: 25,
         marginRight: 25,

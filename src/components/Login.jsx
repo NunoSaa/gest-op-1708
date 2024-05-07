@@ -5,32 +5,50 @@ import '../css/Login.css';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { ClipLoader } from 'react-spinners';
 
 
 function Login({ history }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
+    const [loading, setLoading] = useState(false);
+    const [wrong, setWrong] = useState('');
+    
+    const handleShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
 
     let navigate = useNavigate()
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
             const response = await axios.post('https://preventech-proxy-service.onrender.com/api/login/authentication', { username, password });
-            // Assuming your API returns a token upon successful login
-            console.log(response.data.token);
-            localStorage.setItem('token', response.data.token);
-            navigate('/homepage');
-            //window.location.reload(false);
+            console.log('response = ', response)
+            if (response.status !== 200) {
+
+                // Handle specific error scenarios based on response status
+                if (response.status === 401) {
+                    setWrong('Username ou password incorrectas...')
+
+                } else {
+                    // Handle other error scenarios
+                    setWrong('An error occurred. Please try again later.');
+                }
+
+            } else {
+                // Assuming your API returns a token upon successful login
+                console.log(response.data.token);
+                localStorage.setItem('token', response.data.token);
+                navigate('/homepage');
+            }
         } catch (error) {
-            console.error('Error:', error);
+            setWrong(error.response.data.error);
+            console.error('Error:', error.response.data.error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -47,11 +65,12 @@ function Login({ history }) {
                 <TextField style={styles.input} type={showPassword ? 'text' : 'password'} id="password" label="Password" variant="standard" value={password} onChange={(e) => setPassword(e.target.value)} />
 
                 <button type="button" onClick={handleShowPassword}>
-                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
                 </button>
             </div>
 
-            <Button style={styles.button} variant="contained" onClick={handleSubmit}>Login</Button>
+            {wrong && <p style={{ color: 'red' }}>{wrong}</p>}
+
+            <Button style={styles.button} disabled={loading} variant="contained" onClick={handleSubmit}>{loading ? <ClipLoader size={20} color="#ffffff" /> : 'Login'}</Button>
         </div>
     );
 }
