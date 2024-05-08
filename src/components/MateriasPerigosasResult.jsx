@@ -1,55 +1,24 @@
 import React from 'react';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 
 
-function CheckList() {
+function MateriasPerigosasResult() {
 
-    let navigate = useNavigate()
-
-    const openApoioDecisaoPage = () => {
-        // Replace 'https://example.com' with the URL you want to open
-        window.open('https://www.google.com/maps/d/viewer?mid=1hcFft-BfiEyawGCVxkRu2LgEd_cjte0&ll=41.519126909132694%2C-7.626061528903792&z=11', '_blank');
-    };
-
-    const handleClickOcorrencias = () => {
-        // Navigate to the new page
-        navigate('/ocorrencias');
-    };
-
-    const handleClickCheckList = () => {
-        // Navigate to the new page
-        navigate('/checklist');
-    };
-
-    const handleClickMateriasPerigosas = () => {
-        // Navigate to the new page
-        navigate('/materiasperigosas');
-    };
-
+    const location = useLocation();
+    const results = location.state.results;
+    
+    console.log(results);
     return (
         <div style={styles.center}>
             <div style={styles.container}>
-                <div style={styles.row}>
-                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickOcorrencias}>VECI 01</Button>
-                    <Button style={styles.button_decisao} variant="contained" onClick={openApoioDecisaoPage}>VUCI 02</Button>
-                </div>
-                <div style={styles.row}>
-                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickCheckList}>VFCI 06</Button>
-                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickMateriasPerigosas}>VFCI 07</Button>
-                </div>
-                <div style={styles.row}>
-                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickCheckList}>VFCI 08</Button>
-                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickMateriasPerigosas}>VTTU 01</Button>
-                </div>
-                <div style={styles.row}>
-                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickCheckList}>VCOT 01</Button>
-                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickMateriasPerigosas}>VCOT 02</Button>
-                </div>
-                <div style={styles.row}>
-                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickCheckList}>VCOT 04</Button>
-                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickMateriasPerigosas}>VOPE 05</Button>
-                </div>
+            <h2>Resultados da Pesquisa:</h2>
+                <ul>
+                    {results.map((result, index) => (
+                        <a key={index}>{result.NOME_SUB}, {result.NOME_SUB1}</a>
+                    ))}
+                </ul>
             </div>
         </div>
     );
@@ -70,7 +39,6 @@ const styles = {
         //justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
-        marginTop: 25,
     },
     row: {
         flexDirection: 'row',
@@ -79,7 +47,7 @@ const styles = {
     button_ocorrencias: {
         width: 150, // Set the width and height to create square buttons
         height: 150,
-        backgroundColor: '#A0A0A0',
+        backgroundColor: '#FF6666',
         padding: 20,
         marginHorizontal: 20,
         marginVertical: 20,
@@ -146,4 +114,4 @@ const styles = {
     },
 }
 
-export default CheckList;
+export default MateriasPerigosasResult;
