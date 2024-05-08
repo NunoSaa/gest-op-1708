@@ -8,17 +8,66 @@ function MateriasPerigosasResult() {
 
     const location = useLocation();
     const results = location.state.results;
-    
+
     console.log(results);
     return (
         <div style={styles.center}>
             <div style={styles.container}>
-            <h2>Resultados da Pesquisa:</h2>
-                <ul>
+                <a>
                     {results.map((result, index) => (
-                        <a key={index}>{result.NOME_SUB}, {result.NOME_SUB1}</a>
+                        <div style={styles.row}>
+                            <div style={styles.rowInfo}>
+                                <span style={styles.titleProp}>Nome da Substância: </span>
+                                <span style={styles.info}>{result.NOME_SUB}, </span>
+                                <span style={styles.info}>{result.NOME_SUB1}, </span>
+                                <span style={styles.info}>{result.NOME_SUB2}, </span>
+                                <span style={styles.info}>{result.NOME_SUB3}, </span>
+                                <span style={styles.info}>{result.NOME_SUB4}, </span>
+                                <span style={styles.info}>{result.NOME_SUB5}</span>
+                            </div>
+                            <div style={styles.rowInfo}>
+                                <span style={styles.titleProp}>Número ONU: </span>
+                                <span style={styles.info}>{result.ONU}</span>
+                            </div>
+                            <div style={styles.rowInfo}>
+                                <span style={styles.titleProp}>Estado: </span>
+                                <span style={styles.info}>{result.ESTADO}</span>
+                            </div>
+                            <div style={styles.rowInfo}>
+                                <span style={styles.titleProp}>Características: </span>
+                                <span style={styles.info}>{result.CARACTERISTICAS}</span>
+                            </div>
+                            <div style={styles.rowInfo}>
+                                <span style={styles.titleProp}>Equipamento: </span>
+                                <span style={styles.info}>{result.EQUIPAMENTO}</span>
+                            </div>
+                            <div style={styles.rowInfo}>
+                                <span style={styles.titleProp}>Equipamento: </span>
+                                <span style={styles.info}>{result.EQUIPAMENTO}</span>
+                            </div>
+                            <div style={styles.rowInfo}>
+                                <span style={styles.titleProp}>Segurança: </span>
+                                <span style={styles.info}>{result.SEGURANCA}</span>
+                            </div>
+                            <div style={styles.rowInfo}>
+                                <span style={styles.titleProp}>Fuga: </span>
+                                <span style={styles.info}>{result.FUGA}</span>
+                            </div>
+                            <div style={styles.rowInfo}>
+                                <span style={styles.titleProp}>Incêndio: </span>
+                                <span style={styles.info}>{result.INCENDIO}</span>
+                            </div>
+                            <div style={styles.rowInfo}>
+                                <span style={styles.titleProp}>Socorros: </span>
+                                <span style={styles.info}>{result.SOCORROS}</span>
+                            </div>
+                            <div style={styles.rowInfo}>
+                                <span style={styles.titleProp}>Evecuação: </span>
+                                <span style={styles.info}>{result.EVACUACAO}</span>
+                            </div>
+                        </div>
                     ))}
-                </ul>
+                </a>
             </div>
         </div>
     );
@@ -42,75 +91,22 @@ const styles = {
     },
     row: {
         flexDirection: 'row',
-        marginBottom: 20,
+        marginBottom: 75,
     },
-    button_ocorrencias: {
-        width: 150, // Set the width and height to create square buttons
-        height: 150,
-        backgroundColor: '#FF6666',
-        padding: 20,
-        marginHorizontal: 20,
-        marginVertical: 20,
-        borderRadius: 10,
-        flex: 1, // Each button takes up equal space within the row
-        justifyContent: 'center',
-        alignItems: 'center'
+    rowInfo: {
+        flexDirection: 'row',
+        marginBottom: 10,
+        paddingLeft: 25
     },
-    button_decisao: {
-        width: 150, // Set the width and height to create square buttons
-        height: 150,
-        backgroundColor: '#A0A0A0',
-        padding: 20,
-        marginHorizontal: 20,
-        marginVertical: 20,
-        borderRadius: 10,
-        flex: 1, // Each button takes up equal space within the row
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 30,
+    titleProp: {
+        fontWeight: 'bold'
     },
-    button_checklist: {
-        width: 150, // Set the width and height to create square buttons
-        height: 150,
-        backgroundColor: '#00CC00',
-        padding: 20,
-        marginHorizontal: 20,
-        marginVertical: 20,
-        borderRadius: 10,
-        flex: 1, // Each button takes up equal space within the row
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    button_azmat: {
-        width: 150, // Set the width and height to create square buttons
-        height: 150,
-        backgroundColor: '#FF9933',
-        padding: 20,
-        marginHorizontal: 20,
-        marginVertical: 20,
-        borderRadius: 10,
-        flex: 1, // Each button takes up equal space within the row
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 30,
-    },
-    button_emPreHosp: {
-        width: 150, // Set the width and height to create square buttons
-        height: 150,
-        backgroundColor: '#3399FF',
-        padding: 20,
-        marginHorizontal: 20,
-        marginVertical: 20,
-        borderRadius: 10,
-        //flex: 1, // Each button takes up equal space within the row
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    buttonText: {
-        color: 'white',
+    info: {
         fontSize: 16,
-        fontWeight: 'bold',
+        paddingBottom: 10,
+        paddingLeft: 5,
         textAlign: "center",
+        color: "grey"
     },
 }
 
