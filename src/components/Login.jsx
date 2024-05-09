@@ -5,6 +5,9 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
+import { Icon } from 'react-icons-kit';
+import { eyeOff } from 'react-icons-kit/feather/eyeOff';
+import { eye } from 'react-icons-kit/feather/eye'
 
 
 function Login({ history }) {
@@ -13,7 +16,9 @@ function Login({ history }) {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [wrong, setWrong] = useState('');
-    
+    const [type, setType] = useState('password');
+    const [icon, setIcon] = useState(eyeOff);
+
     const handleShowPassword = () => {
         setShowPassword(!showPassword);
     };
@@ -57,14 +62,18 @@ function Login({ history }) {
             <div style={styles.title}>Bombeiros Vila Pouca de Aguiar</div>
             <div style={styles.title2}>Entrar</div>
             <div style={styles.title1}>Olá. Bem Vindo!</div>
-            <div>
-                <TextField style={styles.input} id="standard-basic" label="Username" variant="standard" value={username} onChange={(e) => setUsername(e.target.value)} />
-            </div>
-            <div>
-                <TextField style={styles.input} type={showPassword ? 'text' : 'password'} id="password" label="Password" variant="standard" value={password} onChange={(e) => setPassword(e.target.value)} />
-
-                <button type="button" onClick={handleShowPassword}>
-                </button>
+            <div style={styles.container}>
+                <div class="mb-4 flex">
+                    <div>
+                        <TextField style={styles.input} id="standard-basic" label="Username" variant="standard" value={username} onChange={(e) => setUsername(e.target.value)} />
+                    </div>
+                    <div >
+                        <TextField style={styles.input} type={showPassword ? 'text' : 'password'} id="password" label="Password" variant="standard" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <span style={styles.icon} onClick={handleShowPassword}>
+                            <Icon class="absolute mr-10" icon={icon} size={24} />
+                        </span>
+                    </div>
+                </div>
             </div>
 
             {wrong && <p style={{ color: 'red' }}>{wrong}</p>}
@@ -135,8 +144,7 @@ const styles = {
         resizeMode: 'contain',
     },
     icon: {
-        marginLeft: -35,
-        fontSize: 24,
+        marginLeft: 15,
     },
     container1: {
         flexDirection: 'row',
