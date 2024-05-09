@@ -62,7 +62,7 @@ function Login({ history }) {
             <div style={styles.title}>Bombeiros Vila Pouca de Aguiar</div>
             <div style={styles.title2}>Entrar</div>
             <div style={styles.title1}>Olá. Bem Vindo!</div>
-            <div style={styles.container}>
+            <div style={styles.container1}>
                 <div class="mb-4 flex">
                     <div>
                         <TextField style={styles.input} id="standard-basic" label="Username" variant="standard" value={username} onChange={(e) => setUsername(e.target.value)} />
