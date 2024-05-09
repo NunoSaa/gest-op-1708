@@ -20,7 +20,7 @@ function Ocorrencias() {
                 setLoading(false); // Data loaded, set loading to false
             } catch (error) {
                 console.error('Error:', error);
-            }finally {
+            } finally {
                 setLoading(false);
             }
         };
@@ -29,14 +29,15 @@ function Ocorrencias() {
     }, []);
 
     const renderItem = (item) => (
-        <div key={item.id} style={{...styles.item, backgroundColor:item.cor_estado}} onClick={() => navigate(`/ocorrenciasDetail/${item.id}`, { state: item })}>
+        <div key={item.id} style={{ ...styles.item, backgroundColor: item.cor_estado }} onClick={() => navigate(`/ocorrenciasDetail/${item.id}`, { state: item })}>
 
             <div style={styles.content}>
                 <h3 style={styles.title}>{item.morada}, {item.localidade_morada}</h3>
                 <p style={styles.description}>{item.desc_classificacao}</p>
-                <p style={styles.vehicle}>{item.viaturas}</p>
+                <p style={styles.vehicle}>{item.viaturas.join(', ')}</p>
             </div>
             <div style={styles.rightContainer}>
+                <span style={styles.estado}>{item.estado}</span>
                 <span style={styles.timestamp}>{item.hora_alerta}</span>
             </div>
         </div>
@@ -75,6 +76,7 @@ const styles = {
         marginLeft: 25,
     },
     item: {
+        display: 'flex', // Add this to make the item a flex container
         alignItems: 'center',
         backgroundColor: '#E0E0E0',
         padding: 20,
@@ -97,12 +99,11 @@ const styles = {
     vehicle: {
         marginTop: '5',
         fontSize: 14,
+        fontWeight: 'bold'
     },
     rightContainer: {
-        //flexDirection: 'row',
-        //alignSelf: 'center',
+        flex: 1,
         alignItems: 'right',
-        //justifyContent: 'center',
         display: 'flex',
         justifyContent: 'flex-end',
     },
@@ -113,7 +114,8 @@ const styles = {
         fontSize: 16
     },
     estado: {
-        flex: 1,
+        fontWeight: 'bold',
+        fontSize: 16
     },
     image: {
         width: 75,
