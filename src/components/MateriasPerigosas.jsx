@@ -32,6 +32,21 @@ function Ocorrencias() {
             }
         };
         fetchDataONU(); // Call the function once when the component mounts
+
+        const fetchDataName = async () => {
+            try {
+                axios.get(`https://preventech-proxy-service.onrender.com/api/materiasperigosas/getALLNomeMateria`)
+                    .then(response => {
+                        const uniqueData = [...new Set(response.data)];
+                        console.log(response.data);
+                        setHintsName(uniqueData);
+                    })
+            } catch (error) {
+                console.error('Error fetching hints:', error);
+            }
+        };
+
+        fetchDataName();
     }, []);
 
     const handleSearchONU = async () => {
@@ -48,8 +63,8 @@ function Ocorrencias() {
     const handleSearchName = async () => {
         // Make a request to another API after search button is pressed
         try {
-            const response = await axios.get(`https://preventech-proxy-service.onrender.com/api/materiasperigosas/getByONU?onu=${queryONU}`);
-            setSearchResultsONU(response.data);
+            const response = await axios.get(`https://preventech-proxy-service.onrender.com/api/materiasperigosas/getByNome?name=${queryName}`);
+            setSearchResultsName(response.data);
             navigate('/materiasPerigosasResult', { state: { results: response.data } });
         } catch (error) {
             console.error('Error fetching search results:', error);
@@ -121,7 +136,7 @@ const styles = {
         padding: 20,
     },
     button_ONU: {
-        width: '40%',
+        width: '65%',
         height: 65,
         backgroundColor: '#A0A0A0',
         borderRadius: 10,
@@ -129,7 +144,7 @@ const styles = {
         marginTop: 50,
     },
     button_Name: {
-        width: '40%',
+        width: '65%',
         height: 65,
         backgroundColor: '#A0A0A0',
         borderRadius: 10,

@@ -1,8 +1,6 @@
 import React from 'react';
 import Button from '@mui/material/Button';
-import { useNavigate } from "react-router-dom";
-import { useLocation } from 'react-router-dom';
-
+import { useNavigate, useLocation } from "react-router-dom";
 
 function MateriasPerigosasResult() {
 
@@ -18,12 +16,12 @@ function MateriasPerigosasResult() {
                         <div style={styles.row}>
                             <div style={styles.rowInfo}>
                                 <span style={styles.titleProp}>Nome da Substância: </span>
-                                <span style={styles.info}>{result.NOME_SUB}, </span>
-                                <span style={styles.info}>{result.NOME_SUB1}, </span>
-                                <span style={styles.info}>{result.NOME_SUB2}, </span>
-                                <span style={styles.info}>{result.NOME_SUB3}, </span>
-                                <span style={styles.info}>{result.NOME_SUB4}, </span>
-                                <span style={styles.info}>{result.NOME_SUB5}</span>
+                                <span style={styles.info}>{result.NOME_SUB !== '' && result.NOME_SUB + ', '}</span>
+                                <span style={styles.info}>{result.NOME_SUB1 !== '' && result.NOME_SUB1 + ', '} </span>
+                                <span style={styles.info}>{result.NOME_SUB2 !== '' && result.NOME_SUB2 + ', '} </span>
+                                <span style={styles.info}>{result.NOME_SUB3 !== '' && result.NOME_SUB3 + ', '} </span>
+                                <span style={styles.info}>{result.NOME_SUB4 !== '' && result.NOME_SUB4 + ', '} </span>
+                                <span style={styles.info}>{result.NOME_SUB5 !== '' && result.NOME_SUB5 + ', '}</span>
                             </div>
                             <div style={styles.rowInfo}>
                                 <span style={styles.titleProp}>Número ONU: </span>
@@ -36,10 +34,6 @@ function MateriasPerigosasResult() {
                             <div style={styles.rowInfo}>
                                 <span style={styles.titleProp}>Características: </span>
                                 <span style={styles.info}>{result.CARACTERISTICAS}</span>
-                            </div>
-                            <div style={styles.rowInfo}>
-                                <span style={styles.titleProp}>Equipamento: </span>
-                                <span style={styles.info}>{result.EQUIPAMENTO}</span>
                             </div>
                             <div style={styles.rowInfo}>
                                 <span style={styles.titleProp}>Equipamento: </span>
