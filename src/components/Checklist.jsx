@@ -7,48 +7,77 @@ function CheckList() {
 
     let navigate = useNavigate()
 
-    const openApoioDecisaoPage = () => {
-        // Replace 'https://example.com' with the URL you want to open
-        window.open('https://www.google.com/maps/d/viewer?mid=1hcFft-BfiEyawGCVxkRu2LgEd_cjte0&ll=41.519126909132694%2C-7.626061528903792&z=11', '_blank');
+    const handleClickABSC01 = () => {
+        window.open('https://docs.google.com/forms/d/1V31uXzaizIpdCa9SST_C1Ge3oAx_tec0FU4nbxh_TGQ/viewform?edit_requested=true', '_blank');
     };
 
-    const handleClickOcorrencias = () => {
-        // Navigate to the new page
-        navigate('/ocorrencias');
+    const handleClickABSC02 = () => {
+        window.open('https://docs.google.com/forms/d/1eTDl5t12FewHGxoRUGxjj0-GinxsXhQa40A_J5_sMm4/viewform?pli=1&pli=1&edit_requested=true', '_blank');
     };
 
-    const handleClickCheckList = () => {
-        // Navigate to the new page
-        navigate('/checklist');
+    const handleClickABSC03 = () => {
+        window.open('https://docs.google.com/forms/d/14_EdGJ4nX6b5ZzR0xk9LBkXU53lxx-Dk1_jsMcOZ-e8/viewform?edit_requested=true', '_blank');
     };
 
-    const handleClickMateriasPerigosas = () => {
-        // Navigate to the new page
-        navigate('/materiasperigosas');
+    const handleClickABSC04 = () => {
+        window.open('https://docs.google.com/forms/d/1hq5--qH-eiT6rqYXSQLxaBX6lvoeWHlieN-eA6_4Dm4/viewform?edit_requested=true', '_blank');
     };
+
+    const handleClickVECI02 = () => {
+        window.open('https://docs.google.com/forms/d/1u-LtigHoX00-V82lojevYbklrGGxBw_DG375RS_d5Ek/viewform?edit_requested=true', '_blank');
+    };
+
+    const handleClickVUCI01 = () => {
+        window.open('https://docs.google.com/forms/d/1DotQjGGF2TA2sT58IofFJ5DH4Lx--LA0lA9yaimep7Q/viewform?edit_requested=true', '_blank');
+    };
+
+    const handleClickVFCI07 = () => {
+        window.open('https://docs.google.com/forms/d/1nqPHwI1Tjv3ifDKPm716pc57xaZhhUJ5RWxwDrixhH4/viewform?edit_requested=true', '_blank');
+    };
+
+    const handleClickVFCI08 = () => {
+        window.open('https://docs.google.com/forms/d/1uWv-_7IjDAy2Yyw4kPn2hfcbY0Thbbfb3JRkYtIhHV4/viewform?edit_requested=true', '_blank');
+    };
+
+    const handleClickVTTU01 = () => {
+        window.open('https://docs.google.com/forms/d/1Wjxrvbu0N2AHxVBa3RTQkOQXE8T2Ck0TLePlnx6kT6k/viewform?edit_requested=true', '_blank');
+    };
+
+    const handleClickVOPE05 = () => {
+        window.open('https://docs.google.com/forms/d/1AGcuwOfth_bBQHR7StoALcEsJt6tZrJKadNpCOUT45o/viewform?edit_requested=true', '_blank');
+    };
+
+    const handleClickVCOT01 = () => {
+        window.open('https://docs.google.com/forms/d/1kJw7gVGV93Ot0erDtCzc7q0tKtcMlot1T2CUjBJHBTc/viewform?edit_requested=true', '_blank');
+    };
+
 
     return (
         <div style={styles.center}>
             <div style={styles.container}>
-                <div style={styles.row}>
-                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickOcorrencias}>VECI 01</Button>
-                    <Button style={styles.button_decisao} variant="contained" onClick={openApoioDecisaoPage}>VUCI 02</Button>
+            <div style={styles.row}>
+                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickABSC01}>ABSC 01</Button>
+                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickABSC02}>ABSC 02</Button>
                 </div>
                 <div style={styles.row}>
-                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickCheckList}>VFCI 06</Button>
-                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickMateriasPerigosas}>VFCI 07</Button>
+                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickABSC03}>ABSC 03</Button>
+                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickABSC04}>ABSC 04</Button>
                 </div>
                 <div style={styles.row}>
-                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickCheckList}>VFCI 08</Button>
-                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickMateriasPerigosas}>VTTU 01</Button>
+                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickVUCI01}>VUCI 01</Button>
+                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickVECI02}>VECI 02</Button>
                 </div>
                 <div style={styles.row}>
-                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickCheckList}>VCOT 01</Button>
-                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickMateriasPerigosas}>VCOT 02</Button>
+                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickVFCI07}>VFCI 07</Button>
+                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickVFCI08}>VFCI 08</Button>
                 </div>
                 <div style={styles.row}>
-                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickCheckList}>VCOT 04</Button>
-                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickMateriasPerigosas}>VOPE 05</Button>
+                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickVTTU01}>VTTU 01</Button>
+                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickVOPE05}>VOPE 05</Button>
+                </div>
+                <div style={styles.row}>
+                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickVCOT01}>VCOT 01</Button>
+                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickVCOT01}>VCOT 02</Button>
                 </div>
             </div>
         </div>
