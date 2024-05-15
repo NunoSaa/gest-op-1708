@@ -12,6 +12,11 @@ function Ocorrencias() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+
+        const interval = setInterval(() => {
+            window.location.reload();
+          }, 60000); // Refresh every minute (60000 milliseconds)
+
         const fetchData = async () => {
             try {
                 const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getIncidentsByDate');
@@ -26,6 +31,8 @@ function Ocorrencias() {
         };
 
         fetchData();
+
+        return () => clearInterval(interval); // Cleanup the interval on unmount
     }, []);
 
     const renderItem = (item) => (
