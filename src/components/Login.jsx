@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
-import { eye } from 'react-icons-kit/feather/eye'
 
 
 function Login({ history }) {
@@ -47,6 +46,15 @@ function Login({ history }) {
                 console.log(response.data.token);
                 localStorage.setItem('token', response.data.token);
                 navigate('/homepage');
+                if (response.data.user.role === 'admin') {
+                    console.log(response.data.token);
+                    localStorage.setItem('token', response.data.token);
+                    navigate('/adminHomepage');
+                } else if(response.data.user.role === 'user'){
+                    console.log(response.data.token);
+                    localStorage.setItem('token', response.data.token);
+                    navigate('/homepage');
+                }
             }
         } catch (error) {
             setWrong(error.response.data.error);
