@@ -56,28 +56,28 @@ function CheckList() {
         <div style={styles.center}>
             <div style={styles.container}>
             <div style={styles.row}>
-                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickABSC01}>ABSC 01</Button>
-                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickABSC02}>ABSC 02</Button>
+                    <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC01}>ABSC 01</Button>
+                    <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC02}>ABSC 02</Button>
                 </div>
                 <div style={styles.row}>
-                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickABSC03}>ABSC 03</Button>
-                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickABSC04}>ABSC 04</Button>
+                    <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC03}>ABSC 03</Button>
+                    <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC04}>ABSC 04</Button>
                 </div>
                 <div style={styles.row}>
-                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickVUCI01}>VUCI 01</Button>
-                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickVECI02}>VECI 02</Button>
+                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVUCI01}>VUCI 01</Button>
+                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVECI02}>VECI 02</Button>
                 </div>
                 <div style={styles.row}>
-                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickVFCI07}>VFCI 07</Button>
-                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickVFCI08}>VFCI 08</Button>
+                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI07}>VFCI 07</Button>
+                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI08}>VFCI 08</Button>
                 </div>
                 <div style={styles.row}>
-                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickVTTU01}>VTTU 01</Button>
-                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickVOPE05}>VOPE 05</Button>
+                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVTTU01}>VTTU 01</Button>
+                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVOPE05}>VOPE 05</Button>
                 </div>
                 <div style={styles.row}>
-                    <Button style={styles.button_ocorrencias} variant="contained" onClick={handleClickVCOT01}>VCOT 01</Button>
-                    <Button style={styles.button_decisao} variant="contained" onClick={handleClickVCOT01}>VCOT 02</Button>
+                    <Button style={styles.button_VCOT} variant="contained" onClick={handleClickVCOT01}>VCOT 01</Button>
+                    <Button style={styles.button_VCOT} variant="contained" onClick={handleClickVCOT01}>VCOT 02</Button>
                 </div>
             </div>
         </div>
@@ -105,7 +105,35 @@ const styles = {
         flexDirection: 'row',
         marginBottom: 20,
     },
-    button_ocorrencias: {
+    button_ABSC: {
+        width: 150, // Set the width and height to create square buttons
+        height: 150,
+        backgroundColor: '#46D8FF',
+        padding: 20,
+        marginHorizontal: 20,
+        marginVertical: 20,
+        borderRadius: 10,
+        flex: 1, // Each button takes up equal space within the row
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 15,
+        marginRight: 15,
+    },
+    button_VUCI: {
+        width: 150, // Set the width and height to create square buttons
+        height: 150,
+        backgroundColor: '#FF6666',
+        padding: 20,
+        marginHorizontal: 20,
+        marginVertical: 20,
+        borderRadius: 10,
+        flex: 1, // Each button takes up equal space within the row
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 15,
+        marginRight: 15,
+    },
+    button_VCOT: {
         width: 150, // Set the width and height to create square buttons
         height: 150,
         backgroundColor: '#A0A0A0',
@@ -115,63 +143,9 @@ const styles = {
         borderRadius: 10,
         flex: 1, // Each button takes up equal space within the row
         justifyContent: 'center',
-        alignItems: 'center'
-    },
-    button_decisao: {
-        width: 150, // Set the width and height to create square buttons
-        height: 150,
-        backgroundColor: '#A0A0A0',
-        padding: 20,
-        marginHorizontal: 20,
-        marginVertical: 20,
-        borderRadius: 10,
-        flex: 1, // Each button takes up equal space within the row
-        justifyContent: 'center',
         alignItems: 'center',
-        marginLeft: 30,
-    },
-    button_checklist: {
-        width: 150, // Set the width and height to create square buttons
-        height: 150,
-        backgroundColor: '#00CC00',
-        padding: 20,
-        marginHorizontal: 20,
-        marginVertical: 20,
-        borderRadius: 10,
-        flex: 1, // Each button takes up equal space within the row
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    button_azmat: {
-        width: 150, // Set the width and height to create square buttons
-        height: 150,
-        backgroundColor: '#FF9933',
-        padding: 20,
-        marginHorizontal: 20,
-        marginVertical: 20,
-        borderRadius: 10,
-        flex: 1, // Each button takes up equal space within the row
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 30,
-    },
-    button_emPreHosp: {
-        width: 150, // Set the width and height to create square buttons
-        height: 150,
-        backgroundColor: '#3399FF',
-        padding: 20,
-        marginHorizontal: 20,
-        marginVertical: 20,
-        borderRadius: 10,
-        //flex: 1, // Each button takes up equal space within the row
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    buttonText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold',
-        textAlign: "center",
+        marginLeft: 15,
+        marginRight: 15,
     },
 }
 
