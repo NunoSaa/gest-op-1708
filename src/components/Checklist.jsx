@@ -1,11 +1,8 @@
 import React from 'react';
 import Button from '@mui/material/Button';
-import { useNavigate } from "react-router-dom";
 
 
 function CheckList() {
-
-    let navigate = useNavigate()
 
     const handleClickABSC01 = () => {
         window.open('https://docs.google.com/forms/d/1V31uXzaizIpdCa9SST_C1Ge3oAx_tec0FU4nbxh_TGQ/viewform?edit_requested=true', '_blank');

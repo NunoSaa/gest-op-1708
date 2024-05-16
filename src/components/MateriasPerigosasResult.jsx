@@ -1,6 +1,5 @@
 import React from 'react';
-import Button from '@mui/material/Button';
-import { useNavigate, useLocation } from "react-router-dom";
+import {useLocation } from "react-router-dom";
 
 function MateriasPerigosasResult() {
 
@@ -11,7 +10,7 @@ function MateriasPerigosasResult() {
     return (
         <div style={styles.center}>
             <div style={styles.container}>
-                <a>
+                <p>
                     {results.map((result, index) => (
                         <div style={styles.row}>
                             <div style={styles.rowInfo}>
@@ -61,7 +60,7 @@ function MateriasPerigosasResult() {
                             </div>
                         </div>
                     ))}
-                </a>
+                </p>
             </div>
         </div>
     );

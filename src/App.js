@@ -8,6 +8,7 @@ import CheckList from './components/Checklist';
 import Posit from './components/Posit'
 import MateriasPerigosas from './components/MateriasPerigosas';
 import MateriasPerigosasResult from './components/MateriasPerigosasResult';
+import AdminHomePage from './components/AdminHomePage';
 
 const isAuthenticated = () => {
   // Check if the user is authenticated
@@ -21,6 +22,7 @@ function App() {
       <Routes>
         <Route path="/" element={isAuthenticated() ? <Navigate to="/homepage" /> : <Login />} />
         <Route path="/homepage" element={<HomePage />} />
+        <Route path="/adminHomePage" element={isAuthenticated() ? <AdminHomePage/> : <Login/>}></Route>
         <Route path="/ocorrencias" element={<Ocorrencias />} />
         <Route path="/ocorrenciasDetail/:id" element={<OcorrenciasDetail />} />
         <Route path="/checklist" element={<CheckList />} />

@@ -1,43 +1,74 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
-
-
-const drawerWidth = 240;
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  content: {
-    flexGrow: 1,
-    //padding: theme.spacing(3),
-  },
-}));
+import {Navigation} from 'react-minimal-side-navigation';
+import 'react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css';
 
 function AdminHomePage() {
-    const classes = useStyles();
-    let navigate = useNavigate()
 
-    const handleLogout = () => {
-        // Clear authentication token from local storage
-        console.log(localStorage.getItem('token'));
-        localStorage.removeItem('token');
-        console.log('depois' + localStorage.getItem('token'));
+  let navigate = useNavigate()
 
-        // Redirect to login page
-        navigate('/login');
-      };
+  const handleSelect = ({ itemId }) => {
+    if (itemId === '/logout') {
+
+      localStorage.removeItem('tokenAdmin');
+      // Redirect to login page
+      navigate('/');
+
+    } else {
+      navigate(itemId);
+    }
+  };
 
     return (
-        <div><p>TESTE ADMIN</p></div>
+        <div style={styles.sidebar}>
+            <Navigation
+            // you can use your own router's api to get pathname
+            activeItemId={window.location.pathname}
+            onSelect={handleSelect}
+            items={[
+              {
+                title: 'Dashboard',
+                itemId: '/dashboard',
+                // you can use your own custom Icon component as well
+                // icon is optional
+                //elemBefore: () => <Icon name="inbox" />,
+              },
+              {
+                title: 'Gestão de Utilizadores',
+                itemId: '/management',
+                //elemBefore: () => <Icon name="users" />,
+                subNav: [
+                  {
+                    title: 'Novo Utilizador',
+                    itemId: '/management/projects',
+                  },
+                  {
+                    title: 'Gerir Utilizadores',
+                    itemId: '/management/members',
+                  },
+                ],
+              },
+              {
+                title: 'Logout',
+                itemId: '/logout',
+                // you can use your own custom Icon component as well
+                // icon is optional
+                //elemBefore: () => <Icon name="inbox" />,
+              },
+            ]}
+          />
+        </div>
+        
     );
+}
+
+const styles = {
+  sidebar: {
+      display: 'flex',
+      justifyContent: 'left',
+      alignItems: 'left',
+      height: '20%',
+  },
 }
 
 

@@ -5,8 +5,8 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
-import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
+import { Icon as IconKit } from 'react-icons-kit';
 
 
 function Login({ history }) {
@@ -15,8 +15,7 @@ function Login({ history }) {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [wrong, setWrong] = useState('');
-    const [type, setType] = useState('password');
-    const [icon, setIcon] = useState(eyeOff);
+    const [icon] = useState(eyeOff);
 
     const handleShowPassword = () => {
         setShowPassword(!showPassword);
@@ -48,7 +47,7 @@ function Login({ history }) {
                 navigate('/homepage');
                 if (response.data.user.role === 'admin') {
                     console.log(response.data.token);
-                    localStorage.setItem('token', response.data.token);
+                    localStorage.setItem('tokenAdmin', response.data.token);
                     navigate('/adminHomepage');
                 } else if(response.data.user.role === 'user'){
                     console.log(response.data.token);
@@ -71,14 +70,14 @@ function Login({ history }) {
             <div style={styles.title2}>Entrar</div>
             <div style={styles.title1}>Olá. Bem Vindo!</div>
             <div style={styles.container1}>
-                <div class="mb-4 flex">
+                <div className="mb-4 flex">
                     <div>
                         <TextField style={styles.input} id="standard-basic" label="Username" variant="standard" value={username} onChange={(e) => setUsername(e.target.value)} />
                     </div>
                     <div >
                         <TextField style={styles.input} type={showPassword ? 'text' : 'password'} id="password" label="Password" variant="standard" value={password} onChange={(e) => setPassword(e.target.value)} />
                         <span style={styles.icon} onClick={handleShowPassword}>
-                            <Icon class="absolute mr-10" icon={icon} size={24} />
+                            <IconKit className="absolute mr-10" icon={icon} size={24} />
                         </span>
                     </div>
                 </div>
