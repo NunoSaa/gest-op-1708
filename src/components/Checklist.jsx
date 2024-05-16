@@ -116,8 +116,8 @@ const styles = {
         flex: 1, // Each button takes up equal space within the row
         justifyContent: 'center',
         alignItems: 'center',
-        marginLeft: 15,
-        marginRight: 15,
+        marginLeft: 5,
+        marginRight: 5,
     },
     button_VUCI: {
         width: 150, // Set the width and height to create square buttons
@@ -130,8 +130,8 @@ const styles = {
         flex: 1, // Each button takes up equal space within the row
         justifyContent: 'center',
         alignItems: 'center',
-        marginLeft: 15,
-        marginRight: 15,
+        marginLeft: 5,
+        marginRight: 5,
     },
     button_VCOT: {
         width: 150, // Set the width and height to create square buttons
@@ -144,8 +144,8 @@ const styles = {
         flex: 1, // Each button takes up equal space within the row
         justifyContent: 'center',
         alignItems: 'center',
-        marginLeft: 15,
-        marginRight: 15,
+        marginLeft: 5,
+        marginRight: 5,
     },
 }
 
