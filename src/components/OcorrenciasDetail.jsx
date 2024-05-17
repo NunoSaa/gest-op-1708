@@ -150,11 +150,18 @@ function OcorrenciasDetail() {
                 </div>
 
                 <div style={styles.row}>
-                    <TextField style={styles.input} label="Kms" />
-                    <Button style={styles.button_Inserir}
-                        onClick={handleSubmit}>
-                        <p style={styles.buttonText}>Inserir</p>
-                    </Button>
+                    <ul>
+                        {item.viaturas.map((viatura, index) => (
+                            <a key={index}>
+                                {viatura}
+                                <TextField style={styles.input} label="Kms" />
+                                <Button style={styles.button_Inserir}
+                                    onClick={handleSubmit}>
+                                    <p style={styles.buttonText}>Inserir</p>
+                                </Button>
+                            </a>
+                        ))}
+                    </ul>
                 </div>
             </div>
         </div>
@@ -255,7 +262,7 @@ const styles = {
         marginTop: 25,
     },
     button_Inserir: {
-        width: "45%",
+        width: "46%",
         height: 50,
         backgroundColor: '#A0A0A0',
         borderRadius: 10,
@@ -284,7 +291,7 @@ const styles = {
     },
     input: {
         height: 50,
-        width: "45%",
+        width: "39%",
         borderColor: 'gray',
         borderWidth: 1,
         borderRadius: 10,
