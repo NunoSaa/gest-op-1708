@@ -15,7 +15,6 @@ function OcorrenciasDetail() {
     const [isTimerRunning, setIsTimerRunning] = useState(true);
 
 
-
     useEffect(() => {
         let intervalId;
         if (isTimerRunning) {
@@ -56,7 +55,6 @@ function OcorrenciasDetail() {
     console.log(item);
     const array = item.viaturas;
     const viaturas = array.join(', ');
-
 
     return (
         <div style={styles.center}>

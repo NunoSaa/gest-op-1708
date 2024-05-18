@@ -12,6 +12,7 @@ function Posit() {
     let navigate = useNavigate()
     const location = useLocation();
     const { state } = location;
+    const [geolocation, setGeoLocation] = useState({ latitude: null, longitude: null });
 
     if (!state) {
     }
@@ -19,6 +20,21 @@ function Posit() {
     console.log(item);
     //const array = item.viaturas;
     //const viaturas = array.join(', ');
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                setGeoLocation({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                });
+                console.log("latitude : " + position.coords.latitude + " - " + "longitude : " + position.coords.longitude);
+            },
+            (error) => {
+            }
+        );
+    } else {
+    }
 
 
     return (
@@ -34,6 +50,15 @@ function Posit() {
                     onClick={() => navigate('/posit')}>
                     <p style={styles.buttonText}>POSIT</p>
                 </Button>
+            </div>
+
+            <div style={styles.center}>
+                <div style={styles.row}>
+                    <div>
+                        <p>Latitude: {geolocation.latitude}</p>
+                        <p>Longitude: {geolocation.longitude}</p>
+                    </div>
+                </div>
             </div>
 
             <div style={styles.center}>
@@ -57,12 +82,12 @@ function Posit() {
 
             <div style={styles.row}>
                 <p>Descrição da Ocorrência: </p>
-                <TextField style={styles.inputBomba} label="Decrição da ocorrência"  multiline rows={12}/>
+                <TextField style={styles.inputBomba} label="Decrição da ocorrência" multiline rows={12} />
             </div>
 
             <div style={styles.row}>
                 <p>Descrição do Trabalho Desenvolvido: </p>
-                <TextField style={styles.inputBomba} label="Decrição do trabalho desenvolvido"  multiline rows={12}/>
+                <TextField style={styles.inputBomba} label="Decrição do trabalho desenvolvido" multiline rows={12} />
             </div>
 
 
@@ -90,7 +115,7 @@ const styles = {
         marginRight: 10
     },
     center: {
-        height: "45%", 
+        height: "45%",
         display: "flex",
         justifyContent: "center",
         alignItems: 'center',
@@ -146,7 +171,7 @@ const styles = {
         marginLeft: 15
     },
     button_SIRESP: {
-        width:150,
+        width: 150,
         height: 75,
         backgroundColor: '#A0A0A0',
         borderRadius: 10,
@@ -165,7 +190,7 @@ const styles = {
         marginLeft: 15,
     },
     button_SAVE: {
-        width:250,
+        width: 250,
         height: 75,
         backgroundColor: '#99FF99',
         borderRadius: 10,
