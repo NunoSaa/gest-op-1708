@@ -281,7 +281,7 @@ const styles = {
         marginTop: 25,
     },
     button_Inserir: {
-        width: "46%",
+        width: "30%",
         height: 50,
         backgroundColor: '#A0A0A0',
         borderRadius: 10,
