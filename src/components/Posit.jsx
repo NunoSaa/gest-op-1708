@@ -9,62 +9,55 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 function Posit() {
 
-    let navigate = useNavigate()
+    const navigate = useNavigate();
     const location = useLocation();
     const { state } = location;
     const [geolocation, setGeoLocation] = useState({ latitude: null, longitude: null });
+    const [item, setItem] = useState(state);
 
-    if (!state) {
-    }
-    const item = state;
-    console.log(item);
-    //const array = item.viaturas;
-    //const viaturas = array.join(', ');
-
-    function getGeolocation() {
+    const fetchGeolocation = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    // Extract and format the latitude and longitude to 6 decimal places
-                    const latitude = position.coords.latitude.toFixed(6);
-                    const longitude = position.coords.longitude.toFixed(6);
-    
-                    // Update the state with formatted coordinates
+                position => {
                     setGeoLocation({
-                        latitude: parseFloat(latitude),
-                        longitude: parseFloat(longitude),
+                        latitude: position.coords.latitude.toFixed(6),
+                        longitude: position.coords.longitude.toFixed(6)
                     });
-    
-                    // Log the formatted coordinates to the console
-                    console.log("Latitude: " + latitude + " - Longitude: " + longitude);
                 },
-                (error) => {
-                    switch (error.code) {
-                        case error.PERMISSION_DENIED:
-                            console.error("User denied the request for Geolocation.");
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            console.error("Location information is unavailable.");
-                            break;
-                        case error.TIMEOUT:
-                            console.error("The request to get user location timed out.");
-                            break;
-                        case error.UNKNOWN_ERROR:
-                            console.error("An unknown error occurred.");
-                            break;
-                    }
+                error => {
+                    console.error('Error obtaining geolocation', error);
                 }
             );
         } else {
-            console.warn("Geolocation is not supported by this browser.");
+            console.error('Geolocation is not supported by this browser');
         }
-    }
+    };
 
-    // Initial call to get the geolocation
-    getGeolocation();
+    const refreshItemData = () => {
+        // Simulate fetching new data
+        const refreshedItem = { ...state, timestamp: new Date().toISOString() };
+        setItem(refreshedItem);
+        console.log('Item refreshed:', refreshedItem);
+    };
 
-    // Set an interval to refresh the geolocation every minute (60000 milliseconds)
-    setInterval(getGeolocation, 60000);
+    useEffect(() => {
+        if (!state) {
+            // Handle the case where state is not provided, perhaps redirect or show an error
+            console.warn('No state provided');
+            return;
+        }
+
+        fetchGeolocation();
+        refreshItemData(); // Initial refresh
+
+        // Set up an interval to refresh items every minute (60000 ms)
+        const interval = setInterval(() => {
+            refreshItemData();
+        }, 60000);
+
+        // Cleanup interval on component unmount
+        return () => clearInterval(interval);
+    }, [state]);
 
 
     return (

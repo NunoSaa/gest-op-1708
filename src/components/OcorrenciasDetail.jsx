@@ -8,12 +8,14 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 function OcorrenciasDetail() {
 
-    let navigate = useNavigate()
+    const navigate = useNavigate();
     const location = useLocation();
     const { state } = location;
+
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
     const [isTimerRunning, setIsTimerRunning] = useState(true);
-
+    const [inputValue, setInputValue] = useState('');
+    const [item, setItem] = useState(state);
 
     useEffect(() => {
         let intervalId;
@@ -25,35 +27,54 @@ function OcorrenciasDetail() {
         return () => clearInterval(intervalId);
     }, [isTimerRunning]);
 
+    useEffect(() => {
+        if (!state) return;
+
+        const refreshItemData = () => {
+            // Simulate fetching new data
+            const refreshedItem = { ...state, timestamp: new Date().toISOString() };
+            setItem(refreshedItem);
+            console.log('Item refreshed:', refreshedItem);
+        };
+
+        refreshItemData(); // Initial refresh
+
+        // Set up an interval to refresh items every minute (60000 ms)
+        const intervalId = setInterval(refreshItemData, 60000);
+
+        // Cleanup interval on component unmount
+        return () => clearInterval(intervalId);
+    }, [state]);
+
     const handleSetTime = () => {
-        //setCurrentTime(new Date().toLocaleTimeString());
-        //setIsTimerRunning(false); // Stop the timer
-        console.log(currentTime)
+        console.log(currentTime);
+        setIsTimerRunning(false); // Optional: stop the timer
     };
 
-    const [inputValue, setInputValue] = useState('');
     const handleInputChange = (e) => {
         setInputValue(e.target.value);
     };
 
     const handleSubmit = () => {
-        // Handle submit logic
+        console.log(inputValue); // Handle submit logic
     };
 
     const openMaps = () => {
-        const address = item.morada + ', ' + item.localidade_morada;
-        const coordinates = item.sado_latitude_gps + ', ' + item.sado_longitude_gps;
+        if (!item) return;
+
+        const address = `${item.morada}, ${item.localidade_morada}`;
+        const coordinates = `${item.sado_latitude_gps}, ${item.sado_longitude_gps}`;
         const encodedAddress = encodeURIComponent(address);
         const encodedCoordinates = encodeURIComponent(coordinates);
-        //window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
+
         window.open(`https://www.google.com/maps/search/?q=${encodedCoordinates}`, '_blank');
     };
 
     if (!state) {
+        return <div>No state provided</div>;
     }
-    const item = state;
-    console.log(item);
-    const array = item.viaturas;
+
+    const array = item.viaturas || [];
     const viaturas = array.join(', ');
 
     return (
