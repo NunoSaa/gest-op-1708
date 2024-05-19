@@ -13,51 +13,68 @@ function Posit() {
     const location = useLocation();
     const { state } = location;
     const [geolocation, setGeoLocation] = useState({ latitude: null, longitude: null });
+    const [geolocationGMS, setGeoLocationGMS] = useState({ latitude: '', longitude: '' });
     const [item, setItem] = useState(state);
 
     const fetchGeolocation = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 position => {
-                    setGeoLocation({
-                        latitude: position.coords.latitude.toFixed(6),
-                        longitude: position.coords.longitude.toFixed(6)
+                    const latitude = position.coords.latitude.toFixed(6);
+                    const longitude = position.coords.longitude.toFixed(6);
+                    setGeoLocation({ latitude, longitude });
+                    setGeoLocationGMS({
+                        latitude: decimalDegreesToGMS(latitude, 'latitude'),
+                        longitude: decimalDegreesToGMS(longitude, 'longitude')
                     });
                 },
                 error => {
                     console.error('Error obtaining geolocation', error);
+                    alert('Unable to obtain your location. Please check your permissions.');
                 }
             );
         } else {
             console.error('Geolocation is not supported by this browser');
+            alert('Geolocation is not supported by your browser.');
         }
     };
 
     const refreshItemData = () => {
-        // Simulate fetching new data
         const refreshedItem = { ...state, timestamp: new Date().toISOString() };
         setItem(refreshedItem);
         console.log('Item refreshed:', refreshedItem);
     };
 
+    const decimalDegreesToGMS = (decimalDegrees, type) => {
+        const absolute = Math.abs(decimalDegrees);
+        const degrees = Math.floor(absolute);
+        const minutesNotTruncated = (absolute - degrees) * 60;
+        const minutes = Math.floor(minutesNotTruncated);
+        const seconds = ((minutesNotTruncated - minutes) * 60).toFixed(2);
+
+        const direction = decimalDegrees >= 0
+            ? (type === 'latitude' ? 'N' : 'E')
+            : (type === 'latitude' ? 'S' : 'W');
+
+        return `${degrees}°${minutes}'${seconds}"${direction}`;
+    };
+
     useEffect(() => {
         if (!state) {
-            // Handle the case where state is not provided, perhaps redirect or show an error
             console.warn('No state provided');
+            navigate('/error'); // Navigate to an error page or handle accordingly
             return;
         }
 
         fetchGeolocation();
         refreshItemData(); // Initial refresh
 
-        // Set up an interval to refresh items every minute (60000 ms)
         const interval = setInterval(() => {
             refreshItemData();
         }, 60000);
 
-        // Cleanup interval on component unmount
         return () => clearInterval(interval);
-    }, [state]);
+    }, [state, navigate]);
 
 
     return (
@@ -76,25 +93,15 @@ function Posit() {
             </div>
 
             <div style={styles.center}>
-                <div style={styles.row}>
+                <div style={styles.rowGeo}>
                     <div>
-                        <p>Latitude: {geolocation.latitude}</p>
-                        <p>Longitude: {geolocation.longitude}</p>
+                        <p><b>Latitude: </b>{geolocation.latitude}</p>
+                        <p><b>Longitude: </b>{geolocation.longitude}</p>
                     </div>
-                </div>
-            </div>
-
-            <div style={styles.center}>
-                <div style={styles.row}>
-                    <Button style={styles.button_SIRESP}>
-                        <p style={styles.buttonText}>SIRESP</p>
-
-                    </Button>
-
-                    <Button style={styles.button_SIRESP}
-                        onClick={() => navigate('/posit')}>
-                        <p style={styles.buttonText}>Geográficas</p>
-                    </Button>
+                    <div>
+                        <p><b>Latitude GMS: </b>{geolocationGMS.latitude}</p>
+                        <p><b>Longitude GMS: </b>{geolocationGMS.longitude}</p>
+                    </div>
                 </div>
             </div>
 
@@ -182,6 +189,12 @@ const styles = {
         marginTop: 30,
         paddingLeft: 25,
         paddingRight: 25
+    },
+    rowGeo: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        gap: 25,
     },
     button_ChegadaLocal: {
         width: "45%",

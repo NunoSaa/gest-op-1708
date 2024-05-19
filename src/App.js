@@ -16,13 +16,19 @@ const isAuthenticated = () => {
   return localStorage.getItem('token') !== null;
 };
 
+const isAuthenticatedAdmin = () => {
+  // Check if the user is authenticated
+  // Implement your authentication logic here, e.g., checking if a token exists in local storage
+  return localStorage.getItem('tokenAdmin') !== null;
+};
+
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={isAuthenticated() ? <Navigate to="/homepage" /> : <Login />} />
         <Route path="/homepage" element={<HomePage />} />
-        <Route path="/adminHomePage" element={isAuthenticated() ? <AdminHomePage/> : <Login/>}></Route>
+        <Route path="/adminHomePage" element={isAuthenticatedAdmin() ? <AdminHomePage/> : <Login/>}></Route>
         <Route path="/ocorrencias" element={<Ocorrencias />} />
         <Route path="/ocorrenciasDetail/:id" element={<OcorrenciasDetail />} />
         <Route path="/checklist" element={<CheckList />} />
