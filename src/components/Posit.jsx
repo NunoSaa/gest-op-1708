@@ -21,20 +21,50 @@ function Posit() {
     //const array = item.viaturas;
     //const viaturas = array.join(', ');
 
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                setGeoLocation({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                });
-                console.log("latitude : " + position.coords.latitude + " - " + "longitude : " + position.coords.longitude);
-            },
-            (error) => {
-            }
-        );
-    } else {
+    function getGeolocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    // Extract and format the latitude and longitude to 6 decimal places
+                    const latitude = position.coords.latitude.toFixed(6);
+                    const longitude = position.coords.longitude.toFixed(6);
+    
+                    // Update the state with formatted coordinates
+                    setGeoLocation({
+                        latitude: parseFloat(latitude),
+                        longitude: parseFloat(longitude),
+                    });
+    
+                    // Log the formatted coordinates to the console
+                    console.log("Latitude: " + latitude + " - Longitude: " + longitude);
+                },
+                (error) => {
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            console.error("User denied the request for Geolocation.");
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            console.error("Location information is unavailable.");
+                            break;
+                        case error.TIMEOUT:
+                            console.error("The request to get user location timed out.");
+                            break;
+                        case error.UNKNOWN_ERROR:
+                            console.error("An unknown error occurred.");
+                            break;
+                    }
+                }
+            );
+        } else {
+            console.warn("Geolocation is not supported by this browser.");
+        }
     }
+
+    // Initial call to get the geolocation
+    getGeolocation();
+
+    // Set an interval to refresh the geolocation every minute (60000 milliseconds)
+    setInterval(getGeolocation, 60000);
 
 
     return (
