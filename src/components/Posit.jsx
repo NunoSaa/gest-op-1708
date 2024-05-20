@@ -15,6 +15,8 @@ function Posit() {
     const [geolocation, setGeoLocation] = useState({ latitude: null, longitude: null });
     const [geolocationGMS, setGeoLocationGMS] = useState({ latitude: '', longitude: '' });
     const [item, setItem] = useState(state);
+    const [inputValue, setInputValue] = useState('');
+
 
     const fetchGeolocation = () => {
         if (navigator.geolocation) {
@@ -107,8 +109,18 @@ function Posit() {
 
             <div style={styles.row}>
                 <p>Horas de Bomba: </p>
-                <TextField style={styles.input} label="Horas de Bomba" />
             </div>
+
+            <div style={styles.row}>
+                    <ul style={styles.list}>
+                        {item.viaturas[0].map((viatura, index) => (
+                            <li key={index} style={styles.listItem}>
+                                <div style={styles.viatura}><b>{viatura}</b></div>
+                                <TextField style={styles.input} label="Horas de Bomba" />
+                            </li>
+                        ))}
+                    </ul>
+                </div>
 
             <div style={styles.row}>
                 <p>Descrição da Ocorrência: </p>
@@ -300,6 +312,24 @@ const styles = {
         marginTop: 15,
         marginBottom: 150,
     },
+    list: {
+        listStyleType: 'none',
+        padding: 0,
+        margin: 0,
+        width: '100%',
+        // other styles as needed
+      },
+      listItem: {
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: '25px',
+        paddingLeft: 25,
+        // other styles as needed
+      },
+      viatura: {
+        marginRight: '10px',
+        // other styles as needed
+      },
 };
 
 export default Posit;

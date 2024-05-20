@@ -74,8 +74,9 @@ function OcorrenciasDetail() {
         return <div>No state provided</div>;
     }
 
-    const array = item.viaturas || [];
-    const viaturas = array.join(', ');
+    const array = item.viaturas[0] || [];
+  const viaturas = array.join(', ');
+
 
     return (
         <div style={styles.center}>
@@ -118,7 +119,7 @@ function OcorrenciasDetail() {
                 <div style={styles.rowInfo}>
                     <span style={styles.infoProp}>Veiculos: </span>
 
-                    <span style={styles.info}>{viaturas}</span>
+                    <span style={styles.infoViaturas}>{viaturas}</span>
                 </div>
 
                 <div style={styles.row}>
@@ -169,16 +170,17 @@ function OcorrenciasDetail() {
                 </div>
 
                 <div style={styles.row}>
-                    <ul>
-                        {item.viaturas.map((viatura, index) => (
-                            <a key={index}>
-                                {viatura}
+                    <ul style={styles.list}>
+                        {item.viaturas[0].map((viatura, index) => (
+                            <li key={index} style={styles.listItem}>
+                                <div style={styles.viatura}><b>{viatura}</b></div>
                                 <TextField style={styles.input} label="Kms" />
-                                <Button style={styles.button_Inserir}
-                                    onClick={handleSubmit}>
+                                <Button
+                                    style={styles.button_Inserir}
+                                    onClick={() => handleSubmit(index)}>
                                     <p style={styles.buttonText}>Inserir</p>
                                 </Button>
-                            </a>
+                            </li>
                         ))}
                     </ul>
                 </div>
@@ -300,13 +302,23 @@ const styles = {
         paddingBottom: 10,
         textAlign: "center",
         fontWeight: "bold",
+        marginRight: 5,
     },
     info: {
         fontSize: 16,
         paddingBottom: 10,
         paddingLeft: 5,
         textAlign: "center",
-        color: "grey"
+        color: "grey",
+        marginRight: 20 ,
+    },
+    infoViaturas: {
+        fontSize: 16,
+        paddingBottom: 10,
+        paddingLeft: 5,
+        textAlign: "center",
+        color: "grey",
+        gap: 10,
     },
     input: {
         height: 50,
@@ -318,6 +330,24 @@ const styles = {
         marginLeft: 15,
         marginRight: 15
     },
+    list: {
+        listStyleType: 'none',
+        padding: 0,
+        margin: 0,
+        width: '100%',
+        // other styles as needed
+      },
+      listItem: {
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: '25px',
+        paddingLeft: 25,
+        // other styles as needed
+      },
+      viatura: {
+        marginRight: '10px',
+        // other styles as needed
+      },
 };
 
 export default OcorrenciasDetail;
