@@ -9,6 +9,8 @@ import Posit from './components/Posit'
 import MateriasPerigosas from './components/MateriasPerigosas';
 import MateriasPerigosasResult from './components/MateriasPerigosasResult';
 import AdminHomePage from './components/AdminHomePage';
+import PositList from './components/PositList';
+import NovoPosit from './components/NovoPosit';
 
 const isAuthenticated = () => {
   // Check if the user is authenticated
@@ -35,6 +37,8 @@ function App() {
         <Route path="/posit" element={<Posit />} />
         <Route path="/materiasPerigosas" element={<MateriasPerigosas />} />
         <Route path="/materiasPerigosasResult" element={<MateriasPerigosasResult />} />
+        <Route path="/positList" element={<PositList />} />
+        <Route path="/novoPosit" element={<NovoPosit />} />
       </Routes>
     </Router>
   );
