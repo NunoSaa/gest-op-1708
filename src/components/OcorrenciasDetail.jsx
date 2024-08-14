@@ -168,7 +168,7 @@ function OcorrenciasDetail() {
                         </Button>
                     </div>
                 </div>
-
+{/*
                 <div style={styles.row}>
                     <ul style={styles.list}>
                         {item.viaturas[0].map((viatura, index) => (
@@ -184,6 +184,7 @@ function OcorrenciasDetail() {
                         ))}
                     </ul>
                 </div>
+*/}
             </div>
         </div>
     );
