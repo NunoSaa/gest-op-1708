@@ -62,8 +62,8 @@ function OcorrenciasDetail() {
     const openMaps = () => {
         if (!item) return;
 
-        const address = `${item.morada}, ${item.localidade_morada}`;
-        const coordinates = `${item.sado_latitude_gps}, ${item.sado_longitude_gps}`;
+        const address = `${item.morada}, ${item.localidadeMorada}`;
+        const coordinates = `${item.sadoLatitudeGps}, ${item.sadoLongitudeGps}`;
         const encodedAddress = encodeURIComponent(address);
         const encodedCoordinates = encodeURIComponent(coordinates);
 
@@ -83,16 +83,16 @@ function OcorrenciasDetail() {
             <div style={styles.container}>
 
                 <div>
-                    <h3 style={styles.title}>{item.desc_classificacao}</h3>
+                    <h3 style={styles.title}>{item.descClassificacao}</h3>
                 </div>
 
                 <div style={styles.rowInfo}>
                     <span style={styles.infoProp}>Data: </span>
-                    <span style={styles.info}>{item.data_hora_alerta}</span>
+                    <span style={styles.info}>{item.dataHoraAlerta}</span>
                 </div>
                 <div style={styles.rowInfo}>
                     <span style={styles.infoProp}>Classifcação: </span>
-                    <span style={styles.info}>{item.desc_classificacao}</span>
+                    <span style={styles.info}>{item.descClassificacao}</span>
                 </div>
                 <div style={styles.rowInfo}>
                     <span style={styles.infoProp}>Estado: </span>
@@ -104,17 +104,17 @@ function OcorrenciasDetail() {
                 </div>
                 <div style={styles.rowInfo}>
                     <span style={styles.infoProp}>Localidade: </span>
-                    <span style={styles.info}>{item.localidade_morada}</span>
+                    <span style={styles.info}>{item.localidadeMorada}</span>
                 </div>
                 <div style={styles.rowInfo}>
                     <span style={styles.infoProp}>Latitude: </span>
-                    <span style={styles.info}>{item.sado_latitude_gps}</span>
+                    <span style={styles.info}>{item.sadoLatitudeGps}</span>
                     <span style={styles.infoProp}>Longitude: </span>
-                    <span style={styles.info}>{item.sado_longitude_gps}</span>
+                    <span style={styles.info}>{item.sadoLongitudeGps}</span>
                 </div>
                 <div style={styles.rowInfo}>
                     <span style={styles.infoProp}>Número de elementos: </span>
-                    <span style={styles.info}>{item.n_bombeiros}</span>
+                    <span style={styles.info}>{item.numeroBombeiros}</span>
                 </div>
                 <div style={styles.rowInfo}>
                     <span style={styles.infoProp}>Veiculos: </span>

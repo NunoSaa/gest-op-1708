@@ -36,16 +36,16 @@ function Ocorrencias() {
     }, []);
 
     const renderItem = (item) => (
-        <div key={item.id} style={{ ...styles.item, backgroundColor: item.cor_estado }} onClick={() => navigate(`/ocorrenciasDetail/${item.id}`, { state: item })}>
+        <div key={item.id} style={{ ...styles.item, backgroundColor: item.corEstado }} onClick={() => navigate(`/ocorrenciasDetail/${item.id}`, { state: item })}>
 
             <div style={styles.content}>
-                <h3 style={styles.title}>{item.morada}, {item.localidade_morada}</h3>
-                <p style={styles.description}>{item.desc_classificacao}</p>
+                <h3 style={styles.title}>{item.morada}, {item.localidadeMorada}</h3>
+                <p style={styles.description}>{item.descClassificacao}</p>
                 <p style={styles.vehicle}>{item.viaturas.join(', ')}</p>
             </div>
             <div style={styles.rightContainer}>
                 <span style={styles.estado}>{item.estado}</span>
-                <span style={styles.timestamp}>{item.hora_alerta}</span>
+                <span style={styles.timestamp}>{item.horaAlerta}</span>
             </div>
         </div>
     );
