@@ -13,38 +13,41 @@ function FitaTempo() {
     let navigate = useNavigate()
     const [loading, setLoading] = useState(false);
     const [item, setItem] = useState(state);
+    const [error, setError] = useState(null);
 
     console.log(item);
 
     useEffect(() => {
-        setLoading(true); // Start loading
-
-        const interval = setInterval(() => {
-            window.location.reload();
-          }, 60000); // Refresh every minute (60000 milliseconds)
-
         const fetchData = async (id) => {
+            setLoading(true);
             try {
-                const response = await axios.get(`https://preventech-proxy-service.onrender.com/api/emergency/getTimeTapeByIncidentID`, {
+                const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getTimeTapeByIncidentID', {
                     params: {
                         id_ocorrencia: id
                     }
                 });
                 setTimeTape(response.data);
                 console.log(response.data);
-                setLoading(false); // Data loaded, set loading to false
             } catch (error) {
                 console.error('Error:', error);
+                setError('Error fetching data');
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchData();
+        if (item && item.id) {
+            fetchData(item.id); // Fetch data using the ID from state
+        }
 
-        return () => clearInterval(interval); // Cleanup the interval on unmount
-        
-    }, []);
+        const interval = setInterval(() => {
+            if (item && item.id) {
+                fetchData(item.id); // Refetch data every minute
+            }
+        }, 60000); // Refresh every minute
+
+        return () => clearInterval(interval); // Cleanup the interval on component unmount
+    }, [item]);
 
     const renderItem = (item) => (
         <div key={item.id} style={{ ...styles.item }} onClick={() => navigate(`/positDetail/${item.id}`, { state: item })}>
