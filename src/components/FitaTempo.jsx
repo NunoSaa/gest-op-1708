@@ -5,60 +5,43 @@ import { useNavigate } from "react-router-dom";
 import { ClipLoader } from 'react-spinners';
 import Button from '@mui/material/Button';
 
-function PositList() {
+function FitaTempo() {
 
-    const [emergencies, setEmergencies] = useState([]);
+    const [timeTape, setTimeTape] = useState([]);
     let navigate = useNavigate()
     const [loading, setLoading] = useState(false);
 
-    const items = [
-        {
-            id: 1,
-            description: 'Primeiro Posit',
-            data: '24-02-2024',
-            ocorrencia: '12345'
-        },
-        {
-            id: 2,
-            description: 'Segundo Posit',
-            data: '25-02-2024',
-            ocorrencia: '12346'
-        },
-        {
-            id: 3,
-            description: 'Terceiro Posit',
-            data: '26-02-2024',
-            ocorrencia: '12347'
-        },
-        {
-            id: 4,
-            description: 'Quarto Posit',
-            data: '27-02-2024',
-            ocorrencia: '12348'
-        },
-        {
-            id: 5,
-            description: 'Quinto Posit',
-            data: '28-02-2024',
-            ocorrencia: '12349'
-        }
-    ];
-
     useEffect(() => {
-        setLoading(true);
-        // Simulating an API call
-        setTimeout(() => {
-            setEmergencies(items);
-            setLoading(false);
-        }, 1000);
+        const interval = setInterval(() => {
+            window.location.reload();
+          }, 60000); // Refresh every minute (60000 milliseconds)
+
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getTimeTapeByIncidentID');
+                setTimeTape(response.data);
+                console.log(response.data);
+                setLoading(false); // Data loaded, set loading to false
+            } catch (error) {
+                console.error('Error:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+
+        return () => clearInterval(interval); // Cleanup the interval on unmount
+        
     }, []);
 
     const renderItem = (item) => (
         <div key={item.id} style={{ ...styles.item }} onClick={() => navigate(`/positDetail/${item.id}`, { state: item })}>
 
             <div style={styles.content}>
-                <h3 style={styles.title}>{item.ocorrencia}</h3>
-                <p style={styles.description}>{item.description}</p>
+                <h3 style={styles.title}>{item.tipo}</h3>
+                <p style={styles.description}>{item.autor}</p>
+                <p style={styles.description}>{item.descricao}</p>
             </div>
             <div style={styles.rightContainer}>
                 <span style={styles.estado}>{item.data}</span>
@@ -79,10 +62,10 @@ function PositList() {
                     <div style={styles.center}>
                         <ClipLoader size={50} color="#C0C0C0" />
                         A carregar...</div> // You can replace this with a loading icon
-                ) : emergencies.length === 0 ? (
-                    <div>Não foram encontradas ocorrências.</div> // Render message if emergencies array is empty
+                ) : timeTape.length === 0 ? (
+                    <div>Não foram encontrados Registos.</div> // Render message if emergencies array is empty
                 ) : (
-                    emergencies.map(renderItem)
+                    timeTape.map(renderItem)
                 )}
             </div>
     );
@@ -171,4 +154,4 @@ const styles = {
     },
 };
 
-export default PositList
+export default FitaTempo

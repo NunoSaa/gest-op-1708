@@ -137,8 +137,8 @@ function OcorrenciasDetail() {
                     </Button>
 
                     <Button style={styles.button_POSIT}
-                        onClick={() => navigate('/posit', { state: item })}>
-                        <p style={styles.buttonText}>POSIT</p>
+                        onClick={() => navigate('/fitaTempo', { state: item })}>
+                        <p style={styles.buttonText}>Fita de tempo</p>
                         <p style={styles.buttonTextPosit}>.</p>
                     </Button>
                 </div>

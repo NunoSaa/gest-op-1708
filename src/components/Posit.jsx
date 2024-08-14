@@ -89,7 +89,7 @@ function Posit() {
                 </Button>
 
                 <Button style={styles.button_POSIT}
-                    onClick={() => navigate('/positList')}>
+                    onClick={() => navigate('/fitaTempo')}>
                     <p style={styles.buttonText}>POSIT</p>
                 </Button>
             </div>

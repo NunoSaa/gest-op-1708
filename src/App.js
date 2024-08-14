@@ -9,7 +9,7 @@ import Posit from './components/Posit'
 import MateriasPerigosas from './components/MateriasPerigosas';
 import MateriasPerigosasResult from './components/MateriasPerigosasResult';
 import AdminHomePage from './components/AdminHomePage';
-import PositList from './components/PositList';
+import FitaTempo from './components/FitaTempo';
 import NovoPosit from './components/NovoPosit';
 
 const isAuthenticated = () => {
@@ -37,7 +37,7 @@ function App() {
         <Route path="/posit" element={<Posit />} />
         <Route path="/materiasPerigosas" element={<MateriasPerigosas />} />
         <Route path="/materiasPerigosasResult" element={<MateriasPerigosasResult />} />
-        <Route path="/positList" element={<PositList />} />
+        <Route path="/fitaTempo" element={<FitaTempo />} />
         <Route path="/novoPosit" element={<NovoPosit />} />
       </Routes>
     </Router>
