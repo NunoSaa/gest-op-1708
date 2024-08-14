@@ -1,24 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../css/Login.css';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ClipLoader } from 'react-spinners';
 import Button from '@mui/material/Button';
 
 function FitaTempo() {
 
+    const location = useLocation();
+    const { state } = location;
     const [timeTape, setTimeTape] = useState([]);
     let navigate = useNavigate()
     const [loading, setLoading] = useState(false);
+    const [item, setItem] = useState(state);
+
+    console.log(item);
 
     useEffect(() => {
+        setLoading(true); // Start loading
+
         const interval = setInterval(() => {
             window.location.reload();
           }, 60000); // Refresh every minute (60000 milliseconds)
 
-        const fetchData = async () => {
+        const fetchData = async (id) => {
             try {
-                const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getTimeTapeByIncidentID');
+                const response = await axios.get(`https://preventech-proxy-service.onrender.com/api/emergency/getTimeTapeByIncidentID`, {
+                    params: {
+                        id_ocorrencia: id
+                    }
+                });
                 setTimeTape(response.data);
                 console.log(response.data);
                 setLoading(false); // Data loaded, set loading to false
