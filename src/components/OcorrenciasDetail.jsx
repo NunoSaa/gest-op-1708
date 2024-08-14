@@ -81,7 +81,6 @@ function OcorrenciasDetail() {
     return (
         <div style={styles.center}>
             <div style={styles.container}>
-
                 <div>
                     <h3 style={styles.title}>{item.descClassificacao}</h3>
                 </div>
@@ -144,12 +143,12 @@ function OcorrenciasDetail() {
                 </div>
 
                 <div style={styles.row}>
-                    <Button style={styles.button_ChegadaLocal}
+                    <Button style={styles.button_SaidaLocal}
                         onClick={() => handleSetTime()}>
                         <p style={styles.buttonText}>Saída do Local</p>
                         <p style={styles.buttonText}>{currentTime}</p>
                     </Button>
-                    <Button style={styles.button_ChegadaLocal}>
+                    <Button style={styles.button_Fotos}>
                         <p style={styles.buttonText}>Fotos</p>
                         <p style={styles.buttonTextOther}>.</p>
                     </Button>
@@ -157,12 +156,12 @@ function OcorrenciasDetail() {
 
                 <div style={styles.row}>
                     <div>
-                        <Button style={styles.button_ChegadaLocal}
+                        <Button style={styles.button_ChegadaUnidade}
                             onClick={() => handleSetTime()}>
                             <p style={styles.buttonText}>Chegada à Unidade</p>
                             <p style={styles.buttonText}>{currentTime}</p>
                         </Button>
-                        <Button style={styles.button_ChegadaLocal}>
+                        <Button style={styles.button_Fotos}>
                             <p style={styles.buttonText}>Anexos</p>
                             <p style={styles.buttonTextOther}>.</p>
                         </Button>
@@ -195,7 +194,7 @@ const styles = {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100vh',
+        height: '110vh',
     },
     container: {
         marginTop: 10,
@@ -252,6 +251,36 @@ const styles = {
     button_ChegadaLocal: {
         width: "45%",
         height: 75,
+        backgroundColor: '#FF0000',
+        borderRadius: 10,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 15
+    },
+    button_SaidaLocal: {
+        width: "45%",
+        height: 75,
+        backgroundColor: '#FF8000',
+        borderRadius: 10,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 15
+    },
+    button_ChegadaUnidade: {
+        width: "45%",
+        height: 75,
+        backgroundColor: '#0BAB00',
+        borderRadius: 10,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 15
+    },
+    button_Fotos: {
+        width: "45%",
+        height: 75,
         backgroundColor: '#A0A0A0',
         borderRadius: 10,
         flex: 1,
@@ -271,7 +300,7 @@ const styles = {
     button_LocTrajeto: {
         width: "91%",
         height: "10%",
-        backgroundColor: '#A0A0A0',
+        backgroundColor: '#3399FF',
         padding: 20,
         borderRadius: 10,
         alignSelf: "center",
