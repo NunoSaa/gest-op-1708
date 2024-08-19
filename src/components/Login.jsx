@@ -44,12 +44,16 @@ function Login({ history }) {
                 // Assuming your API returns a token upon successful login
                 navigate('/homepage');
                 if (response.data.user.role === 'admin') {
-                    console.log(response.data.token);
                     localStorage.setItem('tokenAdmin', response.data.token);
+                    localStorage.setItem('username', response.data.user.username);
+                    console.log(response.data.token);
+                    console.log(response.data.user.username);
                     navigate('/adminHomepage');
                 } else if(response.data.user.role === 'user'){
-                    console.log(response.data.token);
                     localStorage.setItem('token', response.data.token);
+                    localStorage.setItem('username', response.data.user.username);
+                    console.log(response.data.token);
+                    console.log(response.data.user.username);
                     navigate('/homepage');
                 }
             }
