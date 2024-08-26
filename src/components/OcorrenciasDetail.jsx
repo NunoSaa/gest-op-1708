@@ -101,7 +101,7 @@ function OcorrenciasDetail() {
     const handleSetTimeChegadaLocal = async () => {
         const chegadaTime = new Date().toLocaleTimeString();
         setChegadaTime(chegadaTime);
-    
+
         const now = new Date();
         // Get the current date in the format "YYYY-MM-DD"
         const currentDate = formatDateDDMMYYYY(now);
@@ -137,7 +137,7 @@ function OcorrenciasDetail() {
         const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
 
         try {
-            const response = await axios.put('http://localhost:3000/api/emergency/updateIncidentDetails', {
+            const response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentDetails', {
                 id_ocorrencia: emergencies[0].id,
                 id_oco_viatura: vehicle[0].id_oco_viatura,
                 id_viatura: vehicle[0].id_viatura,
@@ -157,7 +157,7 @@ function OcorrenciasDetail() {
     const handleSetTimeChegadaUnidade = async () => {
         const chegadaTime = new Date().toLocaleTimeString();
         setChegadaTime(chegadaTime);
-
+        
         const now = new Date();
         // Get the current date in the format "YYYY-MM-DD"
         const currentDate = formatDateDDMMYYYY(now);
@@ -166,7 +166,7 @@ function OcorrenciasDetail() {
         const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
 
         try {
-            const response = await axios.put('http://localhost:3000/api/emergency/updateIncidentDetails', {
+            const response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentDetails', {
                 id_ocorrencia: emergencies[0].id,
                 id_oco_viatura: vehicle[0].id_oco_viatura,
                 id_viatura: vehicle[0].id_viatura,
