@@ -144,10 +144,6 @@ function NovoPosit() {
 
 
         <div style={styles.container}>
-            <div>
-                <h2>Selecione o Tipo de POSIT:</h2>
-
-            </div>
 
             <form onSubmit={handleSubmit}>
 
