@@ -21,7 +21,7 @@ function FitaTempo() {
         const fetchData = async (id) => {
             setLoading(true);
             try {
-                const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getTimeTapeByIncidentID', {
+                const response = await axios.get('https://preventech-proxy-service.onrender.com/api/timetape/getTimeTapeByIncidentID', {
                     params: {
                         id_ocorrencia: id
                     }
@@ -50,7 +50,7 @@ function FitaTempo() {
     }, [item]);
 
     const renderItem = (item) => (
-        <div key={item.id} style={{ ...styles.item }} onClick={() => navigate(`/positDetail/${item.id}`, { state: item })}>
+        <div key={item.id} style={{ ...styles.item }}>
 
             <div style={styles.content}>
                 <h3 style={styles.title}>{item.tipo}</h3>
@@ -65,13 +65,14 @@ function FitaTempo() {
 
     return (
         <div style={styles.container}>
-                <div style={styles.row}>
-                    <Button style={styles.button_POSIT} 
-                    onClick={() => navigate('/novoPosit')}>
-                        <p style={styles.buttonText}>Novo POSIT</p>
-                    </Button>
-                </div>
+            <div style={styles.row}>
+                <Button style={styles.button_POSIT}
+                    onClick={() => navigate('/novoPosit', { state: item })}>
+                    <p style={styles.buttonText}>Novo POSIT</p>
+                </Button>
+            </div>
 
+            <div style={styles.row}>
                 {loading ? (
                     <div style={styles.center}>
                         <ClipLoader size={50} color="#C0C0C0" />
@@ -79,9 +80,12 @@ function FitaTempo() {
                 ) : timeTape.length === 0 ? (
                     <div>Não foram encontrados Registos.</div> // Render message if emergencies array is empty
                 ) : (
-                    timeTape.map(renderItem)
+                    <div style={styles.rowItem}>
+                        {timeTape.map(renderItem)}
+                    </div>
                 )}
             </div>
+        </div>
     );
 };
 
@@ -118,6 +122,15 @@ const styles = {
         borderWidth: 1,
         borderRadius: 5,
         marginTop: 15
+    },
+    row: {
+        flexDirection: 'row',
+        marginBottom: 25,
+    },
+    rowInfo: {
+        flexDirection: 'row',
+        marginBottom: 25,
+        paddingLeft: 25
     },
     title: {
         fontSize: 24,
@@ -159,7 +172,7 @@ const styles = {
         backgroundColor: '#FF6666',
         borderRadius: 10,
         flex: 1,
-        alignItems: 'center',
+        alignItems: 'center'
     },
     buttonText: {
         color: '#000000', // Set the text color to white

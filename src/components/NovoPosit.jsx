@@ -27,11 +27,9 @@ function NovoPosit() {
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
     const [geolocation, setGeoLocation] = useState({ latitude: null, longitude: null });
     const [geolocationGMS, setGeoLocationGMS] = useState({ latitude: '', longitude: '' });
+    const [item, setItem] = useState(state);
 
-    const handleOptionChange = (event) => {
-        const value = event.target.value;
-        setSelectedOption(value);
-    };
+    const [selectedValue, setSelectedValue] = useState('');
 
     const fetchGeolocation = () => {
         if (navigator.geolocation) {
@@ -80,6 +78,68 @@ function NovoPosit() {
         return () => clearInterval(interval);
     }, [state, navigate]);
 
+    const now = new Date();
+
+    // Get the current date in the format "YYYY-MM-DD"
+    const currentDate = now.toISOString().split('T')[0];
+
+    // Get the current time in the format "HH:MM"
+    const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
+
+    // State to hold form data
+    const [formData, setFormData] = useState({
+        id_ocorrencia: item.id,
+        data: currentDate,
+        hora: currentHour,
+        tipo: '',
+        de: '',
+        para: '',
+        descricao: ''
+    });
+
+    // Handle input change
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    // Handle change
+    const handleDropdownChange = (event) => {
+        setSelectedValue(event.target.value);
+        formData.tipo = String(event.target.value)
+        console.log(event.target.value)
+    };
+
+    // Handle form submission
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const url = 'https://preventech-proxy-service.onrender.com/api/timetape/postTimeTapeByIncidentID/';
+
+        try {
+            const response = await axios.post(url, formData, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            console.log('Response:', response.data);
+            // Check if the response is successful
+        if (response.data && response.data.status === 'success') {
+            // If the response is OK, navigate back to the previous page
+            navigate(-1);  // This will take the user back to the previous page
+        } else {
+            // Handle any other cases (like errors in the response)
+            console.error('Unexpected response:', response.data);
+            alert('Aconteceu um erro ao inserir a informação. Tente mais tarde.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Aconteceu um erro ao inserir a informação. Tente mais tarde.');
+    }
+    };
+
     return (
 
 
@@ -87,137 +147,92 @@ function NovoPosit() {
             <div>
                 <h2>Selecione o Tipo de POSIT:</h2>
 
-                <Box sx={{ minWidth: 120 }}>
-                    <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">POSIT</InputLabel>
+            </div>
+
+            <form onSubmit={handleSubmit}>
+
+                <div style={styles.rowInfo}>
+                    <span style={styles.infoProp}>Data: </span>
+                    <TextField style={styles.input} value={formData.data} disabled />
+                </div>
+
+                <div style={styles.rowInfo}>
+                    <span style={styles.infoProp}>Hora: </span>
+                    <TextField style={styles.input} value={formData.hora} disabled />
+                </div>
+
+                <div style={styles.rowInfo}>
+                    <span style={styles.infoProp}>Número Ocorrência: </span>
+                    <TextField style={styles.input} value={item.id} disabled />
+                </div>
+
+                <div style={styles.rowInfo}>
+                    <span style={styles.infoProp}>Tipo: </span>
+                    <FormControl fullWidth style={styles.input}>
+                        <InputLabel id="dropdown-label" >Tipo</InputLabel>
                         <Select
-                            value={selectedOption}
-                            label="POSIT"
-                            onChange={handleOptionChange}>
-                            <MenuItem value={"incendioEstrutural"}>Incêndio Estrutural</MenuItem>
-                            <MenuItem value={"incendioFlorestal"}>Incêndio Florestal</MenuItem>
-                            <MenuItem value={"incendioRodoviario"}>Incêndio Rodoviario</MenuItem>
-                            <MenuItem value={"acidenteMateriasPerigosas"}>Acidente Matérias Perigosas</MenuItem>
+                            labelId="dropdown-label"
+                            id="dropdown"
+                            name='tipo'
+                            value={selectedValue}
+                            label="Select an Option"
+                            onChange={handleDropdownChange}
+                        >
+                            <MenuItem value={'comunicacao'}>Comunicação</MenuItem>
+                            <MenuItem value={'posit'}>POSIT</MenuItem>
                         </Select>
                     </FormControl>
-                </Box>
+                </div>
 
-                {selectedOption && (
-                    <div>
-                        {selectedOption === 'incendioEstrutural' && (
+                <div style={styles.rowInfo}>
+                    <span style={styles.infoProp}>De:</span>
+                    <TextField
+                        style={styles.input}
+                        type="text"
+                        name="de"
+                        value={formData.de}
+                        onChange={handleChange}
+                        variant="outlined" 
+                        fullWidth 
+                    />
+                </div>
 
-                            <div>
-                                <h3>Incêndio Estrutural</h3>
-                                <a><b>Hora: </b> {currentTime}</a>
+                <div style={styles.rowInfo}>
+                    <span style={styles.infoProp}>Para: </span>
+                    <TextField
+                        style={styles.input}
+                        type="text"
+                        name="para"
+                        value={formData.para}
+                        onChange={handleChange}
+                        variant="outlined" 
+                        fullWidth 
+                    />
+                </div>
 
-                                <Divider style={styles.divider} />
-                                <h1>ESTOU: </h1>
+                <div style={styles.rowInfo}>
+                    <span style={styles.infoProp}>Descrição: </span>
+                    <TextField
+                        style={styles.input}
+                        type="text"
+                        name="descricao"
+                        value={formData.descricao}
+                        onChange={handleChange}
+                        multiline
+                        rows={10} 
+                        variant="outlined" 
+                        fullWidth 
+                    />
+                </div>
 
-                                <div style={styles.rowInfo}>
-                                    <span style={styles.infoProp}>Estou em: </span>
-                                    <TextField style={styles.input} label="Estou em..." />
-                                </div>
-                                <div style={styles.rowInfo}>
-                                    <p><b>Latitude GMS: </b>{geolocationGMS.latitude}</p>
-                                    <p><b>Longitude GMS: </b>{geolocationGMS.longitude}</p>
-                                </div>
-                                <div style={styles.rowInfo}>
-                                    <span style={styles.infoProp}>Freguesia / Municipio: </span>
-                                    <TextField style={styles.input} label="Freguesia / Municipio..." />
-                                </div>
-
-                                <Divider style={styles.divider} />
-                                <h1>VEJO: </h1>
-
-                                <div style={styles.rowInfo}>
-                                    <span style={styles.infoProp}>PONTOS DE SITUAÇÃO: </span>
-                                    <div style={styles.rowInfo}>
-                                        <div>
-                                            <FormControlLabel
-                                                label="Curso (Ativo)"
-                                                control={
-                                                    <Checkbox name="curso" />
-                                                }
-                                            />
-                                        </div>
-                                        <div>
-                                            <FormControlLabel
-                                                label="Resolução (Dominado)"
-                                                control={
-                                                    <Checkbox name="resolucao" />
-                                                }
-                                            />
-                                        </div>
-                                        <div>
-                                            <FormControlLabel
-                                                label="Conclusao (Rescaldo)"
-                                                control={
-                                                    <Checkbox name="conclusao" />
-                                                }
-                                            />
-                                        </div><div>
-                                            <FormControlLabel
-                                                label="Finalizado (Extinto)"
-                                                control={
-                                                    <Checkbox name="finalizado" />
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div style={styles.rowInfo}>
-                                    <span style={styles.infoProp}>Com: </span>
-                                    <div style={styles.rowInfo}>
-                                        <div>
-                                            <FormControlLabel
-                                                label="Fogo à vista"
-                                                control={
-                                                    <Checkbox name="fogo_vista" />
-                                                }
-                                            />
-                                        </div>
-                                        <div>
-                                            <FormControlLabel
-                                                label="Sem fogo à vista"
-                                                control={
-                                                    <Checkbox name="sem_fogo_vista" />
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div style={styles.center}>
-                                    <div style={styles.row}>
-                                        <Button style={styles.button_SAVE}>
-                                            <p style={styles.buttonText}>Guardar</p>
-                                        </Button>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                        {selectedOption === 'incendioFlorestal' && (
-                            <div>
-                                <h3>Incêndio Florestal</h3>
-                            </div>
-                        )}
-                        {selectedOption === 'incendioRodoviario' && (
-                            <div>
-                                <h3>Incêndio Rodoviario</h3>
-                            </div>
-                        )}
-                        {selectedOption === 'acidenteMateriasPerigosas' && (
-                            <div>
-                                <h3>Acidente Matérias Perigosas</h3>
-                            </div>
-                        )}
-                    </div>
-                )}
-            </div>
+                <div style={styles.rowButton}>
+                    <Button type="submit" style={styles.button_SAVE}>
+                        <p style={styles.buttonText}>Guardar</p>
+                    </Button>
+                </div>
+            </form>
         </div>
     );
-
 }
 
 const styles = {
@@ -257,6 +272,11 @@ const styles = {
     title: {
         fontSize: 24,
         paddingBottom: 5,
+    },
+    rowButton: {
+        display: 'flex',
+        justifyContent: 'center',
+        marginTop: 275,
     },
     description: {
         fontSize: 18,
@@ -350,14 +370,12 @@ const styles = {
         marginRight: 20,
     },
     button_SAVE: {
-        width: 250,
+        width: "100%",
         height: 75,
         backgroundColor: '#99FF99',
         borderRadius: 10,
-        //flex: 1,
-        //justifyContent: 'center',
-        //alignItems: 'center',
-        marginLeft: 15
+        flex: 1,
+        alignItems: 'center',
     },
     buttonText: {
         color: '#000000', // Set the text color to white

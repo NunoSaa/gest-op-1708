@@ -3,19 +3,26 @@ import axios from 'axios';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useNavigate, useLocation } from "react-router-dom";
-
-
+import { ClipLoader } from 'react-spinners';
 
 function OcorrenciasDetail() {
-
     const navigate = useNavigate();
     const location = useLocation();
     const { state } = location;
 
+    const [loading, setLoading] = useState(true);
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
     const [isTimerRunning, setIsTimerRunning] = useState(true);
     const [inputValue, setInputValue] = useState('');
     const [item, setItem] = useState(state);
+    const [vehicle, setVehicle] = useState([]);
+    const [error, setError] = useState(null);
+    const [isChegadaSet, setIsChegadaSet] = useState(false);
+    const [chegadaTime, setChegadaTime] = useState('');
+    const [emergencies, setEmergencies] = useState([]);
+    const [lastVehicleUpdate, setLastVehicleUpdate] = useState(Date.now());
+
+    const descricao = localStorage.getItem('username');
 
     useEffect(() => {
         let intervalId;
@@ -31,32 +38,138 @@ function OcorrenciasDetail() {
         if (!state) return;
 
         const refreshItemData = () => {
-            // Simulate fetching new data
             const refreshedItem = { ...state, timestamp: new Date().toISOString() };
             setItem(refreshedItem);
             console.log('Item refreshed:', refreshedItem);
         };
 
-        refreshItemData(); // Initial refresh
+        refreshItemData();
 
-        // Set up an interval to refresh items every minute (60000 ms)
         const intervalId = setInterval(refreshItemData, 60000);
 
-        // Cleanup interval on component unmount
         return () => clearInterval(intervalId);
     }, [state]);
 
-    const handleSetTime = () => {
-        console.log(currentTime);
-        setIsTimerRunning(false); // Optional: stop the timer
+    useEffect(() => {
+        const fetchEmergencies = async () => {
+            try {
+                const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getIncidentByID?id_ocorrencia=' + item.id);
+                if (response.data) {
+                    setEmergencies(response.data);
+                    console.log('Fetched Emergencies:', response.data);
+                    setLoading(false);
+
+                    const vehicles = emergencies[0].viaturas || [];
+                    const filteredVehicles = vehicles.filter(vehicle => vehicle.descricao === descricao);
+
+                    console.log('Filtered Emergencies:', emergencies[0].viaturas);
+                    
+                    const mappedVehicles = filteredVehicles.map(item => ({
+                        id_viatura: item.id_viatura,
+                        id_oco_viatura: item.id_oco_viatura,
+                        descricao: item.descricao,
+                        matricula: item.matricula,
+                        marca: item.marca,
+                        modelo: item.modelo,
+                        km_inicio: item.km_inicio,
+                        km_fim: item.km_fim,
+                        data_saida: item.data_saida,
+                        hora_saida: item.hora_saida,
+                        data_chegada_to: item.data_chegada_to,
+                        hora_chegada_to: item.hora_chegada_to,
+                        data_saida_to: item.data_saida_to,
+                        hora_saida_to: item.hora_saida_to,
+                        data_chegada: item.data_chegada,
+                        hora_chegada: item.hora_chegada
+                    }));
+
+                    setVehicle(mappedVehicles);
+                    console.log('Mapped Vehicles:', mappedVehicles);
+
+                } else {
+                    console.log('No emergencies data');
+                }
+            } catch (error) {
+                console.error('Error fetching emergencies:', error);
+                setLoading(false);
+            }
+        };
+
+        fetchEmergencies(); // Initial fetch
+
+        const intervalId = setInterval(fetchEmergencies, 60000); // Fetch every minute
+
+        return () => clearInterval(intervalId); // Cleanup on unmount
+    }, [item.id]); // Depend on `item.id` to refetch data if `item` changes
+
+    useEffect(() => {
+        if (!emergencies || !emergencies.viaturas) return;
+
+        const now = Date.now();
+        const timeSinceLastUpdate = now - lastVehicleUpdate;
+
+        if (timeSinceLastUpdate >= 60000) {
+            const vehicles = emergencies.viaturas || [];
+            const filteredVehicles = vehicles.filter(vehicle => vehicle.descricao === descricao);
+
+            const mappedVehicles = filteredVehicles.map(item => ({
+                id_viatura: item.id_viatura,
+                id_oco_viatura: item.id_oco_viatura,
+                descricao: item.descricao,
+                matricula: item.matricula,
+                marca: item.marca,
+                modelo: item.modelo,
+                km_inicio: item.km_inicio,
+                km_fim: item.km_fim,
+                data_saida: item.data_saida,
+                hora_saida: item.hora_saida,
+                data_chegada_to: item.data_chegada_to,
+                hora_chegada_to: item.hora_chegada_to,
+                data_saida_to: item.data_saida_to,
+                hora_saida_to: item.hora_saida_to,
+                data_chegada: item.data_chegada,
+                hora_chegada: item.hora_chegada
+            }));
+
+            setVehicle(mappedVehicles);
+            setLastVehicleUpdate(now);
+            console.log('Filtered Vehicles:', mappedVehicles);
+        }
+    }, [emergencies, descricao, lastVehicleUpdate]);
+
+    const handleSetTimeChegadaLocal = async () => {
+        const chegadaTime = new Date().toLocaleTimeString();
+        setChegadaTime(chegadaTime);
+
+        try {
+            const response = await axios.post('http://localhost:3000/api/emergency/updateIncidentDetails', {
+                id_ocorrencia: emergencies[0].id,
+                vehicleId: vehicle.id,
+                chegadaTime: chegadaTime
+            });
+            setIsChegadaSet(true);
+            console.log('Chegada time updated:', response.data);
+        } catch (error) {
+            console.error('Error updating chegada time:', error);
+            setError('Error updating chegada time');
+        }
     };
 
-    const handleInputChange = (e) => {
-        setInputValue(e.target.value);
-    };
+    const handleSetTimeSaidaLocal = async () => {
+        const chegadaTime = new Date().toLocaleTimeString();
+        setCurrentTime(chegadaTime);
+        setIsTimerRunning(false);
 
-    const handleSubmit = () => {
-        console.log(inputValue); // Handle submit logic
+        try {
+            const response = await axios.post('https://preventech-proxy-service.onrender.com/api/vehicles/setChegadaLocal', {
+                vehicleId: item.vehicleId,
+                chegadaTime: chegadaTime
+            });
+            console.log('Chegada time updated:', response.data);
+        } catch (error) {
+            console.error('Error updating chegada time:', error);
+            setError('Error updating chegada time');
+        }
     };
 
     const openMaps = () => {
@@ -75,23 +188,22 @@ function OcorrenciasDetail() {
     }
 
     const array = item.viaturas[0] || [];
-  const viaturas = array.join(', ');
+    const viaturas = array.join(', ');
 
-
-    return (
+    const renderItem = (item) => (
         <div style={styles.center}>
             <div style={styles.container}>
                 <div>
-                    <h3 style={styles.title}>{item.descClassificacao}</h3>
+                    <h3 style={styles.title}>{item.desc_classificacao}</h3>
                 </div>
 
                 <div style={styles.rowInfo}>
                     <span style={styles.infoProp}>Data: </span>
-                    <span style={styles.info}>{item.dataHoraAlerta}</span>
+                    <span style={styles.info}>{item.data_hora_alerta}</span>
                 </div>
                 <div style={styles.rowInfo}>
                     <span style={styles.infoProp}>Classifcação: </span>
-                    <span style={styles.info}>{item.descClassificacao}</span>
+                    <span style={styles.info}>{item.desc_classificacao}</span>
                 </div>
                 <div style={styles.rowInfo}>
                     <span style={styles.infoProp}>Estado: </span>
@@ -103,7 +215,7 @@ function OcorrenciasDetail() {
                 </div>
                 <div style={styles.rowInfo}>
                     <span style={styles.infoProp}>Localidade: </span>
-                    <span style={styles.info}>{item.localidadeMorada}</span>
+                    <span style={styles.info}>{item.localidade_morada}</span>
                 </div>
                 <div style={styles.rowInfo}>
                     <span style={styles.infoProp}>Latitude: </span>
@@ -113,7 +225,7 @@ function OcorrenciasDetail() {
                 </div>
                 <div style={styles.rowInfo}>
                     <span style={styles.infoProp}>Número de elementos: </span>
-                    <span style={styles.info}>{item.numeroBombeiros}</span>
+                    <span style={styles.info}>{item.n_bombeiros}</span>
                 </div>
                 <div style={styles.rowInfo}>
                     <span style={styles.infoProp}>Veiculos: </span>
@@ -130,9 +242,10 @@ function OcorrenciasDetail() {
 
                 <div style={styles.row}>
                     <Button style={styles.button_ChegadaLocal}
-                        onClick={() => handleSetTime()}>
+                        onClick={() => handleSetTimeChegadaLocal()}
+                        disabled={isChegadaSet}>
                         <p style={styles.buttonText}>Chegada ao Local</p>
-                        <p style={styles.buttonText}>{currentTime}</p>
+                        <p style={styles.buttonText}>{isChegadaSet ? chegadaTime : currentTime}</p>
                     </Button>
 
                     <Button style={styles.button_POSIT}
@@ -144,7 +257,7 @@ function OcorrenciasDetail() {
 
                 <div style={styles.row}>
                     <Button style={styles.button_SaidaLocal}
-                        onClick={() => handleSetTime()}>
+                        onClick={() => handleSetTimeSaidaLocal()}>
                         <p style={styles.buttonText}>Saída do Local</p>
                         <p style={styles.buttonText}>{currentTime}</p>
                     </Button>
@@ -157,7 +270,7 @@ function OcorrenciasDetail() {
                 <div style={styles.row}>
                     <div>
                         <Button style={styles.button_ChegadaUnidade}
-                            onClick={() => handleSetTime()}>
+                            onClick={() => handleSetTimeSaidaLocal()}>
                             <p style={styles.buttonText}>Chegada à Unidade</p>
                             <p style={styles.buttonText}>{currentTime}</p>
                         </Button>
@@ -167,24 +280,21 @@ function OcorrenciasDetail() {
                         </Button>
                     </div>
                 </div>
-{/*
-                <div style={styles.row}>
-                    <ul style={styles.list}>
-                        {item.viaturas[0].map((viatura, index) => (
-                            <li key={index} style={styles.listItem}>
-                                <div style={styles.viatura}><b>{viatura}</b></div>
-                                <TextField style={styles.input} label="Kms" />
-                                <Button
-                                    style={styles.button_Inserir}
-                                    onClick={() => handleSubmit(index)}>
-                                    <p style={styles.buttonText}>Inserir</p>
-                                </Button>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-*/}
             </div>
+        </div>
+    );
+
+    return (
+        <div style={styles.container}>
+            {loading ? (
+                <div style={styles.center}>
+                    <ClipLoader size={50} color="#C0C0C0" />
+                    A carregar...</div> // You can replace this with a loading icon
+            ) : emergencies.length === 0 ? (
+                <div>Não foram encontradas ocorrências.</div> // Render message if emergencies array is empty
+            ) : (
+                emergencies.map(renderItem)
+            )}
         </div>
     );
 };
@@ -340,7 +450,7 @@ const styles = {
         paddingLeft: 5,
         textAlign: "center",
         color: "grey",
-        marginRight: 20 ,
+        marginRight: 20,
     },
     infoViaturas: {
         fontSize: 16,
@@ -366,18 +476,18 @@ const styles = {
         margin: 0,
         width: '100%',
         // other styles as needed
-      },
-      listItem: {
+    },
+    listItem: {
         display: 'flex',
         alignItems: 'center',
         marginBottom: '25px',
         paddingLeft: 25,
         // other styles as needed
-      },
-      viatura: {
+    },
+    viatura: {
         marginRight: '10px',
         // other styles as needed
-      },
+    },
 };
 
 export default OcorrenciasDetail;
