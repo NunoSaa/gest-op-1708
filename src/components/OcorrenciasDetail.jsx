@@ -17,7 +17,9 @@ function OcorrenciasDetail() {
     const [item, setItem] = useState(state);
     const [vehicle, setVehicle] = useState([]);
     const [error, setError] = useState(null);
-    const [isChegadaSet, setIsChegadaSet] = useState(false);
+    const [isChegadaLocalSet, setIsChegadaLocalSet] = useState(false);
+    const [isSaidaLocalSet, setIsSaidaLocalSet] = useState(false);
+    const [isChegadaUnidadeSet, setIsChegadaUnidadeSet] = useState(false);
     const [chegadaTime, setChegadaTime] = useState('');
     const [emergencies, setEmergencies] = useState([]);
     const [lastVehicleUpdate, setLastVehicleUpdate] = useState(Date.now());
@@ -59,35 +61,21 @@ function OcorrenciasDetail() {
                     console.log('Fetched Emergencies:', response.data);
                     setLoading(false);
 
-                    const vehicles = emergencies[0].viaturas || [];
+                    const vehicles = response.data[0].viaturas || [];
+                    // Filter vehicles based on the description
                     const filteredVehicles = vehicles.filter(vehicle => vehicle.descricao === descricao);
 
-                    console.log('Filtered Emergencies:', emergencies[0].viaturas);
-                    
-                    const mappedVehicles = filteredVehicles.map(item => ({
-                        id_viatura: item.id_viatura,
-                        id_oco_viatura: item.id_oco_viatura,
-                        descricao: item.descricao,
-                        matricula: item.matricula,
-                        marca: item.marca,
-                        modelo: item.modelo,
-                        km_inicio: item.km_inicio,
-                        km_fim: item.km_fim,
-                        data_saida: item.data_saida,
-                        hora_saida: item.hora_saida,
-                        data_chegada_to: item.data_chegada_to,
-                        hora_chegada_to: item.hora_chegada_to,
-                        data_saida_to: item.data_saida_to,
-                        hora_saida_to: item.hora_saida_to,
-                        data_chegada: item.data_chegada,
-                        hora_chegada: item.hora_chegada
-                    }));
+                    // Log filtered vehicles for debugging
+                    console.log('Filtered Vehicles:', filteredVehicles);
+                    // Update the state with the mapped vehicles
+                    setVehicle(filteredVehicles);
+                    console.log("vehicle object", vehicle)
 
-                    setVehicle(mappedVehicles);
-                    console.log('Mapped Vehicles:', mappedVehicles);
-
+                    // Optionally set loading state to false
+                    setLoading(false);
                 } else {
                     console.log('No emergencies data');
+                    setLoading(false);
                 }
             } catch (error) {
                 console.error('Error fetching emergencies:', error);
@@ -102,52 +90,34 @@ function OcorrenciasDetail() {
         return () => clearInterval(intervalId); // Cleanup on unmount
     }, [item.id]); // Depend on `item.id` to refetch data if `item` changes
 
-    useEffect(() => {
-        if (!emergencies || !emergencies.viaturas) return;
+    const formatDateDDMMYYYY = (date) => {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+        const year = date.getFullYear();
 
-        const now = Date.now();
-        const timeSinceLastUpdate = now - lastVehicleUpdate;
-
-        if (timeSinceLastUpdate >= 60000) {
-            const vehicles = emergencies.viaturas || [];
-            const filteredVehicles = vehicles.filter(vehicle => vehicle.descricao === descricao);
-
-            const mappedVehicles = filteredVehicles.map(item => ({
-                id_viatura: item.id_viatura,
-                id_oco_viatura: item.id_oco_viatura,
-                descricao: item.descricao,
-                matricula: item.matricula,
-                marca: item.marca,
-                modelo: item.modelo,
-                km_inicio: item.km_inicio,
-                km_fim: item.km_fim,
-                data_saida: item.data_saida,
-                hora_saida: item.hora_saida,
-                data_chegada_to: item.data_chegada_to,
-                hora_chegada_to: item.hora_chegada_to,
-                data_saida_to: item.data_saida_to,
-                hora_saida_to: item.hora_saida_to,
-                data_chegada: item.data_chegada,
-                hora_chegada: item.hora_chegada
-            }));
-
-            setVehicle(mappedVehicles);
-            setLastVehicleUpdate(now);
-            console.log('Filtered Vehicles:', mappedVehicles);
-        }
-    }, [emergencies, descricao, lastVehicleUpdate]);
+        return `${day}-${month}-${year}`;
+    };
 
     const handleSetTimeChegadaLocal = async () => {
         const chegadaTime = new Date().toLocaleTimeString();
         setChegadaTime(chegadaTime);
+    
+        const now = new Date();
+        // Get the current date in the format "YYYY-MM-DD"
+        const currentDate = formatDateDDMMYYYY(now);
+
+        // Get the current time in the format "HH:MM"
+        const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
 
         try {
-            const response = await axios.post('http://localhost:3000/api/emergency/updateIncidentDetails', {
+            const response = await axios.put('http://localhost:3000/api/emergency/updateIncidentDetails', {
                 id_ocorrencia: emergencies[0].id,
-                vehicleId: vehicle.id,
-                chegadaTime: chegadaTime
+                id_oco_viatura: vehicle[0].id_oco_viatura,
+                id_viatura: vehicle[0].id_viatura,
+                data_chegada_to: currentDate,
+                hora_chegada_to: currentHour
             });
-            setIsChegadaSet(true);
+            setIsChegadaLocalSet(true);
             console.log('Chegada time updated:', response.data);
         } catch (error) {
             console.error('Error updating chegada time:', error);
@@ -157,14 +127,57 @@ function OcorrenciasDetail() {
 
     const handleSetTimeSaidaLocal = async () => {
         const chegadaTime = new Date().toLocaleTimeString();
-        setCurrentTime(chegadaTime);
-        setIsTimerRunning(false);
+        setChegadaTime(chegadaTime);
+
+        const now = new Date();
+        // Get the current date in the format "YYYY-MM-DD"
+        const currentDate = formatDateDDMMYYYY(now);
+
+        // Get the current time in the format "HH:MM"
+        const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
 
         try {
-            const response = await axios.post('https://preventech-proxy-service.onrender.com/api/vehicles/setChegadaLocal', {
-                vehicleId: item.vehicleId,
-                chegadaTime: chegadaTime
+            const response = await axios.put('http://localhost:3000/api/emergency/updateIncidentDetails', {
+                id_ocorrencia: emergencies[0].id,
+                id_oco_viatura: vehicle[0].id_oco_viatura,
+                id_viatura: vehicle[0].id_viatura,
+                data_chegada_to: vehicle[0].data_chegada_to,
+                hora_chegada_to: vehicle[0].hora_chegada_to,
+                data_saida_to: currentDate,
+                hora_saida_to: currentHour
             });
+            setIsSaidaLocalSet(true);
+            console.log('Chegada time updated:', response.data);
+        } catch (error) {
+            console.error('Error updating chegada time:', error);
+            setError('Error updating chegada time');
+        }
+    };
+
+    const handleSetTimeChegadaUnidade = async () => {
+        const chegadaTime = new Date().toLocaleTimeString();
+        setChegadaTime(chegadaTime);
+
+        const now = new Date();
+        // Get the current date in the format "YYYY-MM-DD"
+        const currentDate = formatDateDDMMYYYY(now);
+
+        // Get the current time in the format "HH:MM"
+        const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
+
+        try {
+            const response = await axios.put('http://localhost:3000/api/emergency/updateIncidentDetails', {
+                id_ocorrencia: emergencies[0].id,
+                id_oco_viatura: vehicle[0].id_oco_viatura,
+                id_viatura: vehicle[0].id_viatura,
+                data_chegada_to: vehicle[0].data_chegada_to,
+                hora_chegada_to: vehicle[0].hora_chegada_to,
+                data_saida_to: vehicle[0].data_saida_to,
+                hora_saida_to: vehicle[0].hora_saida_to,
+                data_chegada: currentDate,
+                hora_chegada: currentHour
+            });
+            setIsChegadaUnidadeSet(true);
             console.log('Chegada time updated:', response.data);
         } catch (error) {
             console.error('Error updating chegada time:', error);
@@ -243,9 +256,9 @@ function OcorrenciasDetail() {
                 <div style={styles.row}>
                     <Button style={styles.button_ChegadaLocal}
                         onClick={() => handleSetTimeChegadaLocal()}
-                        disabled={isChegadaSet}>
+                        disabled={isChegadaLocalSet}>
                         <p style={styles.buttonText}>Chegada ao Local</p>
-                        <p style={styles.buttonText}>{isChegadaSet ? chegadaTime : currentTime}</p>
+                        <p style={styles.buttonText}>{isChegadaLocalSet ? chegadaTime : currentTime}</p>
                     </Button>
 
                     <Button style={styles.button_POSIT}
@@ -257,9 +270,10 @@ function OcorrenciasDetail() {
 
                 <div style={styles.row}>
                     <Button style={styles.button_SaidaLocal}
-                        onClick={() => handleSetTimeSaidaLocal()}>
+                        onClick={() => handleSetTimeSaidaLocal()}
+                        disabled={isSaidaLocalSet}>
                         <p style={styles.buttonText}>Saída do Local</p>
-                        <p style={styles.buttonText}>{currentTime}</p>
+                        <p style={styles.buttonText}>{isSaidaLocalSet ? chegadaTime : currentTime}</p>
                     </Button>
                     <Button style={styles.button_Fotos}>
                         <p style={styles.buttonText}>Fotos</p>
@@ -270,10 +284,11 @@ function OcorrenciasDetail() {
                 <div style={styles.row}>
                     <div>
                         <Button style={styles.button_ChegadaUnidade}
-                            onClick={() => handleSetTimeSaidaLocal()}>
+                            onClick={() => handleSetTimeChegadaUnidade()}
+                            disabled={isChegadaUnidadeSet}>
                             <p style={styles.buttonText}>Chegada à Unidade</p>
-                            <p style={styles.buttonText}>{currentTime}</p>
-                        </Button>
+                            <p style={styles.buttonText}>{isChegadaUnidadeSet ? chegadaTime : currentTime}</p>
+                            </Button>
                         <Button style={styles.button_Fotos}>
                             <p style={styles.buttonText}>Anexos</p>
                             <p style={styles.buttonTextOther}>.</p>
