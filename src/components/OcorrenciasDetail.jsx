@@ -20,7 +20,9 @@ function OcorrenciasDetail() {
     const [isChegadaLocalSet, setIsChegadaLocalSet] = useState(false);
     const [isSaidaLocalSet, setIsSaidaLocalSet] = useState(false);
     const [isChegadaUnidadeSet, setIsChegadaUnidadeSet] = useState(false);
-    const [chegadaTime, setChegadaTime] = useState('');
+    const [chegadaLocalTime, setChegadaLocalTime] = useState('');
+    const [saidaLocalTime, setSaidaLocalTime] = useState('');
+    const [chegadaUnidadeTime, setChegadaUnidadeTime] = useState('');
     const [emergencies, setEmergencies] = useState([]);
     const [lastVehicleUpdate, setLastVehicleUpdate] = useState(Date.now());
 
@@ -100,7 +102,7 @@ function OcorrenciasDetail() {
 
     const handleSetTimeChegadaLocal = async () => {
         const chegadaTime = new Date().toLocaleTimeString();
-        setChegadaTime(chegadaTime);
+        setChegadaLocalTime(chegadaTime);
 
         const now = new Date();
         // Get the current date in the format "YYYY-MM-DD"
@@ -127,7 +129,7 @@ function OcorrenciasDetail() {
 
     const handleSetTimeSaidaLocal = async () => {
         const chegadaTime = new Date().toLocaleTimeString();
-        setChegadaTime(chegadaTime);
+        setSaidaLocalTime(chegadaTime);
 
         const now = new Date();
         // Get the current date in the format "YYYY-MM-DD"
@@ -156,8 +158,8 @@ function OcorrenciasDetail() {
 
     const handleSetTimeChegadaUnidade = async () => {
         const chegadaTime = new Date().toLocaleTimeString();
-        setChegadaTime(chegadaTime);
-        
+        setChegadaUnidadeTime(chegadaTime);
+
         const now = new Date();
         // Get the current date in the format "YYYY-MM-DD"
         const currentDate = formatDateDDMMYYYY(now);
@@ -258,7 +260,7 @@ function OcorrenciasDetail() {
                         onClick={() => handleSetTimeChegadaLocal()}
                         disabled={isChegadaLocalSet}>
                         <p style={styles.buttonText}>Chegada ao Local</p>
-                        <p style={styles.buttonText}>{isChegadaLocalSet ? chegadaTime : currentTime}</p>
+                        <p style={styles.buttonText}>{isChegadaLocalSet ? chegadaLocalTime : currentTime}</p>
                     </Button>
 
                     <Button style={styles.button_POSIT}
@@ -273,7 +275,7 @@ function OcorrenciasDetail() {
                         onClick={() => handleSetTimeSaidaLocal()}
                         disabled={isSaidaLocalSet}>
                         <p style={styles.buttonText}>Saída do Local</p>
-                        <p style={styles.buttonText}>{isSaidaLocalSet ? chegadaTime : currentTime}</p>
+                        <p style={styles.buttonText}>{isSaidaLocalSet ? saidaLocalTime : currentTime}</p>
                     </Button>
                     <Button style={styles.button_Fotos}>
                         <p style={styles.buttonText}>Fotos</p>
@@ -287,7 +289,7 @@ function OcorrenciasDetail() {
                             onClick={() => handleSetTimeChegadaUnidade()}
                             disabled={isChegadaUnidadeSet}>
                             <p style={styles.buttonText}>Chegada à Unidade</p>
-                            <p style={styles.buttonText}>{isChegadaUnidadeSet ? chegadaTime : currentTime}</p>
+                            <p style={styles.buttonText}>{isChegadaUnidadeSet ? chegadaUnidadeTime : currentTime}</p>
                             </Button>
                         <Button style={styles.button_Fotos}>
                             <p style={styles.buttonText}>Anexos</p>
