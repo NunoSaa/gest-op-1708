@@ -28,6 +28,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/login" element={<Login />} /> 
         <Route path="/" element={isAuthenticated() ? <Navigate to="/homepage" /> : <Login />} />
         <Route path="/homepage" element={<HomePage />} />
         <Route path="/adminHomePage" element={isAuthenticatedAdmin() ? <AdminHomePage/> : <Login/>}></Route>

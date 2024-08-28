@@ -236,7 +236,7 @@ const styles = {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100vh',
+        height: '100%',
     },
     container: {
         marginLeft: 25,
@@ -246,7 +246,10 @@ const styles = {
         paddingTop: 25,
         paddingBottom: 25,
         paddingLeft: 25,
-        paddingRight: 25
+        paddingRight: 25,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'stretch', // Ensure children take full width
     },
     content: {
         flex: 1,
@@ -332,14 +335,14 @@ const styles = {
     },
     input: {
         height: 50,
-        width: "95%",
+        width: '100%', // Full width of parent container
         borderColor: 'gray',
         borderWidth: 1,
         borderRadius: 10,
         paddingHorizontal: 10,
-        marginLeft: 15,
-        marginRight: 15,
-        paddingTop: 15,
+        marginLeft: 0, // Align to the right edge
+        marginRight: 15, // Consistent margin
+        marginTop: 15
     },
     row: {
         flexDirection: 'row',
@@ -348,14 +351,15 @@ const styles = {
     rowInfo: {
         flexDirection: 'row',
         marginBottom: 25,
-        paddingLeft: 25
+        paddingLeft: 0
     },
     infoProp: {
         fontSize: 18,
         paddingBottom: 10,
-        textAlign: "center",
+        textAlign: "right", // Align text to the right
         fontWeight: "bold",
-        marginRight: 5,
+        marginRight: 15, // Consistent margin to align with input fields
+        width: 200, // Set a width to ensure consistent alignment
     },
     info: {
         fontSize: 16,
@@ -370,11 +374,13 @@ const styles = {
         height: 75,
         backgroundColor: '#99FF99',
         borderRadius: 10,
-        flex: 1,
+        display: 'flex',
         alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 25, // Adjusted for consistent spacing
     },
     buttonText: {
-        color: '#000000', // Set the text color to white
+        color: '#000000',
         fontSize: 16,
         fontWeight: 'bold',
     },

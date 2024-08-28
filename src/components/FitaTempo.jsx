@@ -53,7 +53,12 @@ function FitaTempo() {
         <div key={item.id} style={{ ...styles.item }}>
 
             <div style={styles.content}>
-                <h3 style={styles.title}>{item.tipo}</h3>
+                <h3 style={styles.title}>
+                    {item.tipo === 'posit' ? 'POSIT' :
+                        item.tipo === 'comunicacao' ? 'Comunicação' :
+                            item.tipo === '' ? '' :
+                                item.tipo}
+                </h3>
                 <p style={styles.description}>{item.autor}</p>
                 <p style={styles.description}>{item.descricao}</p>
             </div>

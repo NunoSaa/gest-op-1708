@@ -35,20 +35,26 @@ function Ocorrencias() {
         
     }, []);
 
-    const renderItem = (item) => (
-        <div key={item.id} style={{ ...styles.item, backgroundColor: item.corEstado }} onClick={() => navigate(`/ocorrenciasDetail/${item.id}`, { state: item })}>
-
-            <div style={styles.content}>
-                <h3 style={styles.title}>{item.morada}, {item.localidadeMorada}</h3>
-                <p style={styles.description}>{item.descClassificacao}</p>
-                <p style={styles.vehicle}>{item.viaturas.join(', ')}</p>
+    const renderItem = (item) => {
+        
+        const array = item.viaturas[0] || [];
+        const uniqueViaturas = [...new Set(array)];
+        const viaturas = uniqueViaturas.join(', ');
+    
+        return (
+            <div key={item.id} style={{ ...styles.item, backgroundColor: item.corEstado }} onClick={() => navigate(`/ocorrenciasDetail/${item.id}`, { state: item })}>
+                <div style={styles.content}>
+                    <h3 style={styles.title}>{item.morada}, {item.localidadeMorada}</h3>
+                    <p style={styles.description}>{item.descClassificacao}</p>
+                    <p style={styles.vehicle}>{viaturas}</p> {/* Correctly using the viaturas variable */}
+                </div>
+                <div style={styles.rightContainer}>
+                    <span style={styles.estado}>{item.estado}</span>
+                    <span style={styles.timestamp}>{item.horaAlerta}</span>
+                </div>
             </div>
-            <div style={styles.rightContainer}>
-                <span style={styles.estado}>{item.estado}</span>
-                <span style={styles.timestamp}>{item.horaAlerta}</span>
-            </div>
-        </div>
-    );
+        );
+    };
 
     return (
         <div style={styles.container}>

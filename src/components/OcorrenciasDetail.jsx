@@ -54,36 +54,37 @@ function OcorrenciasDetail() {
         return () => clearInterval(intervalId);
     }, [state]);
 
-    useEffect(() => {
-        const fetchEmergencies = async () => {
-            try {
-                const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getIncidentByID?id_ocorrencia=' + item.id);
-                if (response.data) {
-                    setEmergencies(response.data);
-                    console.log('Fetched Emergencies:', response.data);
-                    setLoading(false);
+    const fetchEmergencies = async () => {
+        try {
+            const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getIncidentByID?id_ocorrencia=' + item.id);
+            if (response.data) {
+                setEmergencies(response.data);
+                console.log('Fetched Emergencies:', response.data);
+                setLoading(false);
 
-                    const vehicles = response.data[0].viaturas || [];
-                    // Filter vehicles based on the description
-                    const filteredVehicles = vehicles.filter(vehicle => vehicle.descricao === descricao);
+                const vehicles = response.data[0].viaturas || [];
+                // Filter vehicles based on the description
+                const filteredVehicles = vehicles.filter(vehicle => vehicle.descricao === descricao);
 
-                    // Log filtered vehicles for debugging
-                    console.log('Filtered Vehicles:', filteredVehicles);
-                    // Update the state with the mapped vehicles
-                    setVehicle(filteredVehicles);
-                    console.log("vehicle object", vehicle)
+                // Log filtered vehicles for debugging
+                console.log('Filtered Vehicles:', filteredVehicles);
+                // Update the state with the mapped vehicles
+                setVehicle(filteredVehicles);
+                console.log("vehicle object", vehicle)
 
-                    // Optionally set loading state to false
-                    setLoading(false);
-                } else {
-                    console.log('No emergencies data');
-                    setLoading(false);
-                }
-            } catch (error) {
-                console.error('Error fetching emergencies:', error);
+                // Optionally set loading state to false
+                setLoading(false);
+            } else {
+                console.log('No emergencies data');
                 setLoading(false);
             }
-        };
+        } catch (error) {
+            console.error('Error fetching emergencies:', error);
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
 
         fetchEmergencies(); // Initial fetch
 
@@ -120,6 +121,8 @@ function OcorrenciasDetail() {
                 hora_chegada_to: currentHour
             });
             setIsChegadaLocalSet(true);
+            // Refresh the emergencies data after updating
+            await fetchEmergencies();
             console.log('Chegada time updated:', response.data);
         } catch (error) {
             console.error('Error updating chegada time:', error);
@@ -189,13 +192,30 @@ function OcorrenciasDetail() {
 
     const openMaps = () => {
         if (!item) return;
-
-        const address = `${item.morada}, ${item.localidadeMorada}`;
-        const coordinates = `${item.sadoLatitudeGps}, ${item.sadoLongitudeGps}`;
-        const encodedAddress = encodeURIComponent(address);
-        const encodedCoordinates = encodeURIComponent(coordinates);
-
-        window.open(`https://www.google.com/maps/search/?q=${encodedCoordinates}`, '_blank');
+    
+        const { morada, localidadeMorada, sadoLatitudeGps, sadoLongitudeGps } = item;
+    
+        // Check if address components are available and not empty
+        const hasAddress = morada && localidadeMorada && morada.trim() !== '' && localidadeMorada.trim() !== '';
+    
+        // Check if coordinate components are available and valid numbers
+        const hasCoordinates =
+            sadoLatitudeGps &&
+            sadoLongitudeGps &&
+            !isNaN(parseFloat(sadoLatitudeGps)) &&
+            !isNaN(parseFloat(sadoLongitudeGps));
+    
+        if (hasAddress) {
+            const address = `${morada}, ${localidadeMorada}`;
+            const encodedAddress = encodeURIComponent(address);
+            window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
+        } else if (hasCoordinates) {
+            const coordinates = `${sadoLatitudeGps},${sadoLongitudeGps}`;
+            const encodedCoordinates = encodeURIComponent(coordinates);
+            window.open(`https://www.google.com/maps/search/?api=1&query=${encodedCoordinates}`, '_blank');
+        } else {
+            alert('O Endereço não é válido ou coordenadas não disponíveis no Maps');
+        }
     };
 
     if (!state) {
@@ -203,7 +223,10 @@ function OcorrenciasDetail() {
     }
 
     const array = item.viaturas[0] || [];
-    const viaturas = array.join(', ');
+    const uniqueViaturas = [...new Set(array)];
+    const viaturas = uniqueViaturas.join(', ');
+
+    console.log("item: ", item)
 
     const renderItem = (item) => (
         <div style={styles.center}>
@@ -259,7 +282,7 @@ function OcorrenciasDetail() {
                     <Button style={styles.button_ChegadaLocal}
                         onClick={() => handleSetTimeChegadaLocal()}
                         disabled={isChegadaLocalSet}>
-                        <p style={styles.buttonText}>Chegada ao Local</p>
+                        <p style={{ ...styles.buttonText, marginRight: '5px' }}>Chegada ao Local</p>
                         <p style={styles.buttonText}>{isChegadaLocalSet ? chegadaLocalTime : currentTime}</p>
                     </Button>
 
@@ -274,7 +297,7 @@ function OcorrenciasDetail() {
                     <Button style={styles.button_SaidaLocal}
                         onClick={() => handleSetTimeSaidaLocal()}
                         disabled={isSaidaLocalSet}>
-                        <p style={styles.buttonText}>Saída do Local</p>
+                        <p style={{ ...styles.buttonText, marginRight: '5px' }}>Saída do Local </p>
                         <p style={styles.buttonText}>{isSaidaLocalSet ? saidaLocalTime : currentTime}</p>
                     </Button>
                     <Button style={styles.button_Fotos}>
@@ -288,7 +311,7 @@ function OcorrenciasDetail() {
                         <Button style={styles.button_ChegadaUnidade}
                             onClick={() => handleSetTimeChegadaUnidade()}
                             disabled={isChegadaUnidadeSet}>
-                            <p style={styles.buttonText}>Chegada à Unidade</p>
+                            <p style={{ ...styles.buttonText, marginRight: '5px' }}>Chegada à Unidade</p>
                             <p style={styles.buttonText}>{isChegadaUnidadeSet ? chegadaUnidadeTime : currentTime}</p>
                             </Button>
                         <Button style={styles.button_Fotos}>
@@ -324,13 +347,13 @@ const styles = {
         height: '110vh',
     },
     container: {
-        marginTop: 10,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: "white",
-        //marginLeft: 10,
-        //marginRight: 10
+        backgroundColor: "white",  // Your background color
+        padding: 20,               // Optional padding for the container
+        boxSizing: 'border-box',   // Include padding in the element's width and height
+        // Width and height can be adjusted based on content or fixed dimensions
+        width: '100%',              // Example width, adjust as needed
+        maxWidth: '100%',         // Example maximum width, adjust as needed
+        borderRadius: 10,
     },
     scrollView: {
         marginHorizontal: 20,

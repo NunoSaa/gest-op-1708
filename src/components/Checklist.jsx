@@ -36,6 +36,10 @@ function CheckList() {
         window.open('https://docs.google.com/forms/d/1uWv-_7IjDAy2Yyw4kPn2hfcbY0Thbbfb3JRkYtIhHV4/viewform?edit_requested=true', '_blank');
     };
 
+    const handleClickVFCI09 = () => {
+        window.open('https://docs.google.com/forms/d/e/1FAIpQLSdrsdDnbcBZtedWnJxN0RXeLhPoxoJ4K1lxkcbfuv95ZVLW4Q/viewform?vc=0&c=0&w=1&flr=0', '_blank');
+    };
+
     const handleClickVTTU01 = () => {
         window.open('https://docs.google.com/forms/d/1Wjxrvbu0N2AHxVBa3RTQkOQXE8T2Ck0TLePlnx6kT6k/viewform?edit_requested=true', '_blank');
     };
@@ -58,15 +62,14 @@ function CheckList() {
                 </div>
                 <div style={styles.row}>
                     <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC03}>ABSC 03</Button>
-                    <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC04}>ABSC 04</Button>
-                </div>
+                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVUCI01}>VUCI 01</Button>                </div>
                 <div style={styles.row}>
-                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVUCI01}>VUCI 01</Button>
                     <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVECI02}>VECI 02</Button>
+                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI07}>VFCI 07</Button>
                 </div>
                 <div style={styles.row}>
-                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI07}>VFCI 07</Button>
                     <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI08}>VFCI 08</Button>
+                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI09}>VFCI 09</Button>
                 </div>
                 <div style={styles.row}>
                     <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVTTU01}>VTTU 01</Button>

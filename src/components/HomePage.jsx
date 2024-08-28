@@ -27,6 +27,15 @@ function HomePage() {
         navigate('/materiasPerigosas');
     };
 
+    const handleLogout = () => {
+        // Clear the local storage
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+
+        // Optionally navigate to the login page or another page
+        navigate('/');
+    };
+
     return (
         <div style={styles.center}>
             <div style={styles.container}>
@@ -37,6 +46,9 @@ function HomePage() {
                 <div style={styles.row}>
                     <Button style={styles.button_checklist} variant="contained" onClick={handleClickCheckList}>CheckList</Button>
                     <Button style={styles.button_azmat} variant="contained" onClick={handleClickMateriasPerigosas}>Matérias Perigosas</Button>
+                </div>
+                <div style={styles.row}>
+                    <Button style={styles.button_logout} variant="contained" onClick={handleLogout}>Logout</Button>
                 </div>
             </div>
         </div>
@@ -130,6 +142,18 @@ const styles = {
         fontSize: 16,
         fontWeight: 'bold',
         textAlign: "center",
+    },
+    button_logout: {
+        width: 150,
+        height: 50,
+        backgroundColor: '#FF3333',
+        padding: 10,
+        borderRadius: 10,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 350, // Space from other rows
+        marginLeft: 'auto', // Align to the right
     },
 }
 
