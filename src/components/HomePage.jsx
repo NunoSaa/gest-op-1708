@@ -48,7 +48,7 @@ function HomePage() {
                     <Button style={styles.button_azmat} variant="contained" onClick={handleClickMateriasPerigosas}>Matérias Perigosas</Button>
                 </div>
                 <div style={styles.row}>
-                    <Button style={styles.button_logout} variant="contained" onClick={handleLogout}>Logout</Button>
+                    <Button style={styles.button_logout} variant="contained" onClick={handleLogout}>Logout {localStorage.username}</Button>
                 </div>
             </div>
         </div>
@@ -152,7 +152,7 @@ const styles = {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 300, // Space from other rows
+        marginTop: 275, // Space from other rows
         marginLeft: 'auto', // Align to the right
     },
 }
