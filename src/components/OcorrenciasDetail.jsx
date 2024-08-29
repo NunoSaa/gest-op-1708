@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -15,7 +15,8 @@ function OcorrenciasDetail() {
     const [isTimerRunning, setIsTimerRunning] = useState(true);
     const [inputValue, setInputValue] = useState('');
     const [item, setItem] = useState(state);
-    const [vehicle, setVehicle] = useState([]);
+    const vehicle = useRef([]); // Use a ref to store vehicle data
+    //const [vehicle, setVehicle] = useState([]);
     const [error, setError] = useState(null);
     const [isChegadaLocalSet, setIsChegadaLocalSet] = useState(false);
     const [isSaidaLocalSet, setIsSaidaLocalSet] = useState(false);
@@ -54,6 +55,9 @@ function OcorrenciasDetail() {
         return () => clearInterval(intervalId);
     }, [state]);
 
+    // Helper function to create a delay
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
     const fetchEmergencies = async () => {
         try {
             const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getIncidentByID?id_ocorrencia=' + item.id);
@@ -68,8 +72,13 @@ function OcorrenciasDetail() {
                     (vehicle) => vehicle.descricao === descricao
                 );
 
-                setVehicle(filteredVehicles);
+                // Store the filtered vehicles in a ref for immediate access
+                vehicle.current = filteredVehicles;
+                
+                //setVehicle(filteredVehicles);
+                console.log('filtered:', filteredVehicles)
                 console.log('Vehicle Object:', vehicle);
+                console.log('tes: ', response.data[0].viaturas[0].descricao)
 
                 if (filteredVehicles[0].hora_chegada_to != "") {
                     setChegadaLocalTime(filteredVehicles[0].hora_chegada_to)
@@ -129,10 +138,10 @@ function OcorrenciasDetail() {
         try {
             const response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentDetails', {
                 id_ocorrencia: emergencies[0].id,
-                id_oco_viatura: vehicle[0].id_oco_viatura,
-                id_viatura: vehicle[0].id_viatura,
-                hora_saida: vehicle[0].hora_saida,
-                data_saida: vehicle[0].data_saida,
+                id_oco_viatura: vehicle.current[0].id_oco_viatura,
+                id_viatura: vehicle.current[0].id_viatura,
+                hora_saida: vehicle.current[0].hora_saida,
+                data_saida: vehicle.current[0].data_saida,
                 data_chegada_to: currentDate,
                 hora_chegada_to: currentHour
             });
@@ -160,12 +169,12 @@ function OcorrenciasDetail() {
         try {
             const response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentDetails', {
                 id_ocorrencia: emergencies[0].id,
-                id_oco_viatura: vehicle[0].id_oco_viatura,
-                id_viatura: vehicle[0].id_viatura,
-                hora_saida: vehicle[0].hora_saida,
-                data_saida: vehicle[0].data_saida,
-                data_chegada_to: vehicle[0].data_chegada_to,
-                hora_chegada_to: vehicle[0].hora_chegada_to,
+                id_oco_viatura: vehicle.current[0].id_oco_viatura,
+                id_viatura: vehicle.current[0].id_viatura,
+                hora_saida: vehicle.current[0].hora_saida,
+                data_saida: vehicle.current[0].data_saida,
+                data_chegada_to: vehicle.current[0].data_chegada_to,
+                hora_chegada_to: vehicle.current[0].hora_chegada_to,
                 data_saida_to: currentDate,
                 hora_saida_to: currentHour
             });
@@ -192,14 +201,14 @@ function OcorrenciasDetail() {
         try {
             const response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentDetails', {
                 id_ocorrencia: emergencies[0].id,
-                id_oco_viatura: vehicle[0].id_oco_viatura,
-                id_viatura: vehicle[0].id_viatura,
-                hora_saida: vehicle[0].hora_saida,
-                data_saida: vehicle[0].data_saida,
-                data_chegada_to: vehicle[0].data_chegada_to,
-                hora_chegada_to: vehicle[0].hora_chegada_to,
-                data_saida_to: vehicle[0].data_saida_to,
-                hora_saida_to: vehicle[0].hora_saida_to,
+                id_oco_viatura: vehicle.current[0].id_oco_viatura,
+                id_viatura: vehicle.current[0].id_viatura,
+                hora_saida: vehicle.current[0].hora_saida,
+                data_saida: vehicle.current[0].data_saida,
+                data_chegada_to: vehicle.current[0].data_chegada_to,
+                hora_chegada_to: vehicle.current[0].hora_chegada_to,
+                data_saida_to: vehicle.current[0].data_saida_to,
+                hora_saida_to: vehicle.current[0].hora_saida_to,
                 data_chegada: currentDate,
                 hora_chegada: currentHour
             });
