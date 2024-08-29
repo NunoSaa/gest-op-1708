@@ -55,9 +55,6 @@ function OcorrenciasDetail() {
         return () => clearInterval(intervalId);
     }, [state]);
 
-    // Helper function to create a delay
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
     const fetchEmergencies = async () => {
         try {
             const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getIncidentByID?id_ocorrencia=' + item.id);
@@ -146,6 +143,15 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
                 hora_chegada_to: currentHour
             });
             setIsChegadaLocalSet(true);
+
+            if (response.data && response.data.status === 'success') {
+                alert('Chegada ao Local Enviada com Sucesso');
+            } else {
+                // Handle any other cases (like errors in the response)
+                console.error('Unexpected response:', response.data);
+                alert('Aconteceu um erro ao inserir a informação. Tente mais tarde.');
+            }
+
             // Refresh the emergencies data after updating
             await fetchEmergencies();
             console.log('Chegada time updated:', response.data);
@@ -179,6 +185,15 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
                 hora_saida_to: currentHour
             });
             setIsSaidaLocalSet(true);
+
+            if (response.data && response.data.status === 'success') {
+                alert('Saida do Local Enviada com Sucesso');
+            } else {
+                // Handle any other cases (like errors in the response)
+                console.error('Unexpected response:', response.data);
+                alert('Aconteceu um erro ao inserir a informação. Tente mais tarde.');
+            }
+
             await fetchEmergencies();
             console.log('Chegada time updated:', response.data);
         } catch (error) {
@@ -213,6 +228,15 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
                 hora_chegada: currentHour
             });
             setIsChegadaUnidadeSet(true);
+
+            if (response.data && response.data.status === 'success') {
+                alert('Chegada a Unidade Enviada com Sucesso');
+            } else {
+                // Handle any other cases (like errors in the response)
+                console.error('Unexpected response:', response.data);
+                alert('Aconteceu um erro ao inserir a informação. Tente mais tarde.');
+            }
+
             await fetchEmergencies();
             console.log('Chegada time updated:', response.data);
         } catch (error) {
