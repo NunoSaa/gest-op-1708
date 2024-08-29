@@ -33,7 +33,7 @@ function HomePage() {
         localStorage.removeItem('username');
 
         // Optionally navigate to the login page or another page
-        navigate('/');
+        navigate('/login');
     };
 
     return (
@@ -152,7 +152,7 @@ const styles = {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 350, // Space from other rows
+        marginTop: 300, // Space from other rows
         marginLeft: 'auto', // Align to the right
     },
 }

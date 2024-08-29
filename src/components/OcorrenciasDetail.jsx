@@ -62,15 +62,29 @@ function OcorrenciasDetail() {
                 console.log('Fetched Emergencies:', response.data);
                 setLoading(false);
 
+                // Extract and filter viaturas by descricao
                 const vehicles = response.data[0].viaturas || [];
-                // Filter vehicles based on the description
-                const filteredVehicles = vehicles.filter(vehicle => vehicle.descricao === descricao);
+                const filteredVehicles = vehicles.filter(
+                    (vehicle) => vehicle.descricao === descricao
+                );
 
-                // Log filtered vehicles for debugging
-                console.log('Filtered Vehicles:', filteredVehicles);
-                // Update the state with the mapped vehicles
                 setVehicle(filteredVehicles);
-                console.log("vehicle object", vehicle)
+                console.log('Vehicle Object:', vehicle);
+
+                if (filteredVehicles[0].hora_chegada_to != "") {
+                    setChegadaLocalTime(filteredVehicles[0].hora_chegada_to)
+                    setIsChegadaLocalSet(true)
+                }
+
+                if (filteredVehicles[0].hora_saida_to != "") {
+                    setSaidaLocalTime(filteredVehicles[0].hora_saida_to)
+                    setIsSaidaLocalSet(true)
+                }
+
+                if (filteredVehicles[0].hora_chegada != "") {
+                    setChegadaUnidadeTime(filteredVehicles[0].hora_chegada)
+                    setIsChegadaUnidadeSet(true)
+                }
 
                 // Optionally set loading state to false
                 setLoading(false);
@@ -113,7 +127,7 @@ function OcorrenciasDetail() {
         const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
 
         try {
-            const response = await axios.put('http://localhost:3000/api/emergency/updateIncidentDetails', {
+            const response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentDetails', {
                 id_ocorrencia: emergencies[0].id,
                 id_oco_viatura: vehicle[0].id_oco_viatura,
                 id_viatura: vehicle[0].id_viatura,
@@ -152,6 +166,7 @@ function OcorrenciasDetail() {
                 hora_saida_to: currentHour
             });
             setIsSaidaLocalSet(true);
+            await fetchEmergencies();
             console.log('Chegada time updated:', response.data);
         } catch (error) {
             console.error('Error updating chegada time:', error);
@@ -183,6 +198,7 @@ function OcorrenciasDetail() {
                 hora_chegada: currentHour
             });
             setIsChegadaUnidadeSet(true);
+            await fetchEmergencies();
             console.log('Chegada time updated:', response.data);
         } catch (error) {
             console.error('Error updating chegada time:', error);
@@ -192,19 +208,19 @@ function OcorrenciasDetail() {
 
     const openMaps = () => {
         if (!item) return;
-    
+
         const { morada, localidadeMorada, sadoLatitudeGps, sadoLongitudeGps } = item;
-    
+
         // Check if address components are available and not empty
         const hasAddress = morada && localidadeMorada && morada.trim() !== '' && localidadeMorada.trim() !== '';
-    
+
         // Check if coordinate components are available and valid numbers
         const hasCoordinates =
             sadoLatitudeGps &&
             sadoLongitudeGps &&
             !isNaN(parseFloat(sadoLatitudeGps)) &&
             !isNaN(parseFloat(sadoLongitudeGps));
-    
+
         if (hasAddress) {
             const address = `${morada}, ${localidadeMorada}`;
             const encodedAddress = encodeURIComponent(address);
@@ -226,7 +242,6 @@ function OcorrenciasDetail() {
     const uniqueViaturas = [...new Set(array)];
     const viaturas = uniqueViaturas.join(', ');
 
-    console.log("item: ", item)
 
     const renderItem = (item) => (
         <div style={styles.center}>
@@ -313,7 +328,7 @@ function OcorrenciasDetail() {
                             disabled={isChegadaUnidadeSet}>
                             <p style={{ ...styles.buttonText, marginRight: '5px' }}>Chegada à Unidade</p>
                             <p style={styles.buttonText}>{isChegadaUnidadeSet ? chegadaUnidadeTime : currentTime}</p>
-                            </Button>
+                        </Button>
                         <Button style={styles.button_Fotos}>
                             <p style={styles.buttonText}>Anexos</p>
                             <p style={styles.buttonTextOther}>.</p>

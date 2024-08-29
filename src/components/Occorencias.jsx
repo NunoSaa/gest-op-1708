@@ -36,7 +36,7 @@ function Ocorrencias() {
     }, []);
 
     const renderItem = (item) => {
-        
+
         const array = item.viaturas[0] || [];
         const uniqueViaturas = [...new Set(array)];
         const viaturas = uniqueViaturas.join(', ');
@@ -50,7 +50,7 @@ function Ocorrencias() {
                 </div>
                 <div style={styles.rightContainer}>
                     <span style={styles.estado}>{item.estado}</span>
-                    <span style={styles.timestamp}>{item.horaAlerta}</span>
+                    <span style={styles.timestamp}>{item.dataHoraAlerta}</span>
                 </div>
             </div>
         );
