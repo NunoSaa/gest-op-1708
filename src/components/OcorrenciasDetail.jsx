@@ -131,6 +131,8 @@ function OcorrenciasDetail() {
                 id_ocorrencia: emergencies[0].id,
                 id_oco_viatura: vehicle[0].id_oco_viatura,
                 id_viatura: vehicle[0].id_viatura,
+                hora_saida: vehicle[0].hora_saida,
+                data_saida: vehicle[0].data_saida,
                 data_chegada_to: currentDate,
                 hora_chegada_to: currentHour
             });
@@ -160,6 +162,8 @@ function OcorrenciasDetail() {
                 id_ocorrencia: emergencies[0].id,
                 id_oco_viatura: vehicle[0].id_oco_viatura,
                 id_viatura: vehicle[0].id_viatura,
+                hora_saida: vehicle[0].hora_saida,
+                data_saida: vehicle[0].data_saida,
                 data_chegada_to: vehicle[0].data_chegada_to,
                 hora_chegada_to: vehicle[0].hora_chegada_to,
                 data_saida_to: currentDate,
@@ -190,6 +194,8 @@ function OcorrenciasDetail() {
                 id_ocorrencia: emergencies[0].id,
                 id_oco_viatura: vehicle[0].id_oco_viatura,
                 id_viatura: vehicle[0].id_viatura,
+                hora_saida: vehicle[0].hora_saida,
+                data_saida: vehicle[0].data_saida,
                 data_chegada_to: vehicle[0].data_chegada_to,
                 hora_chegada_to: vehicle[0].hora_chegada_to,
                 data_saida_to: vehicle[0].data_saida_to,
