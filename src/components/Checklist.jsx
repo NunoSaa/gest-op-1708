@@ -1,5 +1,10 @@
 import React from 'react';
 import Button from '@mui/material/Button';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 
 function CheckList() {
@@ -56,37 +61,54 @@ function CheckList() {
         window.open('https://docs.google.com/forms/d/1kJw7gVGV93Ot0erDtCzc7q0tKtcMlot1T2CUjBJHBTc/viewform?edit_requested=true', '_blank');
     };
 
+    const handleBackClick = () => {
+        window.history.back(); // Go back to the previous page
+    };
 
     return (
-        <div style={styles.center}>
-            <div style={styles.container}>
-                <div style={styles.row}>
-                    <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC01}>ABSC 01</Button>
-                    <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC03}>ABSC 03</Button>
-                </div>
-                <div style={styles.row}>
-                    <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC04}>ABSC 04</Button>
-                    <Button style={styles.button_ABSC} variant="contained" onClick={handleClickVOPE06}>VOPE 06</Button>
-                </div>
-                <div style={styles.row}>
-                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVUCI01}>VUCI 01</Button>
-                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVECI02}>VECI 02</Button>
-                </div>
-                <div style={styles.row}>
-                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI06}>VFCI 06</Button>
-                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI07}>VFCI 07</Button>
-                </div>
-                <div style={styles.row}>
-                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI08}>VFCI 08</Button>
-                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI09}>VFCI 09</Button>
-                </div>
-                <div style={styles.row}>
-                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVTTU01}>VTTU 01</Button>
-                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVOPE05}>VOPE 05</Button>
-                </div>
-                <div style={styles.row}>
-                    <Button style={styles.button_VCOT} variant="contained" onClick={handleClickVCOT01}>VCOT 01</Button>
-                    <Button style={styles.button_VCOT} variant="contained" onClick={handleClickVCOT01}>VCOT 02</Button>
+
+        <div>
+            <AppBar position="static">
+                <Toolbar style={{backgroundColor: "#A0A0A0" }}>
+                    <IconButton edge="start" color="inherit" onClick={handleBackClick} aria-label="back">
+                        <ArrowBackIcon />
+                    </IconButton>
+                    <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
+                        CheckList
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+
+            <div style={styles.center}>
+                <div style={styles.container}>
+                    <div style={styles.row}>
+                        <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC01}>ABSC 01</Button>
+                        <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC03}>ABSC 03</Button>
+                    </div>
+                    <div style={styles.row}>
+                        <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC04}>ABSC 04</Button>
+                        <Button style={styles.button_ABSC} variant="contained" onClick={handleClickVOPE06}>VOPE 06</Button>
+                    </div>
+                    <div style={styles.row}>
+                        <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVUCI01}>VUCI 01</Button>
+                        <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVECI02}>VECI 02</Button>
+                    </div>
+                    <div style={styles.row}>
+                        <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI06}>VFCI 06</Button>
+                        <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI07}>VFCI 07</Button>
+                    </div>
+                    <div style={styles.row}>
+                        <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI08}>VFCI 08</Button>
+                        <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI09}>VFCI 09</Button>
+                    </div>
+                    <div style={styles.row}>
+                        <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVTTU01}>VTTU 01</Button>
+                        <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVOPE05}>VOPE 05</Button>
+                    </div>
+                    <div style={styles.row}>
+                        <Button style={styles.button_VCOT} variant="contained" onClick={handleClickVCOT01}>VCOT 01</Button>
+                        <Button style={styles.button_VCOT} variant="contained" onClick={handleClickVCOT01}>VCOT 02</Button>
+                    </div>
                 </div>
             </div>
         </div>
