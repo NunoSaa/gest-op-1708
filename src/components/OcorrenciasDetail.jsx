@@ -71,7 +71,7 @@ function OcorrenciasDetail() {
 
                 // Store the filtered vehicles in a ref for immediate access
                 vehicle.current = filteredVehicles;
-                
+
                 //setVehicle(filteredVehicles);
                 console.log('filtered:', filteredVehicles)
                 console.log('Vehicle Object:', vehicle);
@@ -366,6 +366,29 @@ function OcorrenciasDetail() {
                         <p style={styles.buttonText}>Anexar Fotos</p>
                         <p style={styles.buttonTextOther}>.</p>
                     </Button>
+                </div>
+
+                <div style={styles.row}>
+                    {(descricao === 'ABSC01' || descricao === 'ABSC02'
+                        || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06'
+                    ) && (
+                        <div>
+                            <Button
+                                style={styles.button_Fotos}
+                            >
+                                <p style={{ ...styles.buttonText, marginRight: '5px' }}>
+                                    Saída do Hospital
+                                </p>
+                                <p style={styles.buttonText}>
+                                    {isChegadaUnidadeSet ? chegadaUnidadeTime : currentTime}
+                                </p>
+                            </Button>
+                            <Button style={styles.button_Fotos}>
+                                <p style={styles.buttonText}>Anexar Verbete</p>
+                                <p style={styles.buttonTextOther}>.</p>
+                            </Button>
+                        </div>
+                    )}
                 </div>
 
                 <div style={styles.row}>
