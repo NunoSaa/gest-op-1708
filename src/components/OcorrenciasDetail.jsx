@@ -310,6 +310,14 @@ function OcorrenciasDetail() {
                     <span style={styles.info}>{item.localidade_morada}</span>
                 </div>
                 <div style={styles.rowInfo}>
+                    <span style={styles.infoProp}>Freguesia: </span>
+                    <span style={styles.info}>{item.freguesia}</span>
+                </div>
+                <div style={styles.rowInfo}>
+                    <span style={styles.infoProp}>Ponto de Referência: </span>
+                    <span style={styles.info}>{item.ponto_referencia}</span>
+                </div>
+                <div style={styles.rowInfo}>
                     <span style={styles.infoProp}>Latitude: </span>
                     <span style={styles.info}>{item.sadoLatitudeGps}</span>
                     <span style={styles.infoProp}>Longitude: </span>
@@ -355,7 +363,7 @@ function OcorrenciasDetail() {
                         <p style={styles.buttonText}>{isSaidaLocalSet ? saidaLocalTime : currentTime}</p>
                     </Button>
                     <Button style={styles.button_Fotos}>
-                        <p style={styles.buttonText}>Fotos</p>
+                        <p style={styles.buttonText}>Anexar Fotos</p>
                         <p style={styles.buttonTextOther}>.</p>
                     </Button>
                 </div>
@@ -368,8 +376,8 @@ function OcorrenciasDetail() {
                             <p style={{ ...styles.buttonText, marginRight: '5px' }}>Chegada à Unidade</p>
                             <p style={styles.buttonText}>{isChegadaUnidadeSet ? chegadaUnidadeTime : currentTime}</p>
                         </Button>
-                        <Button style={styles.button_Fotos}>
-                            <p style={styles.buttonText}>Anexos</p>
+                        <Button style={styles.button_RelatorioFinal}>
+                            <p style={styles.buttonText}>Relatório Final</p>
                             <p style={styles.buttonTextOther}>.</p>
                         </Button>
                     </div>
@@ -486,6 +494,16 @@ const styles = {
         width: "45%",
         height: 75,
         backgroundColor: '#A0A0A0',
+        borderRadius: 10,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 15
+    },
+    button_RelatorioFinal: {
+        width: "45%",
+        height: 75,
+        backgroundColor: '#2bbfd9',
         borderRadius: 10,
         flex: 1,
         justifyContent: 'center',

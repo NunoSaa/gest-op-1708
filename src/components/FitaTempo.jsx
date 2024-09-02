@@ -75,6 +75,9 @@ function FitaTempo() {
                     onClick={() => navigate('/novoPosit', { state: item })}>
                     <p style={styles.buttonText}>Novo POSIT</p>
                 </Button>
+                <Button style={styles.button_POSIT_AUDIO}>
+                    <p style={styles.buttonText}>Novo Audio POSIT</p>
+                </Button>
             </div>
 
             <div style={styles.row}>
@@ -172,16 +175,26 @@ const styles = {
         resizeMode: 'contain',
     },
     button_POSIT: {
-        width: "100%",
+        width: "45%",
         height: 75,
         backgroundColor: '#FF6666',
         borderRadius: 10,
         flex: 1,
-        alignItems: 'center'
+        alignItems: 'center',
+        marginRight: "5%"
+    },
+    button_POSIT_AUDIO: {
+        width: "45%",
+        height: 75,
+        backgroundColor: '#46a3ff',
+        borderRadius: 10,
+        flex: 1,
+        alignItems: 'center',
+        marginRight: "5%"
     },
     buttonText: {
         color: '#000000', // Set the text color to white
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
     },
 };
