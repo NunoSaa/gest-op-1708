@@ -69,12 +69,12 @@ function CheckList() {
 
         <div>
             <AppBar position="static">
-                <Toolbar style={{backgroundColor: "#A0A0A0" }}>
+                <Toolbar style={{ backgroundColor: "#A0A0A0" }}>
                     <IconButton edge="start" color="inherit" onClick={handleBackClick} aria-label="back">
                         <ArrowBackIcon />
                     </IconButton>
                     <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
-                        CheckList
+                        HomePage
                     </Typography>
                 </Toolbar>
             </AppBar>

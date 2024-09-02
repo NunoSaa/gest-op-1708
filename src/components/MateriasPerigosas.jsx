@@ -4,6 +4,11 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
 import { useNavigate } from 'react-router-dom';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 
 function Ocorrencias() {
@@ -70,48 +75,66 @@ function Ocorrencias() {
         }
     };
 
-    return (
-        <div style={styles.center}>
-            <div style={styles.container}>
-                <p style={styles.titleONU} >Pesquisa por Número ONU</p>
-                <Autocomplete
-                    disablePortal
-                    id="pesquisa_onu"
-                    options={hintsONU}
-                    getOptionLabel={(option) => option.toString()}
-                    value={queryONU || ''}
-                    onChange={(event, newValue) => setQueryONU(newValue)}
-                    sx={{ width: '75%' }}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label="Número ONU..."
-                            defaultValue={queryONU}
-                            style={styles.textFieldONU} // Use defaultValue instead of value
-                        />
-                    )}
-                />
-                <Button style={styles.button_ONU} onClick={handleSearchONU}>Pesquisar Número ONU</Button>
+    const handleBackClick = () => {
+        window.history.back(); // Go back to the previous page
+    };
 
-                <p style={styles.titleNome}>Pesquisa por Nome da Matéria</p>
-                <Autocomplete
-                    disablePortal
-                    id="pesquisa_nome"
-                    options={hintsName}
-                    getOptionLabel={(option) => option.toString()}
-                    value={queryName || ''}
-                    onChange={(event, newValue) => setQueryName(newValue)}
-                    sx={{ width: '75%' }}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label="Nome da Matéria..."
-                            defaultValue={queryName}
-                            style={styles.textFieldName} // Use defaultValue instead of value
-                        />
-                    )}
-                />
-                <Button style={styles.button_Name} onClick={handleSearchName}>Pesquisar Nome Matéria</Button>
+    return (
+
+        <div>
+            <AppBar position="static">
+                <Toolbar style={{ backgroundColor: "#A0A0A0" }}>
+                    <IconButton edge="start" color="inherit" onClick={handleBackClick} aria-label="back">
+                        <ArrowBackIcon />
+                    </IconButton>
+                    <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
+                        HomePage
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+
+            <div style={styles.center}>
+                <div style={styles.container}>
+                    <p style={styles.titleONU} >Pesquisa por Número ONU</p>
+                    <Autocomplete
+                        disablePortal
+                        id="pesquisa_onu"
+                        options={hintsONU}
+                        getOptionLabel={(option) => option.toString()}
+                        value={queryONU || ''}
+                        onChange={(event, newValue) => setQueryONU(newValue)}
+                        sx={{ width: '75%' }}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Número ONU..."
+                                defaultValue={queryONU}
+                                style={styles.textFieldONU} // Use defaultValue instead of value
+                            />
+                        )}
+                    />
+                    <Button style={styles.button_ONU} onClick={handleSearchONU}>Pesquisar Número ONU</Button>
+
+                    <p style={styles.titleNome}>Pesquisa por Nome da Matéria</p>
+                    <Autocomplete
+                        disablePortal
+                        id="pesquisa_nome"
+                        options={hintsName}
+                        getOptionLabel={(option) => option.toString()}
+                        value={queryName || ''}
+                        onChange={(event, newValue) => setQueryName(newValue)}
+                        sx={{ width: '75%' }}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Nome da Matéria..."
+                                defaultValue={queryName}
+                                style={styles.textFieldName} // Use defaultValue instead of value
+                            />
+                        )}
+                    />
+                    <Button style={styles.button_Name} onClick={handleSearchName}>Pesquisar Nome Matéria</Button>
+                </div>
             </div>
         </div>
     );
@@ -139,7 +162,7 @@ const styles = {
         height: 65,
         backgroundColor: '#A0A0A0',
         borderRadius: 10,
-        color:'white',
+        color: 'white',
         marginTop: 50,
     },
     button_Name: {
@@ -147,7 +170,7 @@ const styles = {
         height: 65,
         backgroundColor: '#A0A0A0',
         borderRadius: 10,
-        color:'white',
+        color: 'white',
         marginTop: 50,
     },
     titleONU: {
