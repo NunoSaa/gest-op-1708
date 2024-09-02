@@ -3,6 +3,12 @@ import axios from 'axios';
 import '../css/Login.css';
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from 'react-spinners';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Button from '@mui/material/Button';
 
 
 function Ocorrencias() {
@@ -14,7 +20,7 @@ function Ocorrencias() {
     useEffect(() => {
         const interval = setInterval(() => {
             window.location.reload();
-          }, 60000); // Refresh every minute (60000 milliseconds)
+        }, 60000); // Refresh every minute (60000 milliseconds)
 
         const fetchData = async () => {
             try {
@@ -32,7 +38,7 @@ function Ocorrencias() {
         fetchData();
 
         return () => clearInterval(interval); // Cleanup the interval on unmount
-        
+
     }, []);
 
     const renderItem = (item) => {
@@ -40,7 +46,7 @@ function Ocorrencias() {
         const array = item.viaturas[0] || [];
         const uniqueViaturas = [...new Set(array)];
         const viaturas = uniqueViaturas.join(', ');
-    
+
         return (
             <div key={item.id} style={{ ...styles.item, backgroundColor: item.corEstado }} onClick={() => navigate(`/ocorrenciasDetail/${item.id}`, { state: item })}>
                 <div style={styles.content}>
@@ -56,17 +62,34 @@ function Ocorrencias() {
         );
     };
 
+    const handleBackClick = () => {
+        window.history.back(); // Go back to the previous page
+    };
+
     return (
-        <div style={styles.container}>
-            {loading ? (
-                <div style={styles.center}>
-                    <ClipLoader size={50} color="#C0C0C0" />
-                    A carregar...</div> // You can replace this with a loading icon
-            ) : emergencies.length === 0 ? (
-                <div>Não foram encontradas ocorrências.</div> // Render message if emergencies array is empty
-            ) : (
-                emergencies.map(renderItem)
-            )}
+        <div>
+            <AppBar position="static">
+                <Toolbar style={{ backgroundColor: "#A0A0A0" }}>
+                    <IconButton edge="start" color="inherit" onClick={handleBackClick} aria-label="back">
+                        <ArrowBackIcon />
+                    </IconButton>
+                    <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
+                        HomePage
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+
+            <div style={styles.container}>
+                {loading ? (
+                    <div style={styles.center}>
+                        <ClipLoader size={50} color="#C0C0C0" />
+                        A carregar...</div> // You can replace this with a loading icon
+                ) : emergencies.length === 0 ? (
+                    <div>Não foram encontradas ocorrências.</div> // Render message if emergencies array is empty
+                ) : (
+                    emergencies.map(renderItem)
+                )}
+            </div>
         </div>
     );
 };

@@ -4,6 +4,11 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useNavigate, useLocation } from "react-router-dom";
 import { ClipLoader } from 'react-spinners';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 function OcorrenciasDetail() {
     const navigate = useNavigate();
@@ -281,6 +286,9 @@ function OcorrenciasDetail() {
     const uniqueViaturas = [...new Set(array)];
     const viaturas = uniqueViaturas.join(', ');
 
+    const handleBackClick = () => {
+        window.history.back(); // Go back to the previous page
+    };
 
     const renderItem = (item) => (
         <div style={styles.center}>
@@ -372,23 +380,32 @@ function OcorrenciasDetail() {
                     {(descricao === 'ABSC01' || descricao === 'ABSC02'
                         || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06'
                     ) && (
-                        <div>
-                            <Button
-                                style={styles.button_Fotos}
-                            >
-                                <p style={{ ...styles.buttonText, marginRight: '5px' }}>
-                                    Saída do Hospital
-                                </p>
-                                <p style={styles.buttonText}>
-                                    {isChegadaUnidadeSet ? chegadaUnidadeTime : currentTime}
-                                </p>
-                            </Button>
-                            <Button style={styles.button_Fotos}>
-                                <p style={styles.buttonText}>Anexar Verbete</p>
-                                <p style={styles.buttonTextOther}>.</p>
-                            </Button>
-                        </div>
-                    )}
+                            <div>
+                                <Button
+                                    style={styles.button_Fotos}
+                                >
+                                    <p style={{ ...styles.buttonText, marginRight: '5px' }}>
+                                        Saída do Hospital
+                                    </p>
+                                    <p style={styles.buttonText}>
+                                        {isChegadaUnidadeSet ? chegadaUnidadeTime : currentTime}
+                                    </p>
+                                </Button>
+                                {
+                                    /*
+                                    <Button style={styles.button_Fotos}
+                                    onClick={() => navigate('/verbeteINEM')}>
+                                    <p style={styles.buttonText}>Anexar Verbete</p>
+                                    <p style={styles.buttonTextOther}>.</p>
+                                </Button>
+                                    */
+                                }
+                                <Button style={styles.button_Fotos}>
+                                    <p style={styles.buttonText}>Anexar Verbete</p>
+                                    <p style={styles.buttonTextOther}>.</p>
+                                </Button>
+                            </div>
+                        )}
                 </div>
 
                 <div style={styles.row}>
@@ -399,7 +416,8 @@ function OcorrenciasDetail() {
                             <p style={{ ...styles.buttonText, marginRight: '5px' }}>Chegada à Unidade</p>
                             <p style={styles.buttonText}>{isChegadaUnidadeSet ? chegadaUnidadeTime : currentTime}</p>
                         </Button>
-                        <Button style={styles.button_RelatorioFinal}>
+                        <Button style={styles.button_RelatorioFinal}
+                            onClick={() => navigate('/relatorioFinal')}>
                             <p style={styles.buttonText}>Relatório Final</p>
                             <p style={styles.buttonTextOther}>.</p>
                         </Button>
@@ -410,16 +428,29 @@ function OcorrenciasDetail() {
     );
 
     return (
-        <div style={styles.container}>
-            {loading ? (
-                <div style={styles.center}>
-                    <ClipLoader size={50} color="#C0C0C0" />
-                    A carregar...</div> // You can replace this with a loading icon
-            ) : emergencies.length === 0 ? (
-                <div>Não foram encontradas ocorrências.</div> // Render message if emergencies array is empty
-            ) : (
-                emergencies.map(renderItem)
-            )}
+        <div>
+            <AppBar position="static">
+                <Toolbar style={{ backgroundColor: "#A0A0A0" }}>
+                    <IconButton edge="start" color="inherit" onClick={handleBackClick} aria-label="back">
+                        <ArrowBackIcon />
+                    </IconButton>
+                    <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
+                        Lista de Ocorrências
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+
+            <div style={styles.container}>
+                {loading ? (
+                    <div style={styles.center}>
+                        <ClipLoader size={50} color="#C0C0C0" />
+                        A carregar...</div> // You can replace this with a loading icon
+                ) : emergencies.length === 0 ? (
+                    <div>Não foram encontradas ocorrências.</div> // Render message if emergencies array is empty
+                ) : (
+                    emergencies.map(renderItem)
+                )}
+            </div>
         </div>
     );
 };
