@@ -8,8 +8,8 @@ function CheckList() {
         window.open('https://docs.google.com/forms/d/1V31uXzaizIpdCa9SST_C1Ge3oAx_tec0FU4nbxh_TGQ/viewform?edit_requested=true', '_blank');
     };
 
-    const handleClickABSC02 = () => {
-        window.open('https://docs.google.com/forms/d/1eTDl5t12FewHGxoRUGxjj0-GinxsXhQa40A_J5_sMm4/viewform?pli=1&pli=1&edit_requested=true', '_blank');
+    const handleClickVOPE06 = () => {
+        window.open('https://docs.google.com/forms/d/e/1FAIpQLSdqY03k-Ff6ZI3HFKVR4xV68tnYjkp4JQJXESZsS4LMqsZNLw/viewform?vc=0&c=0&w=1&flr=0', '_blank');
     };
 
     const handleClickABSC03 = () => {
@@ -26,6 +26,10 @@ function CheckList() {
 
     const handleClickVUCI01 = () => {
         window.open('https://docs.google.com/forms/d/1DotQjGGF2TA2sT58IofFJ5DH4Lx--LA0lA9yaimep7Q/viewform?edit_requested=true', '_blank');
+    };
+
+    const handleClickVFCI06 = () => {
+        window.open('https://docs.google.com/forms/d/e/1FAIpQLScjD7RPCQpMDGgdnQZGddy9hWE3qja4n_zGJd-EhBvht2zU1w/viewform?vc=0&c=0&w=1&flr=0', '_blank');
     };
 
     const handleClickVFCI07 = () => {
@@ -56,15 +60,20 @@ function CheckList() {
     return (
         <div style={styles.center}>
             <div style={styles.container}>
-            <div style={styles.row}>
+                <div style={styles.row}>
                     <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC01}>ABSC 01</Button>
-                    <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC02}>ABSC 02</Button>
+                    <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC03}>ABSC 03</Button>
                 </div>
                 <div style={styles.row}>
-                    <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC03}>ABSC 03</Button>
-                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVUCI01}>VUCI 01</Button>                </div>
+                    <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC04}>ABSC 04</Button>
+                    <Button style={styles.button_ABSC} variant="contained" onClick={handleClickVOPE06}>VOPE 06</Button>
+                </div>
                 <div style={styles.row}>
+                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVUCI01}>VUCI 01</Button>
                     <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVECI02}>VECI 02</Button>
+                </div>
+                <div style={styles.row}>
+                    <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI06}>VFCI 06</Button>
                     <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI07}>VFCI 07</Button>
                 </div>
                 <div style={styles.row}>
