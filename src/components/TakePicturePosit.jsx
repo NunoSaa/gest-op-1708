@@ -14,8 +14,12 @@ const TakePicturePosit = () => {
     const theme = useTheme();
 
     useEffect(() => {
-        // Turn on the camera when the component mounts
         const initCamera = async () => {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                alert("Your browser does not support camera access.");
+                return;
+            }
+    
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 if (videoRef.current) {
@@ -24,12 +28,12 @@ const TakePicturePosit = () => {
                 }
             } catch (error) {
                 console.error("Error accessing the camera: ", error);
-                alert("Camera access is required to take a picture.");
+                alert("Camera access is required to take a picture. Please check your browser settings.");
             }
         };
-
+    
         initCamera();
-
+    
         return () => {
             // Clean up the camera stream when the component unmounts
             if (videoRef.current && videoRef.current.srcObject) {
@@ -38,6 +42,7 @@ const TakePicturePosit = () => {
             }
         };
     }, []);
+    
 
     const takePicture = () => {
         if (canvasRef.current && videoRef.current) {
