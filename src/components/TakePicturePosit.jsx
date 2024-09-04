@@ -11,8 +11,8 @@ const TakePicturePosit = () => {
     const [imageBlob, setImageBlob] = useState(null);
     const [isCameraOn, setIsCameraOn] = useState(false);
     const [showPermissionPopup, setShowPermissionPopup] = useState(false);
-    const [isPictureTaken, setIsPictureTaken] = useState(false); // To track if the picture has been taken
-    const [currentCamera, setCurrentCamera] = useState(null); // To track the current camera
+    const [isPictureTaken, setIsPictureTaken] = useState(false);
+    const [currentCamera, setCurrentCamera] = useState(null);
     const [cameraDevices, setCameraDevices] = useState([]);
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
@@ -39,9 +39,8 @@ const TakePicturePosit = () => {
         const initCamera = async () => {
             if (!currentCamera) return;
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: { deviceId: { exact: currentCamera } }
-                });
+                const constraints = { video: { deviceId: { exact: currentCamera } } };
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
                 if (videoRef.current) {
                     videoRef.current.srcObject = stream;
                     setIsCameraOn(true);
@@ -50,11 +49,11 @@ const TakePicturePosit = () => {
                     }
                 }
             } catch (error) {
+                console.error("Error accessing the camera: ", error);
                 if (error.name === "NotAllowedError" || error.name === "SecurityError") {
                     setShowPermissionPopup(true);
                 } else {
-                    console.error("Error accessing the camera: ", error);
-                    alert("Camera access is required to take a picture. Please check your browser settings.");
+                    alert("Camera access is required. Please check your browser settings.");
                 }
             }
         };
@@ -79,12 +78,14 @@ const TakePicturePosit = () => {
 
     const takePicture = () => {
         if (canvasRef.current) {
-            // Capture the current frame from the canvas and stop the real-time feed
             const context = canvasRef.current.getContext('2d');
             context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
             canvasRef.current.toBlob((blob) => {
                 setImageBlob(blob);
                 setIsPictureTaken(true); // Stop updating the canvas with real-time feed
+                if (videoRef.current) {
+                    videoRef.current.pause(); // Pause the video stream
+                }
             }, 'image/jpeg');
         }
     };
@@ -101,20 +102,18 @@ const TakePicturePosit = () => {
         a.click();
         window.URL.revokeObjectURL(url);
 
-        resetCameraFeed(); // Restart camera feed after saving the image
+        resetCameraFeed(); // Resume the camera feed after saving the image
     };
 
     const discardPicture = () => {
-        setImageBlob(null); // Remove the captured image
-        setIsPictureTaken(false); // Allow the camera feed to resume
-        if (videoRef.current && videoRef.current.srcObject) {
-            requestAnimationFrame(drawToCanvas); // Resume real-time feed
-        }
+        setImageBlob(null);
+        setIsPictureTaken(false);
+        resetCameraFeed(); // Resume the camera feed
     };
 
     const resetCameraFeed = () => {
-        setIsPictureTaken(false); // Allow the camera feed to resume
-        if (videoRef.current && videoRef.current.srcObject) {
+        if (videoRef.current) {
+            videoRef.current.play(); // Resume video playback
             requestAnimationFrame(drawToCanvas); // Resume real-time feed
         }
     };
@@ -290,8 +289,7 @@ const styles = {
         borderRadius: 10,
         flex: 1,
         alignItems: 'center',
-        backgroundColor: 'red',
-        color: 'white',
+        color: 'red',
     },
     canvas: {
         width: '100%',
