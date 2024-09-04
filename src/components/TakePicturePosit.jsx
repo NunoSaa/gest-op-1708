@@ -79,6 +79,7 @@ const TakePicturePosit = () => {
 
     const takePicture = () => {
         if (canvasRef.current) {
+            // Capture the current frame from the canvas and stop the real-time feed
             const context = canvasRef.current.getContext('2d');
             context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
             canvasRef.current.toBlob((blob) => {
@@ -101,6 +102,14 @@ const TakePicturePosit = () => {
         window.URL.revokeObjectURL(url);
 
         resetCameraFeed(); // Restart camera feed after saving the image
+    };
+
+    const discardPicture = () => {
+        setImageBlob(null); // Remove the captured image
+        setIsPictureTaken(false); // Allow the camera feed to resume
+        if (videoRef.current && videoRef.current.srcObject) {
+            requestAnimationFrame(drawToCanvas); // Resume real-time feed
+        }
     };
 
     const resetCameraFeed = () => {
@@ -162,36 +171,51 @@ const TakePicturePosit = () => {
                 </div>
 
                 <div style={styles.rowInfo}>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={takePicture}
-                        style={styles.button_TakePicture}
-                    >
-                        Tirar Foto
-                    </Button>
+                    {!isPictureTaken && (
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={takePicture}
+                            style={styles.button_TakePicture}
+                        >
+                            Tirar Foto
+                        </Button>
+                    )}
                 </div>
 
-                <div style={styles.rowInfoCentered}>
-                    <Button
-                        variant="contained"
-                        color="success"
-                        onClick={savePicture}
-                        disabled={!imageBlob}
-                        style={styles.button_Save}
-                    >
-                        Guardar no dispositivo
-                    </Button>
+                {isPictureTaken && (
+                    <div style={styles.rowInfoCentered}>
+                        <Button
+                            variant="contained"
+                            color="success"
+                            onClick={savePicture}
+                            disabled={!imageBlob}
+                            style={styles.button_Save}
+                        >
+                            Guardar no dispositivo
+                        </Button>
 
-                    <Button
-                        variant="contained"
-                        color="info"
-                        disabled={!imageBlob}
-                        style={styles.button_Send}
-                    >
-                        Enviar para Gescorp
-                    </Button>
-                    
+                        <Button
+                            variant="contained"
+                            color="info"
+                            disabled={!imageBlob}
+                            style={styles.button_Send}
+                        >
+                            Enviar para Gescorp
+                        </Button>
+
+                        <Button
+                            variant="contained"
+                            color="error"
+                            onClick={discardPicture}
+                            style={styles.button_Discard}
+                        >
+                            Descartar Foto
+                        </Button>
+                    </div>
+                )}
+
+                <div style={styles.rowInfoCentered}>
                     <Button
                         variant="contained"
                         color="secondary"
@@ -252,7 +276,6 @@ const styles = {
         borderRadius: 10,
         flex: 1,
         alignItems: 'center',
-        marginRight: "5%"
     },
     button_SwitchCamera: {
         width: "35%",
@@ -260,6 +283,15 @@ const styles = {
         borderRadius: 10,
         flex: 1,
         alignItems: 'center',
+    },
+    button_Discard: {
+        width: "35%",
+        height: 75,
+        borderRadius: 10,
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: 'red',
+        color: 'white',
     },
     canvas: {
         width: '100%',
