@@ -370,7 +370,8 @@ function OcorrenciasDetail() {
                         <p style={{ ...styles.buttonText, marginRight: '5px' }}>Saída do Local </p>
                         <p style={styles.buttonText}>{isSaidaLocalSet ? saidaLocalTime : currentTime}</p>
                     </Button>
-                    <Button style={styles.button_Fotos}>
+                    <Button style={styles.button_Fotos}
+                    onClick={() => navigate('/takePicturePosit')}>
                         <p style={styles.buttonText}>Anexar Fotos</p>
                         <p style={styles.buttonTextOther}>.</p>
                     </Button>
@@ -382,8 +383,7 @@ function OcorrenciasDetail() {
                     ) && (
                             <div>
                                 <Button
-                                    style={styles.button_Fotos}
-                                >
+                                    style={styles.button_Fotos}>
                                     <p style={{ ...styles.buttonText, marginRight: '5px' }}>
                                         Saída do Hospital
                                     </p>

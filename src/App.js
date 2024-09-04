@@ -13,6 +13,7 @@ import FitaTempo from './components/FitaTempo';
 import NovoPosit from './components/NovoPosit';
 import RelatorioFinal from './components/RelatorioFinal';
 import RecordPositAudio from './components/RecordPositAudio';
+import TakePicturePosit from './components/TakePicturePosit';
 
 const isAuthenticated = () => {
   // Check if the user is authenticated
@@ -44,6 +45,7 @@ function App() {
         <Route path="/novoPosit" element={<NovoPosit />} />
         <Route path="/relatorioFinal" element={<RelatorioFinal/>} />
         <Route path="/recordPositAudio" element={<RecordPositAudio/>} />
+        <Route path="/takePicturePosit" element={<TakePicturePosit/>} />
       </Routes>
     </Router>
   );
