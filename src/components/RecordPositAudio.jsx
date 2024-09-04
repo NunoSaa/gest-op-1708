@@ -72,7 +72,7 @@ const RecordAudioPosit = () => {
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        a.download = 'recording.webm'; // Save the file as 'recording.webm'
+        a.download = 'recording.mp3'; // Save the file as 'recording.webm'
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
@@ -97,7 +97,7 @@ const RecordAudioPosit = () => {
                         <ArrowBackIcon />
                     </IconButton>
                     <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
-                        Ocorrência
+                        Fita de Tempo
                     </Typography>
                 </Toolbar>
             </AppBar>
