@@ -5,53 +5,64 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
 const TakePicturePosit = () => {
     const [imageBlob, setImageBlob] = useState(null);
     const [isCameraOn, setIsCameraOn] = useState(false);
+    const [showPermissionPopup, setShowPermissionPopup] = useState(false);
+    const [isPictureTaken, setIsPictureTaken] = useState(false); // To track if the picture has been taken
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const theme = useTheme();
 
     useEffect(() => {
         const initCamera = async () => {
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                alert("Your browser does not support camera access.");
-                return;
-            }
-    
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 if (videoRef.current) {
                     videoRef.current.srcObject = stream;
                     setIsCameraOn(true);
+                    if (!isPictureTaken) {
+                        requestAnimationFrame(drawToCanvas); // Start rendering the camera feed
+                    }
                 }
             } catch (error) {
-                console.error("Error accessing the camera: ", error);
-                alert("Camera access is required to take a picture. Please check your browser settings.");
+                if (error.name === "NotAllowedError" || error.name === "SecurityError") {
+                    setShowPermissionPopup(true);
+                } else {
+                    console.error("Error accessing the camera: ", error);
+                    alert("Camera access is required to take a picture. Please check your browser settings.");
+                }
             }
         };
-    
+
         initCamera();
-    
+
         return () => {
-            // Clean up the camera stream when the component unmounts
             if (videoRef.current && videoRef.current.srcObject) {
                 const stream = videoRef.current.srcObject;
                 stream.getTracks().forEach(track => track.stop());
             }
         };
-    }, []);
-    
+    }, [isPictureTaken]);
+
+    const drawToCanvas = () => {
+        if (canvasRef.current && videoRef.current && !isPictureTaken) {
+            const context = canvasRef.current.getContext('2d');
+            context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+            requestAnimationFrame(drawToCanvas); // Continue rendering in real-time
+        }
+    };
 
     const takePicture = () => {
-        if (canvasRef.current && videoRef.current) {
+        if (canvasRef.current) {
+            // Capture the current frame from the canvas and stop the real-time feed
             const context = canvasRef.current.getContext('2d');
-            canvasRef.current.width = videoRef.current.videoWidth;
-            canvasRef.current.height = videoRef.current.videoHeight;
             context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
             canvasRef.current.toBlob((blob) => {
-                setImageBlob(blob); // Save the image blob
+                setImageBlob(blob);
+                setIsPictureTaken(true); // Stop updating the canvas with real-time feed
             }, 'image/jpeg');
         }
     };
@@ -63,14 +74,27 @@ const TakePicturePosit = () => {
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        a.download = 'picture.jpg'; // Save the file as 'picture.jpg'
+        a.download = 'picture.jpg';
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
+
+        resetCameraFeed(); // Restart camera feed after saving the image
+    };
+
+    const resetCameraFeed = () => {
+        setIsPictureTaken(false); // Allow the camera feed to resume
+        if (videoRef.current && videoRef.current.srcObject) {
+            requestAnimationFrame(drawToCanvas); // Resume real-time feed
+        }
+    };
+
+    const handleClosePopup = () => {
+        setShowPermissionPopup(false);
     };
 
     const handleBackClick = () => {
-        window.history.back(); // Go back to the previous page
+        window.history.back();
     };
 
     return (
@@ -86,14 +110,26 @@ const TakePicturePosit = () => {
                 </Toolbar>
             </AppBar>
 
-            <div style={styles.container}>
+            <Dialog open={showPermissionPopup} onClose={handleClosePopup}>
+                <DialogTitle>Permission Required</DialogTitle>
+                <DialogContent>
+                    <Typography>
+                        Camera access is required to take a picture. Please enable camera access in your browser settings.
+                        <br />
+                        On iOS, go to: <strong>Settings &gt; Chrome &gt; Camera</strong> and allow access.
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClosePopup} color="primary">
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
 
+            <div style={styles.container}>
                 <div style={styles.rowInfo}>
                     {isCameraOn && (
-                        <video ref={videoRef} autoPlay style={styles.video}></video>
-                    )}
-                    {imageBlob && (
-                        <img src={URL.createObjectURL(imageBlob)} alt="Captured" style={styles.image} />
+                        <canvas ref={canvasRef} style={styles.canvas} width={640} height={480}></canvas>
                     )}
                 </div>
 
@@ -130,8 +166,7 @@ const TakePicturePosit = () => {
                 </div>
             </div>
 
-            {/* Hidden canvas to capture the image */}
-            <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+            <video ref={videoRef} style={{ display: 'none' }} autoPlay></video>
         </div>
     );
 };
@@ -153,10 +188,10 @@ const styles = {
     },
     rowInfoCentered: {
         display: 'flex',
-        justifyContent: 'center', // Centers the buttons horizontally
-        alignItems: 'center', // Centers the buttons vertically (optional)
-        gap: 16, // Optional: Adds space between the buttons
-        marginTop: 16, // Optional: Adds some margin at the top
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 16,
+        marginTop: 16,
     },
     button_TakePicture: {
         width: "100%",
@@ -181,11 +216,7 @@ const styles = {
         flex: 1,
         alignItems: 'center',
     },
-    video: {
-        width: '100%',
-        borderRadius: 10,
-    },
-    image: {
+    canvas: {
         width: '100%',
         borderRadius: 10,
     },
