@@ -16,6 +16,11 @@ import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 
 function NovoPosit() {
@@ -126,107 +131,124 @@ function NovoPosit() {
 
             console.log('Response:', response.data);
             // Check if the response is successful
-        if (response.data && response.data.status === 'success') {
-            // If the response is OK, navigate back to the previous page
-            navigate(-1);  // This will take the user back to the previous page
-        } else {
-            // Handle any other cases (like errors in the response)
-            console.error('Unexpected response:', response.data);
+            if (response.data && response.data.status === 'success') {
+                // If the response is OK, navigate back to the previous page
+                navigate(-1);  // This will take the user back to the previous page
+            } else {
+                // Handle any other cases (like errors in the response)
+                console.error('Unexpected response:', response.data);
+                alert('Aconteceu um erro ao inserir a informação. Tente mais tarde.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
             alert('Aconteceu um erro ao inserir a informação. Tente mais tarde.');
         }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Aconteceu um erro ao inserir a informação. Tente mais tarde.');
-    }
+    };
+
+
+    const handleBackClick = () => {
+        window.history.back(); // Go back to the previous page
     };
 
     return (
 
+        <div>
+            <AppBar position="static">
+                <Toolbar style={{ backgroundColor: "#A0A0A0" }}>
+                    <IconButton edge="start" color="inherit" onClick={handleBackClick} aria-label="back">
+                        <ArrowBackIcon />
+                    </IconButton>
+                    <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
+                        Fita de Tempo
+                    </Typography>
+                </Toolbar>
+            </AppBar>
 
-        <div style={styles.container}>
+            <div style={styles.container}>
 
-            <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit}>
 
-                <div style={styles.rowInfo}>
-                    <span style={styles.infoProp}>Data: </span>
-                    <TextField style={styles.input} value={formData.data} disabled />
-                </div>
+                    <div style={styles.rowInfo}>
+                        <span style={styles.infoProp}>Data: </span>
+                        <TextField style={styles.input} value={formData.data} disabled />
+                    </div>
 
-                <div style={styles.rowInfo}>
-                    <span style={styles.infoProp}>Hora: </span>
-                    <TextField style={styles.input} value={formData.hora} disabled />
-                </div>
+                    <div style={styles.rowInfo}>
+                        <span style={styles.infoProp}>Hora: </span>
+                        <TextField style={styles.input} value={formData.hora} disabled />
+                    </div>
 
-                <div style={styles.rowInfo}>
-                    <span style={styles.infoProp}>Número Ocorrência: </span>
-                    <TextField style={styles.input} value={item.id} disabled />
-                </div>
+                    <div style={styles.rowInfo}>
+                        <span style={styles.infoProp}>Número Ocorrência: </span>
+                        <TextField style={styles.input} value={item.id} disabled />
+                    </div>
 
-                <div style={styles.rowInfo}>
-                    <span style={styles.infoProp}>Tipo: </span>
-                    <FormControl fullWidth style={styles.input}>
-                        <InputLabel id="dropdown-label" >Tipo</InputLabel>
-                        <Select
-                            labelId="dropdown-label"
-                            id="dropdown"
-                            name='tipo'
-                            value={selectedValue}
-                            label="Select an Option"
-                            onChange={handleDropdownChange}
-                        >
-                            <MenuItem value={'comunicacao'}>Comunicação</MenuItem>
-                            <MenuItem value={'posit'}>POSIT</MenuItem>
-                        </Select>
-                    </FormControl>
-                </div>
+                    <div style={styles.rowInfo}>
+                        <span style={styles.infoProp}>Tipo: </span>
+                        <FormControl fullWidth style={styles.input}>
+                            <InputLabel id="dropdown-label" >Tipo</InputLabel>
+                            <Select
+                                labelId="dropdown-label"
+                                id="dropdown"
+                                name='tipo'
+                                value={selectedValue}
+                                label="Select an Option"
+                                onChange={handleDropdownChange}
+                            >
+                                <MenuItem value={'comunicacao'}>Comunicação</MenuItem>
+                                <MenuItem value={'posit'}>POSIT</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </div>
 
-                <div style={styles.rowInfo}>
-                    <span style={styles.infoProp}>De:</span>
-                    <TextField
-                        style={styles.input}
-                        type="text"
-                        name="de"
-                        value={formData.de}
-                        onChange={handleChange}
-                        variant="outlined" 
-                        fullWidth 
-                    />
-                </div>
+                    <div style={styles.rowInfo}>
+                        <span style={styles.infoProp}>De:</span>
+                        <TextField
+                            style={styles.input}
+                            type="text"
+                            name="de"
+                            value={formData.de}
+                            onChange={handleChange}
+                            variant="outlined"
+                            fullWidth
+                        />
+                    </div>
 
-                <div style={styles.rowInfo}>
-                    <span style={styles.infoProp}>Para: </span>
-                    <TextField
-                        style={styles.input}
-                        type="text"
-                        name="para"
-                        value={formData.para}
-                        onChange={handleChange}
-                        variant="outlined" 
-                        fullWidth 
-                    />
-                </div>
+                    <div style={styles.rowInfo}>
+                        <span style={styles.infoProp}>Para: </span>
+                        <TextField
+                            style={styles.input}
+                            type="text"
+                            name="para"
+                            value={formData.para}
+                            onChange={handleChange}
+                            variant="outlined"
+                            fullWidth
+                        />
+                    </div>
 
-                <div style={styles.rowInfo}>
-                    <span style={styles.infoProp}>Descrição: </span>
-                    <TextField
-                        style={styles.input}
-                        type="text"
-                        name="descricao"
-                        value={formData.descricao}
-                        onChange={handleChange}
-                        multiline
-                        rows={10} 
-                        variant="outlined" 
-                        fullWidth 
-                    />
-                </div>
+                    <div style={styles.rowInfo}>
+                        <span style={styles.infoProp}>Descrição: </span>
+                        <TextField
+                            style={styles.input}
+                            type="text"
+                            name="descricao"
+                            value={formData.descricao}
+                            onChange={handleChange}
+                            multiline
+                            rows={10}
+                            variant="outlined"
+                            fullWidth
+                        />
+                    </div>
 
-                <div style={styles.rowButton}>
-                    <Button type="submit" style={styles.button_SAVE}>
-                        <p style={styles.buttonText}>Guardar</p>
-                    </Button>
-                </div>
-            </form>
+                    <div style={styles.rowButton}>
+                        <Button type="submit" style={styles.button_SAVE}>
+                            <p style={styles.buttonText}>Guardar</p>
+                        </Button>
+                    </div>
+                </form>
+            </div>
         </div>
     );
 }

@@ -4,6 +4,11 @@ import '../css/Login.css';
 import { useNavigate, useLocation } from "react-router-dom";
 import { ClipLoader } from 'react-spinners';
 import Button from '@mui/material/Button';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 function FitaTempo() {
 
@@ -68,31 +73,49 @@ function FitaTempo() {
         </div>
     );
 
-    return (
-        <div style={styles.container}>
-            <div style={styles.row}>
-                <Button style={styles.button_POSIT}
-                    onClick={() => navigate('/novoPosit', { state: item })}>
-                    <p style={styles.buttonText}>Novo POSIT</p>
-                </Button>
-                <Button style={styles.button_POSIT_AUDIO}
-                onClick={() => navigate('/recordPositAudio', { state: item })}>
-                    <p style={styles.buttonText}>Novo Audio POSIT</p>
-                </Button>
-            </div>
+    const handleBackClick = () => {
+        window.history.back(); // Go back to the previous page
+    };
 
-            <div style={styles.row}>
-                {loading ? (
-                    <div style={styles.center}>
-                        <ClipLoader size={50} color="#C0C0C0" />
-                        A carregar...</div> // You can replace this with a loading icon
-                ) : timeTape.length === 0 ? (
-                    <div>Não foram encontrados Registos.</div> // Render message if emergencies array is empty
-                ) : (
-                    <div style={styles.rowItem}>
-                        {timeTape.map(renderItem)}
-                    </div>
-                )}
+    return (
+
+        <div>
+            <AppBar position="static">
+                <Toolbar style={{ backgroundColor: "#A0A0A0" }}>
+                    <IconButton edge="start" color="inherit" onClick={handleBackClick} aria-label="back">
+                        <ArrowBackIcon />
+                    </IconButton>
+                    <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
+                        Ocorrência
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+
+            <div style={styles.container}>
+                <div style={styles.row}>
+                    <Button style={styles.button_POSIT}
+                        onClick={() => navigate('/novoPosit', { state: item })}>
+                        <p style={styles.buttonText}>Novo POSIT</p>
+                    </Button>
+                    <Button style={styles.button_POSIT_AUDIO}
+                        onClick={() => navigate('/recordPositAudio', { state: item })}>
+                        <p style={styles.buttonText}>Novo Audio POSIT</p>
+                    </Button>
+                </div>
+
+                <div style={styles.row}>
+                    {loading ? (
+                        <div style={styles.center}>
+                            <ClipLoader size={50} color="#C0C0C0" />
+                            A carregar...</div> // You can replace this with a loading icon
+                    ) : timeTape.length === 0 ? (
+                        <div>Não foram encontrados Registos.</div> // Render message if emergencies array is empty
+                    ) : (
+                        <div style={styles.rowItem}>
+                            {timeTape.map(renderItem)}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

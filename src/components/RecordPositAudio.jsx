@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, LinearProgress, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const RecordAudioPosit = () => {
     const [audioBlob, setAudioBlob] = useState(null);
@@ -81,70 +85,87 @@ const RecordAudioPosit = () => {
         return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
     };
 
+    const handleBackClick = () => {
+        window.history.back(); // Go back to the previous page
+    };
+
     return (
-        <div style={styles.container}>
-            <div style={styles.rowInfo}>
-                <h2>Audio POSIT</h2>
-            </div>
-
-            <div style={styles.rowInfo}>
-                <LinearProgress variant="determinate" value={isRecording ? progress : 0} />
-                {isRecording && (
-                    <Typography variant="body1" style={{ marginTop: theme.spacing(1) }}>
-                        Tempo de Gravação: {formatTime(elapsedTime)}
+        <div>
+            <AppBar position="static">
+                <Toolbar style={{ backgroundColor: "#A0A0A0" }}>
+                    <IconButton edge="start" color="inherit" onClick={handleBackClick} aria-label="back">
+                        <ArrowBackIcon />
+                    </IconButton>
+                    <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
+                        Ocorrência
                     </Typography>
-                )}
-            </div>
+                </Toolbar>
+            </AppBar>
 
-            <div style={styles.rowInfo}>
-                {audioBlob && (
-                    <audio controls src={URL.createObjectURL(audioBlob)} style={styles.player}>
-                        Your browser does not support the audio element.
-                    </audio>
-                )}
-            </div>
+            <div style={styles.container}>
+                <div style={styles.rowInfo}>
+                    <h2>Audio POSIT</h2>
+                </div>
 
-            <div style={styles.rowInfo}>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={startRecording}
-                    disabled={isRecording}
-                    style={styles.button_Inciar}
-                >
-                    Iniciar Gravação
-                </Button>
-                <Button
-                    variant="contained"
-                    color="error"
-                    onClick={stopRecording}
-                    disabled={!isRecording}
-                    style={styles.button_Parar}
-                >
-                    Parar Gravação
-                </Button>
-            </div>
-            <div style={styles.rowInfoCentered}>
-                <Button
-                    variant="contained"
-                    color="success"
-                    onClick={saveRecording}
-                    disabled={!audioBlob}
-                    style={styles.button_Save}
-                >
-                    Guardar no dispositivo
-                </Button>
+                <div style={styles.rowInfo}>
+                    <LinearProgress variant="determinate" value={isRecording ? progress : 0} />
+                    {isRecording && (
+                        <Typography variant="body1" style={{ marginTop: theme.spacing(1) }}>
+                            Tempo de Gravação: {formatTime(elapsedTime)}
+                        </Typography>
+                    )}
+                </div>
 
-                <Button
-                    variant="contained"
-                    color="info"
-                    disabled={!audioBlob}
-                    style={styles.button_Send}
-                >
-                    Enviar para Gescorp
-                </Button>
-            </div>
+                <div style={styles.rowInfo}>
+                    {audioBlob && (
+                        <audio controls src={URL.createObjectURL(audioBlob)} style={styles.player}>
+                            Your browser does not support the audio element.
+                        </audio>
+                    )}
+                </div>
 
+                <div style={styles.rowInfo}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={startRecording}
+                        disabled={isRecording}
+                        style={styles.button_Inciar}
+                    >
+                        Iniciar Gravação
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="error"
+                        onClick={stopRecording}
+                        disabled={!isRecording}
+                        style={styles.button_Parar}
+                    >
+                        Parar Gravação
+                    </Button>
+                </div>
+                <div style={styles.rowInfoCentered}>
+                    <Button
+                        variant="contained"
+                        color="success"
+                        onClick={saveRecording}
+                        disabled={!audioBlob}
+                        style={styles.button_Save}
+                    >
+                        Guardar no dispositivo
+                    </Button>
+
+                    <Button
+                        variant="contained"
+                        color="info"
+                        disabled={!audioBlob}
+                        style={styles.button_Send}
+                    >
+                        Enviar para Gescorp
+                    </Button>
+                </div>
+
+            </div>
         </div>
     );
 };
