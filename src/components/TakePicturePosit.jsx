@@ -43,6 +43,9 @@ const TakePicturePosit = () => {
                 const stream = await navigator.mediaDevices.getUserMedia(constraints);
                 if (videoRef.current) {
                     videoRef.current.srcObject = stream;
+                    videoRef.current.onloadedmetadata = () => {
+                        videoRef.current.play(); // Ensure the video is playing
+                    };
                     setIsCameraOn(true);
                     if (!isPictureTaken) {
                         requestAnimationFrame(drawToCanvas); // Start rendering the camera feed
@@ -71,6 +74,8 @@ const TakePicturePosit = () => {
     const drawToCanvas = () => {
         if (canvasRef.current && videoRef.current && !isPictureTaken) {
             const context = canvasRef.current.getContext('2d');
+            canvasRef.current.width = videoRef.current.videoWidth; // Set canvas width to video width
+            canvasRef.current.height = videoRef.current.videoHeight; // Set canvas height to video height
             context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
             requestAnimationFrame(drawToCanvas); // Continue rendering in real-time
         }
@@ -165,7 +170,7 @@ const TakePicturePosit = () => {
             <div style={styles.container}>
                 <div style={styles.rowInfo}>
                     {isCameraOn && (
-                        <canvas ref={canvasRef} style={styles.canvas} width={640} height={480}></canvas>
+                        <canvas ref={canvasRef} style={styles.canvas}></canvas>
                     )}
                 </div>
 
@@ -294,6 +299,7 @@ const styles = {
     canvas: {
         width: '100%',
         borderRadius: 10,
+        display: 'block',
     },
 };
 
