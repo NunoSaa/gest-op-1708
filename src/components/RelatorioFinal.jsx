@@ -7,8 +7,13 @@ import Button from '@mui/material/Button';
 function RelatorioFinal() {
     return (
         <div style={styles.container}>
+
             <div style={styles.rowInfo}>
+                <div style={styles.Geralontainer}>
+                <div style={styles.desalojadosLabel}>
                 <span style={styles.infoProp}>Geral: </span>
+                </div>
+                </div>
             </div>
 
             <div style={styles.rowInfo}>
@@ -33,10 +38,12 @@ function RelatorioFinal() {
                 />
             </div>
 
-            <Divider style={styles.divider} />
-
             <div style={styles.rowInfo}>
+                <div style={styles.Geralontainer}>
+                <div style={styles.desalojadosLabel}>
                 <span style={styles.infoProp}>Efeitos do Sinistro: </span>
+                </div>
+                </div>
             </div>
 
             <div style={styles.rowInfo}>
@@ -110,10 +117,10 @@ function RelatorioFinal() {
             </div>
 
             <div style={styles.rowButton}>
-                    <Button type="submit" style={styles.button_SAVE}>
-                        <p style={styles.buttonText}>Guardar</p>
-                    </Button>
-                </div>
+                <Button type="submit" style={styles.button_SAVE}>
+                    <p style={styles.buttonText}>Guardar</p>
+                </Button>
+            </div>
 
         </div>
     );
@@ -254,6 +261,17 @@ const styles = {
         color: '#000000',
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    Geralontainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: '5px',
+        border: '1px solid #ccc',
+        borderRadius: '8px',
+        backgroundColor: "#A0A0A0",
+        marginTop: 25,
+        marginBottom: 25
     },
 };
 
