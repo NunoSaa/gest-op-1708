@@ -12,14 +12,36 @@ const TakePicturePosit = () => {
     const [isCameraOn, setIsCameraOn] = useState(false);
     const [showPermissionPopup, setShowPermissionPopup] = useState(false);
     const [isPictureTaken, setIsPictureTaken] = useState(false); // To track if the picture has been taken
+    const [currentCamera, setCurrentCamera] = useState(null); // To track the current camera
+    const [cameraDevices, setCameraDevices] = useState([]);
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const theme = useTheme();
 
     useEffect(() => {
-        const initCamera = async () => {
+        const getCameraDevices = async () => {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const cameras = devices.filter(device => device.kind === 'videoinput');
+                setCameraDevices(cameras);
+                if (cameras.length > 0) {
+                    setCurrentCamera(cameras[0].deviceId);
+                }
+            } catch (error) {
+                console.error('Error getting devices: ', error);
+            }
+        };
+
+        getCameraDevices();
+    }, []);
+
+    useEffect(() => {
+        const initCamera = async () => {
+            if (!currentCamera) return;
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { deviceId: { exact: currentCamera } }
+                });
                 if (videoRef.current) {
                     videoRef.current.srcObject = stream;
                     setIsCameraOn(true);
@@ -45,7 +67,7 @@ const TakePicturePosit = () => {
                 stream.getTracks().forEach(track => track.stop());
             }
         };
-    }, [isPictureTaken]);
+    }, [currentCamera, isPictureTaken]);
 
     const drawToCanvas = () => {
         if (canvasRef.current && videoRef.current && !isPictureTaken) {
@@ -57,7 +79,6 @@ const TakePicturePosit = () => {
 
     const takePicture = () => {
         if (canvasRef.current) {
-            // Capture the current frame from the canvas and stop the real-time feed
             const context = canvasRef.current.getContext('2d');
             context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
             canvasRef.current.toBlob((blob) => {
@@ -95,6 +116,13 @@ const TakePicturePosit = () => {
 
     const handleBackClick = () => {
         window.history.back();
+    };
+
+    const switchCamera = () => {
+        if (cameraDevices.length > 1) {
+            const newIndex = (cameraDevices.findIndex(device => device.deviceId === currentCamera) + 1) % cameraDevices.length;
+            setCurrentCamera(cameraDevices[newIndex].deviceId);
+        }
     };
 
     return (
@@ -163,6 +191,15 @@ const TakePicturePosit = () => {
                     >
                         Enviar para Gescorp
                     </Button>
+                    
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={switchCamera}
+                        style={styles.button_SwitchCamera}
+                    >
+                        Alternar Câmera
+                    </Button>
                 </div>
             </div>
 
@@ -210,6 +247,14 @@ const styles = {
         marginRight: "5%"
     },
     button_Send: {
+        width: "35%",
+        height: 75,
+        borderRadius: 10,
+        flex: 1,
+        alignItems: 'center',
+        marginRight: "5%"
+    },
+    button_SwitchCamera: {
         width: "35%",
         height: 75,
         borderRadius: 10,
