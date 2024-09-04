@@ -75,7 +75,8 @@ function FitaTempo() {
                     onClick={() => navigate('/novoPosit', { state: item })}>
                     <p style={styles.buttonText}>Novo POSIT</p>
                 </Button>
-                <Button style={styles.button_POSIT_AUDIO}>
+                <Button style={styles.button_POSIT_AUDIO}
+                onClick={() => navigate('/recordPositAudio', { state: item })}>
                     <p style={styles.buttonText}>Novo Audio POSIT</p>
                 </Button>
             </div>

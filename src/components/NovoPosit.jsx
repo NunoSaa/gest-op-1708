@@ -29,7 +29,7 @@ function NovoPosit() {
     const [geolocationGMS, setGeoLocationGMS] = useState({ latitude: '', longitude: '' });
     const [item, setItem] = useState(state);
 
-    const [selectedValue, setSelectedValue] = useState('');
+    const [selectedValue, setSelectedValue] = useState('posit');
 
     const fetchGeolocation = () => {
         if (navigator.geolocation) {

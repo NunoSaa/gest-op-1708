@@ -11,6 +11,8 @@ import MateriasPerigosasResult from './components/MateriasPerigosasResult';
 import AdminHomePage from './components/AdminHomePage';
 import FitaTempo from './components/FitaTempo';
 import NovoPosit from './components/NovoPosit';
+import RelatorioFinal from './components/RelatorioFinal';
+import RecordPositAudio from './components/RecordPositAudio';
 
 const isAuthenticated = () => {
   // Check if the user is authenticated
@@ -40,6 +42,8 @@ function App() {
         <Route path="/materiasPerigosasResult" element={<MateriasPerigosasResult />} />
         <Route path="/fitaTempo" element={<FitaTempo />} />
         <Route path="/novoPosit" element={<NovoPosit />} />
+        <Route path="/relatorioFinal" element={<RelatorioFinal/>} />
+        <Route path="/recordPositAudio" element={<RecordPositAudio/>} />
       </Routes>
     </Router>
   );
