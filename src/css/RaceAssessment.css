@@ -10,7 +10,7 @@
 }
 
 /* Title styles */
-h3 {
+.race-container h3 {
     font-size: 18px;
     color: #0065ad;
     margin-bottom: 10px;
