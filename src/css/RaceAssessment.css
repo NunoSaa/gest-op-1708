@@ -1,0 +1,82 @@
+/* Container for all tables */
+.race-container {
+    width: 95%;
+    margin-left: 25px;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f7f9fb;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* Title styles */
+h3 {
+    font-size: 18px;
+    color: #0065ad;
+    margin-bottom: 10px;
+}
+
+/* Flexbox layout to place tables side by side */
+.table-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+/* Styles for the RACE table */
+.race-table-section, .glasgow-cincinnati-section {
+    flex-basis: 48%; /* Adjusts the width of each section */
+    margin-bottom: 20px;
+}
+
+/* Table styles */
+.race-table, .glasgow-table, .cincinnati-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.race-table th, .glasgow-table th, .cincinnati-table th,
+.race-table td, .glasgow-table td, .cincinnati-table td {
+    border: 1px solid #dddddd;
+    padding: 8px;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Header row styles */
+.race-table th, .glasgow-table th, .cincinnati-table th {
+    background-color: #e0e8f0;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Alternating row background color */
+.race-table tbody tr:nth-child(even),
+.glasgow-table tbody tr:nth-child(even),
+.cincinnati-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Style for the title row inside the table */
+.row-title {
+    background-color: #0065ad;
+    color: white;
+    text-align: left;
+    padding: 8px;
+    font-weight: bold;
+}
+
+/* Media query for responsive layout */
+@media screen and (max-width: 768px) {
+    .table-container {
+        flex-direction: column;
+    }
+
+    .race-table-section, .glasgow-cincinnati-section {
+        flex-basis: 100%;
+    }
+
+    th, td {
+        font-size: 12px;
+    }
+}

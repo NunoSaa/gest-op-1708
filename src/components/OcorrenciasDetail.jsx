@@ -401,7 +401,8 @@ function OcorrenciasDetail() {
                                     */
                                 }
                                 <Button style={styles.button_Fotos}>
-                                    <p style={styles.buttonText}>Anexar Verbete</p>
+                                    <p style={styles.buttonText}
+                                    onClick={() => navigate('/verbeteINEM')}>Anexar Verbete</p>
                                     <p style={styles.buttonTextOther}>.</p>
                                 </Button>
                             </div>
