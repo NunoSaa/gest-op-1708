@@ -319,7 +319,7 @@ function OcorrenciasDetail() {
                 </div>
                 <div style={styles.rowInfo}>
                     <span style={styles.infoProp}>Freguesia: </span>
-                    <span style={styles.info}>{item.freguesia}</span>
+                    <span style={styles.info}>{item.localidade}</span>
                 </div>
                 <div style={styles.rowInfo}>
                     <span style={styles.infoProp}>Ponto de Referência: </span>
@@ -371,7 +371,7 @@ function OcorrenciasDetail() {
                         <p style={styles.buttonText}>{isSaidaLocalSet ? saidaLocalTime : currentTime}</p>
                     </Button>
                     <Button style={styles.button_Fotos}
-                    onClick={() => navigate('/takePicturePosit')}>
+                        onClick={() => navigate('/takePicturePosit')}>
                         <p style={styles.buttonText}>Anexar Fotos</p>
                         <p style={styles.buttonTextOther}>.</p>
                     </Button>
@@ -391,18 +391,13 @@ function OcorrenciasDetail() {
                                         {isChegadaUnidadeSet ? chegadaUnidadeTime : currentTime}
                                     </p>
                                 </Button>
-                                {
-                                    /*
-                                    <Button style={styles.button_Fotos}
-                                    onClick={() => navigate('/verbeteINEM')}>
-                                    <p style={styles.buttonText}>Anexar Verbete</p>
-                                    <p style={styles.buttonTextOther}>.</p>
-                                </Button>
-                                    */
-                                }
+
                                 <Button style={styles.button_Fotos}>
                                     <p style={styles.buttonText}
-                                    onClick={() => navigate('/verbeteINEM')}>Anexar Verbete</p>
+                                        onClick={() => {
+                                            console.log('Anexar Verbete button clicked');
+                                            navigate('/verbeteINEM');
+                                        }}>Anexar Verbete</p>
                                     <p style={styles.buttonTextOther}>.</p>
                                 </Button>
                             </div>
@@ -418,7 +413,7 @@ function OcorrenciasDetail() {
                             <p style={styles.buttonText}>{isChegadaUnidadeSet ? chegadaUnidadeTime : currentTime}</p>
                         </Button>
                         <Button style={styles.button_RelatorioFinal}
-                            onClick={() => navigate('/relatorioFinal')}>
+                            onClick={() => navigate('/relatorioFinal', { state: item })}>
                             <p style={styles.buttonText}>Relatório Final</p>
                             <p style={styles.buttonTextOther}>.</p>
                         </Button>
