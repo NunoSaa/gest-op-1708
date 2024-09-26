@@ -1,11 +1,9 @@
 import '../css/Login.css';
 import axios from 'axios';
 import TextField from '@mui/material/TextField';
-import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect} from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
-import { ClipLoader } from 'react-spinners';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';

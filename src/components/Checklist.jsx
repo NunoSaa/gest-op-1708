@@ -5,9 +5,13 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-
+import Grid from '@mui/material/Grid';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 function CheckList() {
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const handleClickABSC01 = () => {
         window.open('https://docs.google.com/forms/d/1V31uXzaizIpdCa9SST_C1Ge3oAx_tec0FU4nbxh_TGQ/viewform?edit_requested=true', '_blank');
@@ -66,7 +70,6 @@ function CheckList() {
     };
 
     return (
-
         <div>
             <AppBar position="static">
                 <Toolbar style={{ backgroundColor: "#A0A0A0" }}>
@@ -81,34 +84,53 @@ function CheckList() {
 
             <div style={styles.center}>
                 <div style={styles.container}>
-                    <div style={styles.row}>
-                        <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC01}>ABSC 01</Button>
-                        <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC03}>ABSC 03</Button>
-                    </div>
-                    <div style={styles.row}>
-                        <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC04}>ABSC 04</Button>
-                        <Button style={styles.button_ABSC} variant="contained" onClick={handleClickVOPE06}>VOPE 06</Button>
-                    </div>
-                    <div style={styles.row}>
-                        <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVUCI01}>VUCI 01</Button>
-                        <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVECI02}>VECI 02</Button>
-                    </div>
-                    <div style={styles.row}>
-                        <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI06}>VFCI 06</Button>
-                        <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI07}>VFCI 07</Button>
-                    </div>
-                    <div style={styles.row}>
-                        <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI08}>VFCI 08</Button>
-                        <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI09}>VFCI 09</Button>
-                    </div>
-                    <div style={styles.row}>
-                        <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVTTU01}>VTTU 01</Button>
-                        <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVOPE05}>VOPE 05</Button>
-                    </div>
-                    <div style={styles.row}>
-                        <Button style={styles.button_VCOT} variant="contained" onClick={handleClickVCOT01}>VCOT 01</Button>
-                        <Button style={styles.button_VCOT} variant="contained" onClick={handleClickVCOT01}>VCOT 02</Button>
-                    </div>
+                    <Grid container spacing={isMobile ? 2 : 4} justifyContent="center">
+                        <Grid item xs={12} sm={6} md={3}>
+                            <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC01}>ABSC 01</Button>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={3}>
+                            <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC03}>ABSC 03</Button>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={3}>
+                            <Button style={styles.button_ABSC} variant="contained" onClick={handleClickABSC04}>ABSC 04</Button>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={3}>
+                            <Button style={styles.button_ABSC} variant="contained" onClick={handleClickVOPE06}>VOPE 06</Button>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6} md={3}>
+                            <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVUCI01}>VUCI 01</Button>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={3}>
+                            <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVECI02}>VECI 02</Button>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={3}>
+                            <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI06}>VFCI 06</Button>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={3}>
+                            <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI07}>VFCI 07</Button>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6} md={3}>
+                            <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI08}>VFCI 08</Button>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={3}>
+                            <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVFCI09}>VFCI 09</Button>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={3}>
+                            <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVTTU01}>VTTU 01</Button>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={3}>
+                            <Button style={styles.button_VUCI} variant="contained" onClick={handleClickVOPE05}>VOPE 05</Button>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6} md={3}>
+                            <Button style={styles.button_VCOT} variant="contained" onClick={handleClickVCOT01}>VCOT 01</Button>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={3}>
+                            <Button style={styles.button_VCOT} variant="contained" onClick={handleClickVCOT01}>VCOT 02</Button>
+                        </Grid>
+                    </Grid>
                 </div>
             </div>
         </div>
@@ -127,57 +149,31 @@ const styles = {
         flexDirection: 'column',
         backgroundColor: "white",
         flex: 1,
-        //justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
         marginTop: 25,
     },
-    row: {
-        flexDirection: 'row',
-        marginBottom: 20,
-    },
     button_ABSC: {
-        width: 150, // Set the width and height to create square buttons
-        height: 150,
+        width: '100%', // Full width for responsiveness
+        height: '30vh',
         backgroundColor: '#46D8FF',
         padding: 20,
-        marginHorizontal: 20,
-        marginVertical: 20,
         borderRadius: 10,
-        flex: 1, // Each button takes up equal space within the row
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 5,
-        marginRight: 5,
     },
     button_VUCI: {
-        width: 150, // Set the width and height to create square buttons
-        height: 150,
+        width: '100%', // Full width for responsiveness
+        height: '30vh',
         backgroundColor: '#FF6666',
         padding: 20,
-        marginHorizontal: 20,
-        marginVertical: 20,
         borderRadius: 10,
-        flex: 1, // Each button takes up equal space within the row
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 5,
-        marginRight: 5,
     },
     button_VCOT: {
-        width: 150, // Set the width and height to create square buttons
-        height: 150,
+        width: '100%', // Full width for responsiveness
+        height: '30vh',
         backgroundColor: '#A0A0A0',
         padding: 20,
-        marginHorizontal: 20,
-        marginVertical: 20,
         borderRadius: 10,
-        flex: 1, // Each button takes up equal space within the row
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 5,
-        marginRight: 5,
     },
-}
+};
 
 export default CheckList;

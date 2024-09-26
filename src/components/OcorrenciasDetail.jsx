@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useNavigate, useLocation } from "react-router-dom";
 import { ClipLoader } from 'react-spinners';
@@ -11,17 +10,15 @@ import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 function OcorrenciasDetail() {
+
     const navigate = useNavigate();
     const location = useLocation();
     const { state } = location;
-
     const [loading, setLoading] = useState(true);
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
     const [isTimerRunning, setIsTimerRunning] = useState(true);
-    const [inputValue, setInputValue] = useState('');
     const [item, setItem] = useState(state);
     const vehicle = useRef([]); // Use a ref to store vehicle data
-    //const [vehicle, setVehicle] = useState([]);
     const [error, setError] = useState(null);
     const [isChegadaLocalSet, setIsChegadaLocalSet] = useState(false);
     const [isSaidaLocalSet, setIsSaidaLocalSet] = useState(false);
@@ -30,8 +27,6 @@ function OcorrenciasDetail() {
     const [saidaLocalTime, setSaidaLocalTime] = useState('');
     const [chegadaUnidadeTime, setChegadaUnidadeTime] = useState('');
     const [emergencies, setEmergencies] = useState([]);
-    const [lastVehicleUpdate, setLastVehicleUpdate] = useState(Date.now());
-
     const descricao = localStorage.getItem('username');
 
     useEffect(() => {
@@ -82,17 +77,17 @@ function OcorrenciasDetail() {
                 console.log('Vehicle Object:', vehicle);
                 console.log('tes: ', response.data[0].viaturas[0].descricao)
 
-                if (filteredVehicles[0].hora_chegada_to != "") {
+                if (filteredVehicles[0].hora_chegada_to !== "") {
                     setChegadaLocalTime(filteredVehicles[0].hora_chegada_to)
                     setIsChegadaLocalSet(true)
                 }
 
-                if (filteredVehicles[0].hora_saida_to != "") {
+                if (filteredVehicles[0].hora_saida_to !== "") {
                     setSaidaLocalTime(filteredVehicles[0].hora_saida_to)
                     setIsSaidaLocalSet(true)
                 }
 
-                if (filteredVehicles[0].hora_chegada != "") {
+                if (filteredVehicles[0].hora_chegada !== "") {
                     setChegadaUnidadeTime(filteredVehicles[0].hora_chegada)
                     setIsChegadaUnidadeSet(true)
                 }

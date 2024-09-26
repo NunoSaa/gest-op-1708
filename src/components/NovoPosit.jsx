@@ -3,19 +3,12 @@ import axios from 'axios';
 import '../css/Login.css';
 import { ClipLoader } from 'react-spinners';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import Text from '@mui/material/TextField'
-import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import { useNavigate, useLocation } from "react-router-dom";
-import Checkbox from '@mui/material/Checkbox';
-import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -28,12 +21,9 @@ function NovoPosit() {
     const navigate = useNavigate();
     const location = useLocation();
     const { state } = location;
-    const [selectedOption, setSelectedOption] = useState('');
-    const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
     const [geolocation, setGeoLocation] = useState({ latitude: null, longitude: null });
     const [geolocationGMS, setGeoLocationGMS] = useState({ latitude: '', longitude: '' });
     const [item, setItem] = useState(state);
-
     const [selectedValue, setSelectedValue] = useState('posit');
 
     const fetchGeolocation = () => {
@@ -400,11 +390,6 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 25, // Adjusted for consistent spacing
-    },
-    buttonText: {
-        color: '#000000',
-        fontSize: 16,
-        fontWeight: 'bold',
     },
 };
 

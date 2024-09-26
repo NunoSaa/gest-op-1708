@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Typography } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -16,7 +15,6 @@ const TakePicturePosit = () => {
     const [cameraDevices, setCameraDevices] = useState([]);
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
-    const theme = useTheme();
 
     useEffect(() => {
         const getCameraDevices = async () => {
