@@ -107,10 +107,10 @@ function OcorrenciasDetail() {
     useEffect(() => {
 
         fetchEmergencies(); // Initial fetch
-
         const intervalId = setInterval(fetchEmergencies, 60000); // Fetch every minute
 
         return () => clearInterval(intervalId); // Cleanup on unmount
+
     }, [item.id]); // Depend on `item.id` to refetch data if `item` changes
 
     const formatDateDDMMYYYY = (date) => {
@@ -121,15 +121,13 @@ function OcorrenciasDetail() {
         return `${day}-${month}-${year}`;
     };
 
+    //CHEGADA AO LOCAL
     const handleSetTimeChegadaLocal = async () => {
         const chegadaTime = new Date().toLocaleTimeString();
         setChegadaLocalTime(chegadaTime);
 
         const now = new Date();
-        // Get the current date in the format "YYYY-MM-DD"
         const currentDate = formatDateDDMMYYYY(now);
-
-        // Get the current time in the format "HH:MM"
         const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
 
         try {

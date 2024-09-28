@@ -8,13 +8,16 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-
+import { useMediaQuery } from '@mui/material'; // Import to handle responsiveness
 
 function Ocorrencias() {
 
     const [emergencies, setEmergencies] = useState([]);
     let navigate = useNavigate()
     const [loading, setLoading] = useState(true);
+
+    // Use media queries to detect screen size
+    const isMobile = useMediaQuery('(max-width:600px)');
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -41,17 +44,24 @@ function Ocorrencias() {
     }, []);
 
     const renderItem = (item) => {
-
         const array = item.viaturas[0] || [];
         const uniqueViaturas = [...new Set(array)];
         const viaturas = uniqueViaturas.join(', ');
 
         return (
-            <div key={item.id} style={{ ...styles.item, backgroundColor: item.corEstado }} onClick={() => navigate(`/ocorrenciasDetail/${item.id}`, { state: item })}>
+            <div 
+                key={item.id} 
+                style={{ 
+                    ...styles.item, 
+                    backgroundColor: item.corEstado, 
+                    flexDirection: isMobile ? 'column' : 'row' // Adjust for mobile
+                }} 
+                onClick={() => navigate(`/ocorrenciasDetail/${item.id}`, { state: item })}
+            >
                 <div style={styles.content}>
                     <h3 style={styles.title}>{item.morada}, {item.localidadeMorada}</h3>
                     <p style={styles.description}>{item.descClassificacao}</p>
-                    <p style={styles.vehicle}>{viaturas}</p> {/* Correctly using the viaturas variable */}
+                    <p style={styles.vehicle}>{viaturas}</p>
                 </div>
                 <div style={styles.rightContainer}>
                     <span style={styles.estado}>{item.estado}</span>
@@ -82,9 +92,10 @@ function Ocorrencias() {
                 {loading ? (
                     <div style={styles.center}>
                         <ClipLoader size={50} color="#C0C0C0" />
-                        A carregar...</div> // You can replace this with a loading icon
+                        A carregar...
+                    </div>
                 ) : emergencies.length === 0 ? (
-                    <div>Não foram encontradas ocorrências.</div> // Render message if emergencies array is empty
+                    <div>Não foram encontradas ocorrências.</div>
                 ) : (
                     emergencies.map(renderItem)
                 )}
@@ -111,8 +122,8 @@ const styles = {
         marginLeft: 25,
     },
     item: {
-        display: 'flex', // Add this to make the item a flex container
-        alignItems: 'center',
+        display: 'flex', // Flexbox layout
+        alignItems: 'center', // Center vertically
         backgroundColor: '#E0E0E0',
         padding: 20,
         marginVertical: 5,
@@ -121,42 +132,72 @@ const styles = {
         border: '1px solid #C0C0C0',
         borderWidth: 1,
         borderRadius: 5,
-        marginTop: 15
+        marginTop: 15,
+        flexDirection: 'row', // Default for desktop, adjusted for mobile in renderItem
+        transition: '0.3s ease', // Smooth transition for better UX
     },
     title: {
-        fontSize: 24,
+        fontSize: '1.5em', // Use responsive units for fonts
         paddingBottom: 5,
     },
     description: {
-        fontSize: 18,
+        fontSize: '1.2em',
         paddingBottom: 5,
     },
     vehicle: {
-        marginTop: '5',
-        fontSize: 14,
+        marginTop: 5,
+        fontSize: '1em',
         fontWeight: 'bold'
     },
     rightContainer: {
-        flex: 1,
-        alignItems: 'right',
         display: 'flex',
-        justifyContent: 'flex-end',
+        flexDirection: 'column',
+        justifyContent: 'center', // Center vertically
+        alignItems: 'flex-end', // Align to the right
+        textAlign: 'right',
+        paddingRight: 25 // Add padding to the right
     },
     timestamp: {
-        marginRight: 25,
-        marginLeft: 25,
         color: '#888',
-        fontSize: 16
+        fontSize: '1em',
+        marginTop: 10 // Add some spacing between estado and timestamp
     },
     estado: {
         fontWeight: 'bold',
-        fontSize: 16
+        fontSize: '1.2em',
     },
     image: {
         width: 75,
         height: 75,
         resizeMode: 'contain',
     },
+    // Media query for mobile responsiveness
+    '@media (max-width: 600px)': {
+        container: {
+            marginLeft: 10,
+            marginRight: 10,
+        },
+        item: {
+            flexDirection: 'column', // Stack elements for mobile
+            padding: 10,
+            marginHorizontal: 10,
+        },
+        title: {
+            fontSize: '1.2em',
+        },
+        description: {
+            fontSize: '1em',
+        },
+        vehicle: {
+            fontSize: '0.9em',
+        },
+        timestamp: {
+            fontSize: '0.8em',
+        },
+        estado: {
+            fontSize: '1em',
+        }
+    }
 };
 
 export default Ocorrencias;
