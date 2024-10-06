@@ -33,7 +33,8 @@ function HomePage() {
         localStorage.removeItem('username');
 
         // Optionally navigate to the login page or another page
-        navigate('/login');
+        // Redirect to user homepage and refresh
+        window.location.href = '/login';
     };
 
     return (

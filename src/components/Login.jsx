@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
-import { eyeOff } from 'react-icons-kit/feather/eyeOff';
+import { eyeOff, eye } from 'react-icons-kit/feather'; // Importing both icons
 import { Icon as IconKit } from 'react-icons-kit';
 
 
@@ -48,13 +48,15 @@ function Login({ history }) {
                     localStorage.setItem('username', response.data.user.username);
                     console.log(response.data.token);
                     console.log(response.data.user.username);
-                    navigate('/adminHomepage');
-                } else if(response.data.user.role === 'user'){
+                    // Redirect to admin homepage and refresh
+                    window.location.href = '/adminHomePage';
+                } else if (response.data.user.role === 'user') {
                     localStorage.setItem('token', response.data.token);
                     localStorage.setItem('username', response.data.user.username);
                     console.log(response.data.token);
                     console.log(response.data.user.username);
-                    navigate('/homepage');
+                    // Redirect to user homepage and refresh
+                    window.location.href = '/homepage';
                 }
             }
         } catch (error) {
@@ -74,12 +76,27 @@ function Login({ history }) {
             <div style={styles.container1}>
                 <div className="mb-4 flex">
                     <div>
-                        <TextField style={styles.input} id="standard-basic" label="Username" variant="standard" value={username} onChange={(e) => setUsername(e.target.value)} />
+                        <TextField
+                            style={styles.inputLogin}
+                            id="standard-basic"
+                            label="Username"
+                            variant="standard"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
                     </div>
-                    <div >
-                        <TextField style={styles.input} type={showPassword ? 'text' : 'password'} id="password" label="Password" variant="standard" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <div style={{ position: 'relative' }}>
+                        <TextField
+                            style={styles.inputLogin}
+                            type={showPassword ? 'text' : 'password'}
+                            id="password"
+                            label="Password"
+                            variant="standard"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
                         <span style={styles.icon} onClick={handleShowPassword}>
-                            <IconKit className="absolute mr-10" icon={icon} size={24} />
+                            <IconKit className="absolute" icon={showPassword ? eye : eyeOff} size={24} />
                         </span>
                     </div>
                 </div>
@@ -87,7 +104,14 @@ function Login({ history }) {
 
             {wrong && <p style={{ color: 'red' }}>{wrong}</p>}
 
-            <Button style={styles.button} disabled={loading} variant="contained" onClick={handleSubmit}>{loading ? <ClipLoader size={20} color="#ffffff" /> : 'Login'}</Button>
+            <Button
+                style={styles.button}
+                disabled={loading}
+                variant="contained"
+                onClick={handleSubmit}
+            >
+                {loading ? <ClipLoader size={20} color="#ffffff" /> : 'Login'}
+            </Button>
         </div>
     );
 }
@@ -125,7 +149,7 @@ const styles = {
         color: '#000000',
         //paddingHorizontal: 10,
     },
-    input: {
+    inputLogin: {
         width: 250,
         height: 40,
         borderWidth: 1,
