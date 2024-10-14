@@ -148,10 +148,20 @@ function OcorrenciasDetail() {
             if (response.data && response.data.status === 'success') {
                 alert('Chegada ao Local Enviada com Sucesso');
 
-                await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
-                    id_ocorrencia: emergencies[0].id,
-                    id_estado: '6'
-                });
+                if (descricao === 'ABSC01' || descricao === 'ABSC02'
+                    || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06') {
+                    await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
+                        id_ocorrencia: emergencies[0].id,
+                        id_estado: '6'
+                    });
+                }
+                else {
+                    await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
+                        id_ocorrencia: emergencies[0].id,
+                        id_estado: '5'
+                    });
+                }
+
 
             } else {
                 // Handle any other cases (like errors in the response)
@@ -195,10 +205,19 @@ function OcorrenciasDetail() {
 
             if (response.data && response.data.status === 'success') {
 
-                await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
-                    id_ocorrencia: emergencies[0].id,
-                    id_estado: '5'
-                });
+                if (descricao === 'ABSC01' || descricao === 'ABSC02'
+                    || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06') {
+                    await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
+                        id_ocorrencia: emergencies[0].id,
+                        id_estado: '6'
+                    });
+                }
+                else {
+                    await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
+                        id_ocorrencia: emergencies[0].id,
+                        id_estado: '7'
+                    });
+                }
 
                 alert('Saida do Local Enviada com Sucesso');
             } else {
@@ -227,10 +246,16 @@ function OcorrenciasDetail() {
         const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
 
         try {
-            const response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
-                id_ocorrencia: emergencies[0].id,
-                id_estado: '7'
-            });
+
+            const response = '';
+
+            if (descricao === 'ABSC01' || descricao === 'ABSC02'
+                || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06') {
+                response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
+                    id_ocorrencia: emergencies[0].id,
+                    id_estado: '7'
+                });
+            }
 
             await fetchEmergencies();
             console.log('Chegada Estado updated:', response.data);
@@ -270,10 +295,19 @@ function OcorrenciasDetail() {
             if (response.data && response.data.status === 'success') {
                 alert('Chegada a Unidade Enviada com Sucesso');
 
-                await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
-                    id_ocorrencia: emergencies[0].id,
-                    id_estado: '8'
-                });
+                if (descricao === 'ABSC01' || descricao === 'ABSC02'
+                    || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06') {
+                    await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
+                        id_ocorrencia: emergencies[0].id,
+                        id_estado: '8'
+                    });
+                }
+                else {
+                    await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
+                        id_ocorrencia: emergencies[0].id,
+                        id_estado: '8'
+                    });
+                }
             } else {
                 // Handle any other cases (like errors in the response)
                 console.error('Unexpected response:', response.data);
@@ -420,14 +454,12 @@ function OcorrenciasDetail() {
                         || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06'
                     ) && (
                             <div>
-                                <Button
-                                    style={styles.button_Fotos}>
-                                    <p style={{ ...styles.buttonText, marginRight: '5px' }}>
-                                        Saída do Hospital
-                                    </p>
+                                <Button style={styles.button_Fotos}
+                                    onClick={() => handleSetTimeSaidaUnidadeHosp()}
+                                    disabled={isChegadaUnidadeHospSet}>
+                                    <p style={{ ...styles.buttonText, marginRight: '5px' }}>Chegada à Unidade Hospitalar</p>
                                     <p style={styles.buttonText}>
-                                        {isChegadaUnidadeHospSet ? chegadaUnidadeHospTime : currentTime}
-                                    </p>
+                                        {isChegadaUnidadeHospSet ? chegadaUnidadeHospTime : currentTime}</p>
                                 </Button>
 
                                 <Button style={styles.button_Fotos}>
