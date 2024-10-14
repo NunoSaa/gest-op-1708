@@ -23,9 +23,11 @@ function OcorrenciasDetail() {
     const [isChegadaLocalSet, setIsChegadaLocalSet] = useState(false);
     const [isSaidaLocalSet, setIsSaidaLocalSet] = useState(false);
     const [isChegadaUnidadeSet, setIsChegadaUnidadeSet] = useState(false);
+    const [isChegadaUnidadeHospSet, setIsChegadaUnidadeHospSet] = useState(false);
     const [chegadaLocalTime, setChegadaLocalTime] = useState('');
     const [saidaLocalTime, setSaidaLocalTime] = useState('');
     const [chegadaUnidadeTime, setChegadaUnidadeTime] = useState('');
+    const [chegadaUnidadeHospTime, setChegadaUnidadeHospTime] = useState('');
     const [emergencies, setEmergencies] = useState([]);
     const descricao = localStorage.getItem('username');
 
@@ -148,7 +150,7 @@ function OcorrenciasDetail() {
 
                 await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
                     id_ocorrencia: emergencies[0].id,
-                    id_estado: '6' 
+                    id_estado: '6'
                 });
 
             } else {
@@ -195,7 +197,7 @@ function OcorrenciasDetail() {
 
                 await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
                     id_ocorrencia: emergencies[0].id,
-                    id_estado: '5' 
+                    id_estado: '5'
                 });
 
                 alert('Saida do Local Enviada com Sucesso');
@@ -207,6 +209,31 @@ function OcorrenciasDetail() {
 
             await fetchEmergencies();
             console.log('Chegada time updated:', response.data);
+        } catch (error) {
+            console.error('Error updating chegada time:', error);
+            setError('Error updating chegada time');
+        }
+    };
+
+    const handleSetTimeSaidaUnidadeHosp = async () => {
+        const chegadaTime = new Date().toLocaleTimeString();
+        setChegadaUnidadeTime(chegadaTime);
+
+        const now = new Date();
+        // Get the current date in the format "YYYY-MM-DD"
+        const currentDate = formatDateDDMMYYYY(now);
+
+        // Get the current time in the format "HH:MM"
+        const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
+
+        try {
+            const response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
+                id_ocorrencia: emergencies[0].id,
+                id_estado: '7'
+            });
+
+            await fetchEmergencies();
+            console.log('Chegada Estado updated:', response.data);
         } catch (error) {
             console.error('Error updating chegada time:', error);
             setError('Error updating chegada time');
@@ -245,7 +272,7 @@ function OcorrenciasDetail() {
 
                 await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
                     id_ocorrencia: emergencies[0].id,
-                    id_estado: '7' 
+                    id_estado: '8'
                 });
             } else {
                 // Handle any other cases (like errors in the response)
@@ -399,7 +426,7 @@ function OcorrenciasDetail() {
                                         Saída do Hospital
                                     </p>
                                     <p style={styles.buttonText}>
-                                        {isChegadaUnidadeSet ? chegadaUnidadeTime : currentTime}
+                                        {isChegadaUnidadeHospSet ? chegadaUnidadeHospTime : currentTime}
                                     </p>
                                 </Button>
 
