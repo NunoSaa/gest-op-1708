@@ -131,6 +131,7 @@ function OcorrenciasDetail() {
         const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
 
         try {
+
             const response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentDetails', {
                 id_ocorrencia: emergencies[0].id,
                 id_oco_viatura: vehicle.current[0].id_oco_viatura,
@@ -144,6 +145,12 @@ function OcorrenciasDetail() {
 
             if (response.data && response.data.status === 'success') {
                 alert('Chegada ao Local Enviada com Sucesso');
+
+                await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
+                    id_ocorrencia: emergencies[0].id,
+                    id_estado: '6' 
+                });
+
             } else {
                 // Handle any other cases (like errors in the response)
                 console.error('Unexpected response:', response.data);
@@ -185,6 +192,12 @@ function OcorrenciasDetail() {
             setIsSaidaLocalSet(true);
 
             if (response.data && response.data.status === 'success') {
+
+                await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
+                    id_ocorrencia: emergencies[0].id,
+                    id_estado: '5' 
+                });
+
                 alert('Saida do Local Enviada com Sucesso');
             } else {
                 // Handle any other cases (like errors in the response)
@@ -229,6 +242,11 @@ function OcorrenciasDetail() {
 
             if (response.data && response.data.status === 'success') {
                 alert('Chegada a Unidade Enviada com Sucesso');
+
+                await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
+                    id_ocorrencia: emergencies[0].id,
+                    id_estado: '7' 
+                });
             } else {
                 // Handle any other cases (like errors in the response)
                 console.error('Unexpected response:', response.data);
