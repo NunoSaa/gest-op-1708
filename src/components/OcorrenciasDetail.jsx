@@ -152,7 +152,7 @@ function OcorrenciasDetail() {
                     || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06') {
                     await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
                         id_ocorrencia: emergencies[0].id,
-                        id_estado: '6'
+                        id_estado: '5'
                     });
                 }
                 else {
@@ -461,7 +461,7 @@ function OcorrenciasDetail() {
                                     <p style={styles.buttonText}>
                                         {isChegadaUnidadeHospSet ? chegadaUnidadeHospTime : currentTime}</p>
                                 </Button>
-
+ß
                                 <Button style={styles.button_Fotos}>
                                     <p style={styles.buttonText}
                                         onClick={() => {
