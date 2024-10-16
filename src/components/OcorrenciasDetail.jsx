@@ -140,6 +140,7 @@ function OcorrenciasDetail() {
                 id_viatura: vehicle.current[0].id_viatura,
                 hora_saida: vehicle.current[0].hora_saida,
                 data_saida: vehicle.current[0].data_saida,
+                km_inicio: vehicle.current[0].km_inicio,
                 data_chegada_to: currentDate,
                 hora_chegada_to: currentHour
             });
@@ -198,6 +199,7 @@ function OcorrenciasDetail() {
                 data_saida: vehicle.current[0].data_saida,
                 data_chegada_to: vehicle.current[0].data_chegada_to,
                 hora_chegada_to: vehicle.current[0].hora_chegada_to,
+                km_inicio: vehicle.current[0].km_inicio,
                 data_saida_to: currentDate,
                 hora_saida_to: currentHour
             });
@@ -287,6 +289,7 @@ function OcorrenciasDetail() {
                 hora_chegada_to: vehicle.current[0].hora_chegada_to,
                 data_saida_to: vehicle.current[0].data_saida_to,
                 hora_saida_to: vehicle.current[0].hora_saida_to,
+                km_inicio: vehicle.current[0].km_inicio,
                 data_chegada: currentDate,
                 hora_chegada: currentHour
             });
