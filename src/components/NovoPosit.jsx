@@ -519,7 +519,7 @@ Latitude N: ${geolocationGMS.latitude}, Longitude W: ${geolocationGMS.longitude}
                     `
 Ponto de situação actual: Incêndio em ${item.desc_classificacao} ${pontos} ${tipoVeiculo}`;
             }
-            if (tipoCarga != '') {
+            if (tipoCarga.tipoCarga != '') {
                 updatedDescricao = updatedDescricao +
                     `
 Tipo de Carga: ${tipoCarga.tipoCarga}`;
