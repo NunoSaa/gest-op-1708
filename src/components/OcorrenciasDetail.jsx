@@ -398,12 +398,6 @@ function OcorrenciasDetail() {
                     <span style={styles.info}>{item.ponto_referencia}</span>
                 </div>
                 <div style={styles.rowInfo}>
-                    <span style={styles.infoProp}>Latitude: </span>
-                    <span style={styles.info}>{item.sadoLatitudeGps}</span>
-                    <span style={styles.infoProp}>Longitude: </span>
-                    <span style={styles.info}>{item.sadoLongitudeGps}</span>
-                </div>
-                <div style={styles.rowInfo}>
                     <span style={styles.infoProp}>Número de elementos: </span>
                     <span style={styles.info}>{item.n_bombeiros}</span>
                 </div>
