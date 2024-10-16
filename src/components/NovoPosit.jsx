@@ -14,6 +14,15 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Divider from '@mui/material/Divider';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import IncendiosUrbanosComponent from './PositComponents/IncendiosUrbanosComponent';
 
 
 function NovoPosit() {
@@ -25,6 +34,8 @@ function NovoPosit() {
     const [geolocationGMS, setGeoLocationGMS] = useState({ latitude: '', longitude: '' });
     const [item, setItem] = useState(state);
     const [selectedValue, setSelectedValue] = useState('posit');
+    const descricao = localStorage.getItem('username');
+    const [guiaComandoState, setGuiaComandoState] = useState(false);
 
     const fetchGeolocation = () => {
         if (navigator.geolocation) {
@@ -81,7 +92,6 @@ function NovoPosit() {
     // Get the current time in the format "HH:MM"
     const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
 
-    // State to hold form data
     const [formData, setFormData] = useState({
         id_ocorrencia: item.id,
         data: currentDate,
@@ -89,8 +99,62 @@ function NovoPosit() {
         tipo: '',
         de: '',
         para: '',
-        descricao: ''
+        descricao: '',
+        estou: '',
+        localidade: '',
     });
+
+    const [estouEm, setEstouEm] = useState('');
+
+    const [pontosSituacao, setPontosSituacao] = useState({
+        curso: false,
+        resolucao: false,
+        conclusao: false,
+        finalizado: false,
+    });
+
+    const [fogoVista, setFogoVista] = useState({
+        fogoVista: false,
+        semFogo: false,
+    });
+
+    const [em, setEm] = useState({
+        habitacoes: false,
+        industria: false,
+        comercio: false,
+        outros: false,
+    });
+
+    const handlePontosSituacaoChange = (event) => {
+        const { name, checked } = event.target;
+        setPontosSituacao((prevState) => ({
+            curso: false,
+            resolucao: false,
+            conclusao: false,
+            finalizado: false,
+            [name]: true
+        }));
+    };
+
+    const handleFogoVistaChange = (event) => {
+        const { name, checked } = event.target;
+        setFogoVista((prevState) => ({
+            fogoVista: false,
+            semFogo: false,
+            [name]: true
+        }));
+    };
+
+    const handleEmChange = (event) => {
+        const { name, checked } = event.target;
+        setEm((prevState) => ({
+            habitacoes: false,
+            industria: false,
+            comercio: false,
+            outros: false,
+            [name]: true
+        }));
+    };
 
     // Handle input change
     const handleChange = (e) => {
@@ -104,6 +168,63 @@ function NovoPosit() {
         formData.tipo = String(event.target.value)
         console.log(event.target.value)
     };
+
+    // Function to dynamically update descricao string
+    useEffect(() => {
+
+        if (guiaComandoState) {
+
+            const pontosDescriptions = {
+                curso: "em curso",
+                resolucao: "em resolução",
+                conclusao: "em conclusão",
+                finalizado: "finalizado"
+            };
+
+            const fogoDescriptions = {
+                fogoVista: "com fogo à vista",
+                semFogo: "sem fogo à vista",
+            };
+
+            const tipoDescriptions = {
+                habitacoes: "em Habitação",
+                industria: "em Indústria",
+                comercio: "em Comércio",
+                outros: "em Outro tipo",
+            };
+
+            const pontos = Object.keys(pontosSituacao)
+                .filter((key) => pontosSituacao[key])
+                .map((key) => pontosDescriptions[key])
+                .join(', ');
+
+            const fogo = Object.keys(fogoVista)
+                .filter((key) => fogoVista[key])
+                .map((key) => fogoDescriptions[key])
+                .join(', ');
+
+            const tipo = Object.keys(em)
+                .filter((key) => em[key])
+                .map((key) => tipoDescriptions[key])
+                .join(', ');
+
+            var updatedDescricao = `
+            Estou em ${item.morada}, freguesia de ${item.localidade}
+            Latitude N: ${geolocationGMS.latitude}, Longitude W: ${geolocationGMS.longitude} `;
+
+            if (pontosSituacao != '') {
+                updatedDescricao = updatedDescricao +
+                    `
+            Ponto de situação actual: Incêndio em ${item.desc_classificacao} ${pontos} ${fogo} ${tipo}`;
+            }
+
+            setFormData((prevState) => ({
+                ...prevState,
+                descricao: updatedDescricao,
+            }));
+        }
+
+    }, [estouEm, pontosSituacao, fogoVista, geolocationGMS, em]);
 
     // Handle form submission
     const handleSubmit = async (e) => {
@@ -133,6 +254,12 @@ function NovoPosit() {
             console.error('Error:', error);
             alert('Aconteceu um erro ao inserir a informação. Tente mais tarde.');
         }
+    };
+
+    // Handle changes in checkboxes f
+    const handleCheckboxGuiaComandoChange = (event) => {
+        setGuiaComandoState(event.target.checked);
+        console.log(guiaComandoState)
     };
 
 
@@ -197,8 +324,8 @@ function NovoPosit() {
                             style={styles.input}
                             type="text"
                             name="de"
-                            value={formData.de}
-                            onChange={handleChange}
+                            value={descricao}
+                            disabled
                             variant="outlined"
                             fullWidth
                         />
@@ -210,12 +337,44 @@ function NovoPosit() {
                             style={styles.input}
                             type="text"
                             name="para"
-                            value={formData.para}
-                            onChange={handleChange}
+                            value='SALOP'
+                            disabled
                             variant="outlined"
                             fullWidth
                         />
                     </div>
+
+                    <div style={styles.rowInfo}>
+                        <span style={styles.infoProp}>Usar Guia de Comando: </span>
+                        <Checkbox
+                            checked={guiaComandoState}
+                            onChange={handleCheckboxGuiaComandoChange}
+                            color="primary"
+                            inputProps={{ 'aria-label': 'controlled' }}
+                        />
+                    </div>
+
+                    {guiaComandoState && (
+                        <div style={styles.rowInfo}>
+                            {(item.classificacao === '2101' || item.classificacao === '2111' || item.classificacao === '2115'
+                                || item.classificacao === '2127' || item.classificacao === '2129'
+                            ) && (
+                                    <IncendiosUrbanosComponent
+                                        pontosSituacao={pontosSituacao}
+                                        handleCheckboxChange={handlePontosSituacaoChange}
+                                        fogoVista={fogoVista}
+                                        handleFogoVistaChange={handleFogoVistaChange}
+                                        em={em}
+                                        handleEmChange={handleEmChange}
+                                        geolocationGMS={geolocationGMS}
+                                        estouEm={item.morada}
+                                        setEstouEm={setEstouEm}
+                                        localidade={item.localidade}
+                                        handleChange={handleChange}
+                                    />
+                                )}
+                        </div>
+                    )}
 
                     <div style={styles.rowInfo}>
                         <span style={styles.infoProp}>Descrição: </span>
