@@ -117,11 +117,8 @@ function NovoPosit() {
     const handlePontosSituacaoChange = (event) => {
         const { name, checked } = event.target;
         setPontosSituacao((prevState) => ({
-            curso: false,
-            resolucao: false,
-            conclusao: false,
-            finalizado: false,
-            [name]: true
+            ...prevState, // Keep the previous selections
+            [name]: checked, // Update the selected checkbox value
         }));
     };
 
@@ -133,9 +130,8 @@ function NovoPosit() {
     const handleFogoVistaChange = (event) => {
         const { name, checked } = event.target;
         setFogoVista((prevState) => ({
-            fogoVista: false,
-            semFogo: false,
-            [name]: true
+            ...prevState, // Keep the previous selections
+            [name]: checked, // Update the selected checkbox value
         }));
     };
 
@@ -149,11 +145,24 @@ function NovoPosit() {
     const handleEmChange = (event) => {
         const { name, checked } = event.target;
         setEm((prevState) => ({
-            habitacoes: false,
-            industria: false,
-            comercio: false,
-            outros: false,
-            [name]: true
+            ...prevState, // Keep the previous selections
+            [name]: checked, // Update the selected checkbox value
+        }));
+    };
+
+    const [emVeiculo, setEmVeiculo] = useState({
+        rodoviario_ligeiro: false,
+        rodoviarioLigeiroMercadorias: false,
+        rodoviarioPesadoMercadorias: false,
+        rodoviarioPesadosPassageiros: false,
+        rodoviarioOutros:false
+    });
+
+    const handleEmVeiculoChange = (event) => {
+        const { name, checked } = event.target;
+        setEmVeiculo((prevState) => ({
+            ...prevState, // Keep the previous selections
+            [name]: checked, // Update the selected checkbox value
         }));
     };
 
@@ -169,13 +178,8 @@ function NovoPosit() {
     const handleTipoEdificioChange = (event) => {
         const { name, checked } = event.target;
         setTipoEdificio((prevState) => ({
-            unifamiliar: false,
-            grandeAltura: false,
-            utilidadePublica: false,
-            hospitaLarEscola: false,
-            militarSeguranca: false,
-            outros: false,
-            [name]: true
+            ...prevState, // Keep the previous selections
+            [name]: checked, // Update the selected checkbox value
         }));
     };
 
@@ -189,11 +193,8 @@ function NovoPosit() {
     const handlePontosSensiveisChange = (event) => {
         const { name, checked } = event.target;
         setPontosSensiveis((prevState) => ({
-            habitacoes: false,
-            industria: false,
-            comercio: false,
-            outros: false,
-            [name]: true
+            ...prevState, // Keep the previous selections
+            [name]: checked, // Update the selected checkbox value
         }));
     };
 
@@ -205,9 +206,8 @@ function NovoPosit() {
     const handlePropagacaoChange = (event) => {
         const { name, checked } = event.target;
         setPropagacao((prevState) => ({
-            horizontal: false,
-            vertical: false,
-            [name]: true
+            ...prevState, // Keep the previous selections
+            [name]: checked, // Update the selected checkbox value
         }));
     };
 
@@ -256,6 +256,17 @@ function NovoPosit() {
         }));
     };
 
+    const [tipoCarga, setTipoCarga] = useState({
+        tipoCarga: '',
+    });
+
+    const handleTipoCargaChange = (name, value) => {
+        setTipoCarga((prevTipoCarga) => ({
+            ...prevTipoCarga,
+            [name]: value
+        }));
+    };
+
     // Handle input change
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -274,173 +285,254 @@ function NovoPosit() {
 
         if (item.classificacao === '2101' || item.classificacao === '2111' || item.classificacao === '2115'
             || item.classificacao === '2127' || item.classificacao === '2129') {
-            if (guiaComandoState) {
 
-                const pontosDescriptions = {
-                    curso: "em curso",
-                    resolucao: "em resolução",
-                    conclusao: "em conclusão",
-                    finalizado: "finalizado"
-                };
+            const pontosDescriptions = {
+                curso: "em curso",
+                resolucao: "em resolução",
+                conclusao: "em conclusão",
+                finalizado: "finalizado"
+            };
 
-                const pontos = Object.keys(pontosSituacao)
-                    .filter((key) => pontosSituacao[key])
-                    .map((key) => pontosDescriptions[key])
-                    .join(', ');
+            const pontos = Object.keys(pontosSituacao)
+                .filter((key) => pontosSituacao[key])
+                .map((key) => pontosDescriptions[key])
+                .join(', ');
 
-                const fogoDescriptions = {
-                    fogoVista: "com fogo à vista",
-                    semFogo: "sem fogo à vista",
-                };
+            const fogoDescriptions = {
+                fogoVista: "com fogo à vista",
+                semFogo: "sem fogo à vista",
+            };
 
-                const fogo = Object.keys(fogoVista)
-                    .filter((key) => fogoVista[key])
-                    .map((key) => fogoDescriptions[key])
-                    .join(', ');
+            const fogo = Object.keys(fogoVista)
+                .filter((key) => fogoVista[key])
+                .map((key) => fogoDescriptions[key])
+                .join(', ');
 
-                const tipoDescriptions = {
-                    habitacoes: "em Habitação",
-                    industria: "em Indústria",
-                    comercio: "em Comércio",
-                    outros: "em Outro tipo",
-                };
+            const tipoDescriptions = {
+                habitacoes: "em Habitação",
+                industria: "em Indústria",
+                comercio: "em Comércio",
+                outros: "em Outro tipo",
+            };
 
-                const tipo = Object.keys(em)
-                    .filter((key) => em[key])
-                    .map((key) => tipoDescriptions[key])
-                    .join(', ');
+            const tipo = Object.keys(em)
+                .filter((key) => em[key])
+                .map((key) => tipoDescriptions[key])
+                .join(', ');
 
-                const tipoEdificioDescriptions = {
-                    unifamiliar: "Unifamiliar",
-                    grandeAltura: "Edifício de Grande Altura",
-                    utilidadePublica: "Edifício de Utilidade Pública",
-                    hospitaLarEscola: "Hospital / Lar / Escola",
-                    militarSeguranca: "Militar / Segurança",
-                    outros: "Outros",
-                }
+            const tipoEdificioDescriptions = {
+                unifamiliar: "Unifamiliar",
+                grandeAltura: "Edifício de Grande Altura",
+                utilidadePublica: "Edifício de Utilidade Pública",
+                hospitaLarEscola: "Hospital / Lar / Escola",
+                militarSeguranca: "Militar / Segurança",
+                outros: "Outros",
+            }
 
-                const edificio = Object.keys(tipoEdificio)
-                    .filter((key) => tipoEdificio[key])
-                    .map((key) => tipoEdificioDescriptions[key])
-                    .join(', ');
+            const edificio = Object.keys(tipoEdificio)
+                .filter((key) => tipoEdificio[key])
+                .map((key) => tipoEdificioDescriptions[key])
+                .join(', ');
 
-                const pontosSensiveisDescriptions = {
-                    habitacoes: "Habitação",
-                    industria: "Indústria",
-                    comercio: "Comércio",
-                    outros: "Outro tipo",
-                }
+            const pontosSensiveisDescriptions = {
+                habitacoes: "Habitação",
+                industria: "Indústria",
+                comercio: "Comércio",
+                outros: "Outro tipo",
+            }
 
-                const sensiveis = Object.keys(pontosSensiveis)
-                    .filter((key) => pontosSensiveis[key])
-                    .map((key) => pontosSensiveisDescriptions[key])
-                    .join(', ');
+            const sensiveis = Object.keys(pontosSensiveis)
+                .filter((key) => pontosSensiveis[key])
+                .map((key) => pontosSensiveisDescriptions[key])
+                .join(', ');
 
-                const propagacaoDescriptions = {
-                    horizontal: "com Progapagção horizontal",
-                    vertical: "com propagação vertical",
-                }
+            const propagacaoDescriptions = {
+                horizontal: "com Progapagção horizontal",
+                vertical: "com propagação vertical",
+            }
 
-                const propagacaofilter = Object.keys(propagacao)
-                    .filter((key) => propagacao[key])
-                    .map((key) => propagacaoDescriptions[key])
-                    .join(', ');
+            const propagacaofilter = Object.keys(propagacao)
+                .filter((key) => propagacao[key])
+                .map((key) => propagacaoDescriptions[key])
+                .join(', ');
 
-                const facoDescriptions = {
-                    reconhecimento: "Reconhecimento",
-                    estrategiaDefensiva: "Estratégia Defensiva",
-                    estrategiaOfensiva: "Estratégia Ofensiva",
-                    estabelecimentoMeiosAcao: "Estabelecimento de meios de ação",
-                    salvamentos: "Salvamentos",
-                    rescaldo: "Rescaldo",
-                    vigilancia: "Vigilância",
-                    protecaoExposicoes: "Proteção de exposições",
-                }
+            const facoDescriptions = {
+                reconhecimento: "Reconhecimento",
+                estrategiaDefensiva: "Estratégia Defensiva",
+                estrategiaOfensiva: "Estratégia Ofensiva",
+                estabelecimentoMeiosAcao: "Estabelecimento de meios de ação",
+                salvamentos: "Salvamentos",
+                rescaldo: "Rescaldo",
+                vigilancia: "Vigilância",
+                protecaoExposicoes: "Proteção de exposições",
+            }
 
-                const facofilter = Object.keys(faco)
-                    .filter((key) => faco[key])
-                    .map((key) => facoDescriptions[key])
-                    .join(', ');
-
-
-                const solicitoDescriptions = {
-                    vuciVECI: "VUCI / VECI",
-                    vttuVALE: "VTTU / VALE",
-                    veVP: "VE / VP",
-                    absc: "ABSC",
-                    vmer: "VMER"
-                };
-
-                // Filter and map solicito dynamically with quantity, excluding the Qt keys
-                const solicitofilter = Object.keys(solicito)
-                    .filter((key) => solicito[key] && !key.includes('Qt'))  // Exclude quantity keys from filtering
-                    .map((key) => `${solicitoDescriptions[key]}: ${solicito[`${key}Qt`] || '0'}`) // Use the quantity associated with the key
-                    .join(', ');
+            const facofilter = Object.keys(faco)
+                .filter((key) => faco[key])
+                .map((key) => facoDescriptions[key])
+                .join(', ');
 
 
-                const elementoComandoDescriptions = {
-                    elementoComando: "Elemento de comando para o local",
-                }
+            const solicitoDescriptions = {
+                vuciVECI: "VUCI / VECI",
+                vttuVALE: "VTTU / VALE",
+                veVP: "VE / VP",
+                absc: "ABSC",
+                vmer: "VMER"
+            };
 
-                const elementoComandofilter = Object.keys(elementoComando)
-                    .filter((key) => elementoComando[key])
-                    .map((key) => elementoComandoDescriptions[key])
-                    .join(', ');
+            // Filter and map solicito dynamically with quantity, excluding the Qt keys
+            const solicitofilter = Object.keys(solicito)
+                .filter((key) => solicito[key] && !key.includes('Qt'))  // Exclude quantity keys from filtering
+                .map((key) => `${solicitoDescriptions[key]}: ${solicito[`${key}Qt`] || '0'}`) // Use the quantity associated with the key
+                .join(', ');
 
-                var updatedDescricao = `
-Estou em ${item.morada}, freguesia de ${item.localidade}
+
+            const elementoComandoDescriptions = {
+                elementoComando: "Elemento de comando para o local",
+            }
+
+            const elementoComandofilter = Object.keys(elementoComando)
+                .filter((key) => elementoComando[key])
+                .map((key) => elementoComandoDescriptions[key])
+                .join(', ');
+
+            var updatedDescricao = 
+`Estou em ${item.morada}, freguesia de ${item.localidade}
 Latitude N: ${geolocationGMS.latitude}, Longitude W: ${geolocationGMS.longitude} `;
 
-                if (pontosSituacao != '') {
-                    updatedDescricao = updatedDescricao +
-                        `
+            if (pontosSituacao != '') {
+                updatedDescricao = updatedDescricao +
+                    `
 Ponto de situação actual: Incêndio em ${item.desc_classificacao} ${pontos} ${fogo} ${propagacaofilter} ${tipo} ${edificio}`;
-                }
+            }
 
-                //Add Pontos Sensiveis to Description
-                if (sensiveis != '') {
-                    updatedDescricao = updatedDescricao +
-                        `
+            //Add Pontos Sensiveis to Description
+            if (sensiveis != '') {
+                updatedDescricao = updatedDescricao +
+                    `
 Pontos sensíveis: ${sensiveis}`;
-                }
+            }
 
-                //Add Faço to Description
-                if (facofilter != '') {
-                    updatedDescricao = updatedDescricao +
-                        `
+            //Add Faço to Description
+            if (facofilter != '') {
+                updatedDescricao = updatedDescricao +
+                    `
 Faço: ${facofilter}`;
-                }
+            }
 
-                // Add Solicito to Description dynamically with quantities
-                if (solicitofilter != '') {
-                    updatedDescricao = updatedDescricao +
-                        `
+            // Add Solicito to Description dynamically with quantities
+            if (solicitofilter != '') {
+                updatedDescricao = updatedDescricao +
+                    `
 Solicito: ${solicitofilter}`;
-                }
+            }
 
-                //Add Solicito Elemento Comando to Description
-                if (elementoComandofilter != '') {
-                    updatedDescricao = updatedDescricao +
-                        `
+            //Add Solicito Elemento Comando to Description
+            if (elementoComandofilter != '') {
+                updatedDescricao = updatedDescricao +
+                    `
 Solicito: ${elementoComandofilter}`;
-                }
+            }
 
-                setFormData((prevState) => ({
-                    ...prevState,
-                    descricao: updatedDescricao,
-                }));
-            }
-            else {
-                // Clear the description when guiaComandoState is false
-                setFormData((prevState) => ({
-                    ...prevState,
-                    descricao: '', // Clear the description
-                }));
-            }
+            setFormData((prevState) => ({
+                ...prevState,
+                descricao: updatedDescricao,
+            }));
         }
 
 
-    }, [estouEm, pontosSituacao, fogoVista, geolocationGMS, em, tipoEdificio, pontosSensiveis, propagacao, faco, solicito, elementoComando]);
+        if (item.classificacao === '2301') {
+
+            const pontosDescriptions = {
+                curso: "em curso",
+                resolucao: "em resolução",
+                conclusao: "em conclusão",
+                finalizado: "finalizado"
+            };
+
+            const pontos = Object.keys(pontosSituacao)
+                .filter((key) => pontosSituacao[key])
+                .map((key) => pontosDescriptions[key])
+                .join(', ');
+
+            const tipoVeiculoDescriptions = {
+                rodoviario_ligeiro: "em Veículo ligeiro",
+                rodoviarioLigeiroMercadorias: "em Veículo ligeiro de mercadorias",
+                rodoviarioPesadoMercadorias: "em Veículo pesado de mercadorias",
+                rodoviarioPesadosPassageiros: "em Veículo pesado de passageiros",
+                rodoviarioOutros: "em outro tipo de Veículos"
+            };
+
+            const tipoVeiculo = Object.keys(emVeiculo)
+                .filter((key) => emVeiculo[key])
+                .map((key) => tipoVeiculoDescriptions[key])
+                .join(', ');
+
+            const facoDescriptions = {
+                reconhecimento: "Reconhecimento",
+                estrategiaDefensiva: "Estratégia Defensiva",
+                estrategiaOfensiva: "Estratégia Ofensiva",
+                estabelecimentoMeiosAcao: "Estabelecimento de meios de ação",
+                salvamentos: "Salvamentos",
+                rescaldo: "Rescaldo",
+                vigilancia: "Vigilância",
+                protecaoExposicoes: "Proteção de exposições",
+            }
+
+            const facofilter = Object.keys(faco)
+                .filter((key) => faco[key])
+                .map((key) => facoDescriptions[key])
+                .join(', ');
+
+
+            const solicitoDescriptions = {
+                vuciVECI: "VUCI / VECI",
+                vttuVALE: "VTTU / VALE",
+                veVP: "VE / VP",
+                absc: "ABSC",
+                vmer: "VMER"
+            };
+
+            // Filter and map solicito dynamically with quantity, excluding the Qt keys
+            const solicitofilter = Object.keys(solicito)
+                .filter((key) => solicito[key] && !key.includes('Qt'))  // Exclude quantity keys from filtering
+                .map((key) => `${solicitoDescriptions[key]}: ${solicito[`${key}Qt`] || '0'}`) // Use the quantity associated with the key
+                .join(', ');
+
+
+            const elementoComandoDescriptions = {
+                elementoComando: "Elemento de comando para o local",
+            }
+
+            const elementoComandofilter = Object.keys(elementoComando)
+                .filter((key) => elementoComando[key])
+                .map((key) => elementoComandoDescriptions[key])
+                .join(', ');
+
+            var updatedDescricao =            
+`Estou em ${item.morada}, freguesia de ${item.localidade}
+Latitude N: ${geolocationGMS.latitude}, Longitude W: ${geolocationGMS.longitude} `;
+
+            if (pontosSituacao != '') {
+                updatedDescricao = updatedDescricao +
+                    `
+Ponto de situação actual: Incêndio em ${item.desc_classificacao} ${pontos} ${tipoVeiculo}`;
+            }
+            if (tipoCarga != '') {
+                updatedDescricao = updatedDescricao +
+                    `
+Tipo de Carga: ${tipoCarga.tipoCarga}`;
+            }
+
+            setFormData((prevState) => ({
+                ...prevState,
+                descricao: updatedDescricao,
+            }));
+        }
+
+
+    }, [estouEm, pontosSituacao, fogoVista, geolocationGMS, em, emVeiculo, tipoEdificio, pontosSensiveis, propagacao, faco, solicito, elementoComando, tipoCarga]);
 
     // Handle form submission
     const handleSubmit = async (e) => {
@@ -569,55 +661,54 @@ Solicito: ${elementoComandofilter}`;
                     </div>
 
                     <div style={styles.rowInfo}>
-                        <span style={styles.infoProp}>Usar Guia de Comando: </span>
-                        <Checkbox
-                            checked={guiaComandoState}
-                            onChange={handleCheckboxGuiaComandoChange}
-                            color="primary"
-                            inputProps={{ 'aria-label': 'controlled' }}
-                        />
+                        {(item.classificacao === '2101' || item.classificacao === '2111' || item.classificacao === '2115'
+                            || item.classificacao === '2127' || item.classificacao === '2129'
+                        ) && (
+                                <IncendiosUrbanosComponent
+                                    pontosSituacao={pontosSituacao}
+                                    handleCheckboxChange={handlePontosSituacaoChange}
+                                    fogoVista={fogoVista}
+                                    handleFogoVistaChange={handleFogoVistaChange}
+                                    em={em}
+                                    handleEmChange={handleEmChange}
+                                    tipoEdificio={tipoEdificio}
+                                    handleTipoEdificio={handleTipoEdificioChange}
+                                    pontosSensiveis={pontosSensiveis}
+                                    handlePontosSensiveis={handlePontosSensiveisChange}
+                                    propagacao={propagacao}
+                                    handlePropagacao={handlePropagacaoChange}
+                                    faco={faco}
+                                    handleFaco={handleFacoChange}
+                                    solicito={solicito}
+                                    handleSolicito={handleSolicitoChange}
+                                    elementoComando={elementoComando}
+                                    handleElementoComando={handleElementoComandoChange}
+                                    geolocationGMS={geolocationGMS}
+                                    estouEm={item.morada}
+                                    setEstouEm={setEstouEm}
+                                    localidade={item.localidade}
+                                    handleChange={handleChange}
+                                />
+                            )}
+
+
+                        {(item.classificacao === '2301')
+                            && (
+                                <IncendiosRodoviariosComponent
+                                    pontosSituacao={pontosSituacao}
+                                    handleCheckboxChange={handlePontosSituacaoChange}
+                                    geolocationGMS={geolocationGMS}
+                                    estouEm={item.morada}
+                                    setEstouEm={setEstouEm}
+                                    localidade={item.localidade}
+                                    handleChange={handleChange}
+                                    emVeiculo={emVeiculo}
+                                    handleEmVeiculoChange={handleEmVeiculoChange}
+                                    tipoCarga={tipoCarga}
+                                    handleTipoCargaChange={handleTipoCargaChange}
+                                />
+                            )}
                     </div>
-
-                    {guiaComandoState && (
-                        <div style={styles.rowInfo}>
-                            {(item.classificacao === '2101' || item.classificacao === '2111' || item.classificacao === '2115'
-                                || item.classificacao === '2127' || item.classificacao === '2129'
-                            ) && (
-                                    <IncendiosUrbanosComponent
-                                        pontosSituacao={pontosSituacao}
-                                        handleCheckboxChange={handlePontosSituacaoChange}
-                                        fogoVista={fogoVista}
-                                        handleFogoVistaChange={handleFogoVistaChange}
-                                        em={em}
-                                        handleEmChange={handleEmChange}
-                                        tipoEdificio={tipoEdificio}
-                                        handleTipoEdificio={handleTipoEdificioChange}
-                                        pontosSensiveis={pontosSensiveis}
-                                        handlePontosSensiveis={handlePontosSensiveisChange}
-                                        propagacao={propagacao}
-                                        handlePropagacao={handlePropagacaoChange}
-                                        faco={faco}
-                                        handleFaco={handleFacoChange}
-                                        solicito={solicito}
-                                        handleSolicito={handleSolicitoChange}
-                                        elementoComando={elementoComando}
-                                        handleElementoComando={handleElementoComandoChange}
-                                        geolocationGMS={geolocationGMS}
-                                        estouEm={item.morada}
-                                        setEstouEm={setEstouEm}
-                                        localidade={item.localidade}
-                                        handleChange={handleChange}
-                                    />
-                                )}
-
-
-                            {(item.classificacao === '2301')
-                                && (
-                                    <IncendiosRodoviariosComponent
-                                    />
-                                )}
-                        </div>
-                    )}
 
                     <div style={styles.rowInfo}>
                         <span style={styles.infoProp}>Descrição: </span>
