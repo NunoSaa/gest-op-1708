@@ -481,7 +481,7 @@ function OcorrenciasDetail() {
                         </Button>
                         <Button style={styles.button_RelatorioFinal}
                             onClick={() => navigate('/relatorioFinal', { state: item })}>
-                            <p style={styles.buttonText}>Relatório Final</p>
+                            <p style={styles.buttonText}>Finalizar Relatório</p>
                             <p style={styles.buttonTextOther}>.</p>
                         </Button>
                     </div>
