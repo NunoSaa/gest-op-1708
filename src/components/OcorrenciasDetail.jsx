@@ -477,8 +477,7 @@ function OcorrenciasDetail() {
                                     onClick={() => handleSetTimeSaidaUnidadeHosp()}
                                     disabled={isChegadaUnidadeHospSet}>
                                     <p style={{ ...styles.buttonText, marginRight: '5px' }}>Chegada à Unidade Hospitalar</p>
-                                    <p style={styles.buttonText}>
-                                        {isChegadaUnidadeHospSet ? chegadaUnidadeHospTime : currentTime}</p>
+                                    <p style={styles.buttonText}></p>
                                 </Button>
                                 <Button style={styles.button_Fotos}>
                                     <p style={styles.buttonText}
