@@ -237,31 +237,28 @@ function OcorrenciasDetail() {
         }
     };
 
-    const handleSetTimeSaidaUnidadeHosp = async () => {
-        const chegadaTime = new Date().toLocaleTimeString();
-        setChegadaUnidadeTime(chegadaTime);
-
-        const now = new Date();
-        // Get the current date in the format "YYYY-MM-DD"
-        const currentDate = formatDateDDMMYYYY(now);
-
-        // Get the current time in the format "HH:MM"
-        const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
+    const handleSetTimeChegadaUnidadeHosp = async () => {
 
         try {
-
-            const response = '';
+            let response = null;
 
             if (descricao === 'ABSC01' || descricao === 'ABSC02'
                 || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06') {
+
+
                 response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
                     id_ocorrencia: emergencies[0].id,
                     id_estado: '7'
                 });
+
+                if (response.data && response.data.status === 'success') {
+                    alert('Chegada à Unidade Hospitalar Enviada com Sucesso');
+                }
             }
 
+            setIsChegadaUnidadeHospSet(true);
             await fetchEmergencies();
-            console.log('Chegada Estado updated:', response.data);
+
         } catch (error) {
             console.error('Error updating chegada time:', error);
             setError('Error updating chegada time');
@@ -270,19 +267,25 @@ function OcorrenciasDetail() {
 
     const handleDisponivel = async () => {
         try {
-
-            const response = '';
+            let response = null;
 
             if (descricao === 'ABSC01' || descricao === 'ABSC02'
                 || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06') {
+
+
                 response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
                     id_ocorrencia: emergencies[0].id,
                     id_estado: '8'
                 });
+
+                if (response.data && response.data.status === 'success') {
+                    alert(descricao + ' Disponível com Sucesso');
+                }
             }
 
+            setDisponivel(true);
             await fetchEmergencies();
-            console.log('Chegada Estado updated:', response.data);
+
         } catch (error) {
             console.error('Error updating chegada time:', error);
             setError('Error updating chegada time');
@@ -318,7 +321,7 @@ function OcorrenciasDetail() {
             setIsChegadaUnidadeSet(true);
 
             if (response.data && response.data.status === 'success') {
-                alert('Chegada a Unidade Enviada com Sucesso');
+                alert('Chegada à Unidade Enviada com Sucesso');
 
                 if (descricao === 'ABSC01' || descricao === 'ABSC02'
                     || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06') {
@@ -334,7 +337,6 @@ function OcorrenciasDetail() {
                     });
                 }
             } else {
-                // Handle any other cases (like errors in the response)
                 console.error('Unexpected response:', response.data);
                 alert('Aconteceu um erro ao inserir a informação. Tente mais tarde.');
             }
@@ -473,13 +475,13 @@ function OcorrenciasDetail() {
                         || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06'
                     ) && (
                             <div>
-                                <Button style={styles.button_Fotos}
-                                    onClick={() => handleSetTimeSaidaUnidadeHosp()}
+                                <Button style={styles.button_ChegadaUnidadeHosp}
+                                    onClick={() => handleSetTimeChegadaUnidadeHosp()}
                                     disabled={isChegadaUnidadeHospSet}>
                                     <p style={{ ...styles.buttonText, marginRight: '5px' }}>Chegada à Unidade Hospitalar</p>
                                     <p style={styles.buttonText}></p>
                                 </Button>
-                                <Button style={styles.button_Fotos}>
+                                <Button style={styles.button_VerbeteInem}>
                                     <p style={styles.buttonText}
                                         onClick={() => {
                                             console.log('Anexar Verbete button clicked');
@@ -496,7 +498,7 @@ function OcorrenciasDetail() {
                         || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06'
                     ) && (
                             <div>
-                                <Button style={styles.button_Fotos}
+                                <Button style={styles.button_Disponivel}
                                     onClick={() => handleDisponivel()}
                                     disabled={isDisponivel}>
                                     <p style={{ ...styles.buttonText, marginRight: '5px' }}>Disponível</p>
@@ -642,6 +644,36 @@ const styles = {
         alignItems: 'center',
         marginLeft: 15
     },
+    button_ChegadaUnidadeHosp: {
+        width: "45%",
+        height: 75,
+        backgroundColor: '#e5c605',
+        borderRadius: 10,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 15
+    },
+    button_Disponivel: {
+        width: "45%",
+        height: 75,
+        backgroundColor: '#1cbdda',
+        borderRadius: 10,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 15
+    },
+    button_VerbeteInem: {
+        width: "45%",
+        height: 75,
+        backgroundColor: '#0794cc',
+        borderRadius: 10,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 15
+    },
     button_Fotos: {
         width: "45%",
         height: 75,
@@ -655,7 +687,7 @@ const styles = {
     button_RelatorioFinal: {
         width: "45%",
         height: 75,
-        backgroundColor: '#2bbfd9',
+        backgroundColor: '#076812',
         borderRadius: 10,
         flex: 1,
         justifyContent: 'center',
