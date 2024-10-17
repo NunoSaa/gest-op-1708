@@ -15,6 +15,7 @@ function Ocorrencias() {
     const [emergencies, setEmergencies] = useState([]);
     let navigate = useNavigate()
     const [loading, setLoading] = useState(true);
+    const username = localStorage.username;
 
     // Use media queries to detect screen size
     const isMobile = useMediaQuery('(max-width:600px)');
@@ -27,8 +28,17 @@ function Ocorrencias() {
         const fetchData = async () => {
             try {
                 const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getIncidentsByDate');
-                setEmergencies(response.data);
-                console.log(response.data);
+                let fetchedEmergencies = response.data;
+
+                // Filter based on the username
+                if (username !== "ADMIN" && username !== "USER_ADMIN") {
+                    fetchedEmergencies = fetchedEmergencies.filter(item =>
+                        item.viaturas && item.viaturas.some(vehicle => vehicle.includes(username))
+                    );
+                }
+
+                console.log("Fetched emergencies: ", fetchedEmergencies); // Log fetched data
+                setEmergencies(fetchedEmergencies); // Set the emergencies data
                 setLoading(false); // Data loaded, set loading to false
             } catch (error) {
                 console.error('Error:', error);
@@ -41,7 +51,7 @@ function Ocorrencias() {
 
         return () => clearInterval(interval); // Cleanup the interval on unmount
 
-    }, []);
+    }, [username]);
 
     const renderItem = (item) => {
         const array = item.viaturas[0] || [];
@@ -49,13 +59,13 @@ function Ocorrencias() {
         const viaturas = uniqueViaturas.join(', ');
 
         return (
-            <div 
-                key={item.id} 
-                style={{ 
-                    ...styles.item, 
-                    backgroundColor: item.corEstado, 
+            <div
+                key={item.id}
+                style={{
+                    ...styles.item,
+                    backgroundColor: item.corEstado,
                     flexDirection: isMobile ? 'column' : 'row' // Adjust for mobile
-                }} 
+                }}
                 onClick={() => navigate(`/ocorrenciasDetail/${item.id}`, { state: item })}
             >
                 <div style={styles.content}>
