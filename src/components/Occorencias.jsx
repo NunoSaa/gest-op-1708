@@ -93,7 +93,7 @@ function Ocorrencias() {
                         <ArrowBackIcon />
                     </IconButton>
                     <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
-                        HomePage
+                        Início
                     </Typography>
                 </Toolbar>
             </AppBar>
