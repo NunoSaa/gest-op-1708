@@ -28,6 +28,7 @@ function OcorrenciasDetail() {
     const [saidaLocalTime, setSaidaLocalTime] = useState('');
     const [chegadaUnidadeTime, setChegadaUnidadeTime] = useState('');
     const [chegadaUnidadeHospTime, setChegadaUnidadeHospTime] = useState('');
+    const [isDisponivel, setDisponivel] = useState('');
     const [emergencies, setEmergencies] = useState([]);
     const descricao = localStorage.getItem('username');
 
@@ -211,7 +212,7 @@ function OcorrenciasDetail() {
                     || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06') {
                     await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
                         id_ocorrencia: emergencies[0].id,
-                        id_estado: '6'
+                        id_estado: '5'
                     });
                 }
                 else {
@@ -267,6 +268,27 @@ function OcorrenciasDetail() {
         }
     };
 
+    const handleDisponivel = async () => {
+        try {
+
+            const response = '';
+
+            if (descricao === 'ABSC01' || descricao === 'ABSC02'
+                || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06') {
+                response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
+                    id_ocorrencia: emergencies[0].id,
+                    id_estado: '8'
+                });
+            }
+
+            await fetchEmergencies();
+            console.log('Chegada Estado updated:', response.data);
+        } catch (error) {
+            console.error('Error updating chegada time:', error);
+            setError('Error updating chegada time');
+        }
+    };
+
     const handleSetTimeChegadaUnidade = async () => {
         const chegadaTime = new Date().toLocaleTimeString();
         setChegadaUnidadeTime(chegadaTime);
@@ -302,7 +324,7 @@ function OcorrenciasDetail() {
                     || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06') {
                     await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
                         id_ocorrencia: emergencies[0].id,
-                        id_estado: '8'
+                        id_estado: '10'
                     });
                 }
                 else {
@@ -458,7 +480,6 @@ function OcorrenciasDetail() {
                                     <p style={styles.buttonText}>
                                         {isChegadaUnidadeHospSet ? chegadaUnidadeHospTime : currentTime}</p>
                                 </Button>
-ß
                                 <Button style={styles.button_Fotos}>
                                     <p style={styles.buttonText}
                                         onClick={() => {
@@ -466,6 +487,21 @@ function OcorrenciasDetail() {
                                             navigate('/verbeteINEM');
                                         }}>Anexar Verbete</p>
                                     <p style={styles.buttonTextOther}>.</p>
+                                </Button>
+                            </div>
+                        )}
+                </div>
+
+                <div style={styles.row}>
+                    {(descricao === 'ABSC01' || descricao === 'ABSC02'
+                        || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06'
+                    ) && (
+                            <div>
+                                <Button style={styles.button_Fotos}
+                                    onClick={() => handleDisponivel()}
+                                    disabled={isDisponivel}>
+                                    <p style={{ ...styles.buttonText, marginRight: '5px' }}>Disponível</p>
+                                    <p style={styles.buttonText}></p>
                                 </Button>
                             </div>
                         )}
