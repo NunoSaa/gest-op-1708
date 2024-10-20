@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import logo from '../assets/Logo.png'
+import logo from '../assets/Logo.png';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
-import { eyeOff, eye } from 'react-icons-kit/feather'; // Importing both icons
+import { eyeOff, eye } from 'react-icons-kit/feather';
 import { Icon as IconKit } from 'react-icons-kit';
 
 
@@ -21,41 +21,32 @@ function Login({ history }) {
         setShowPassword(!showPassword);
     };
 
-    let navigate = useNavigate()
+    let navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault(); 
         setLoading(true);
         try {
             const response = await axios.post('https://preventech-proxy-service.onrender.com/api/login/authentication', { username, password });
-            console.log('response = ', response)
+            console.log('response = ', response);
             if (response.status !== 200) {
-
-                // Handle specific error scenarios based on response status
                 if (response.status === 401) {
-                    setWrong('Username ou password incorrectas...')
-
+                    setWrong('Username ou password incorrectas...');
                 } else {
-                    // Handle other error scenarios
                     setWrong('An error occurred. Please try again later.');
                 }
-
             } else {
                 // Assuming your API returns a token upon successful login
                 navigate('/homepage');
                 if (response.data.user.role === 'admin') {
                     localStorage.setItem('tokenAdmin', response.data.token);
                     localStorage.setItem('username', response.data.user.username);
-                    console.log(response.data.token);
-                    console.log(response.data.user.username);
-                    // Redirect to admin homepage and refresh
+
                     window.location.href = '/adminHomePage';
                 } else if (response.data.user.role === 'user') {
                     localStorage.setItem('token', response.data.token);
                     localStorage.setItem('username', response.data.user.username);
-                    console.log(response.data.token);
-                    console.log(response.data.user.username);
-                    // Redirect to user homepage and refresh
+
                     window.location.href = '/homepage';
                 }
             }
@@ -67,24 +58,30 @@ function Login({ history }) {
         }
     };
 
+    // Handle "Enter" key press in the password field
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            handleSubmit(e);
+        }
+    };
+
     return (
         <div style={styles.container}>
             <img alt='Logo' src={logo} style={styles.image} />
             <div style={styles.title}>Bombeiros Vila Pouca de Aguiar</div>
             <div style={styles.title2}>Entrar</div>
             <div style={styles.title1}>Olá. Bem Vindo!</div>
-            <div style={styles.container1}>
-                <div className="mb-4 flex">
-                    <div>
-                        <TextField
-                            style={styles.inputLogin}
-                            id="standard-basic"
-                            label="Username"
-                            variant="standard"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                        />
-                    </div>
+            <div style={styles.formContainer}> 
+                <div className="mb-4 flex" style={styles.inputContainer}> 
+                    <TextField
+                        style={styles.inputLogin}
+                        id="standard-basic"
+                        label="Username"
+                        variant="standard"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        onKeyDown={handleKeyDown} 
+                    />
                     <div style={{ position: 'relative' }}>
                         <TextField
                             style={styles.inputLogin}
@@ -94,60 +91,70 @@ function Login({ history }) {
                             variant="standard"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            onKeyDown={handleKeyDown} 
                         />
                         <span style={styles.icon} onClick={handleShowPassword}>
                             <IconKit className="absolute" icon={showPassword ? eye : eyeOff} size={24} />
                         </span>
                     </div>
                 </div>
+
+                {wrong && <p style={{ color: 'red' }}>{wrong}</p>}
+
+                <Button
+                    style={styles.button}
+                    disabled={loading}
+                    variant="contained"
+                    onClick={handleSubmit}
+                >
+                    {loading ? <ClipLoader size={20} color="#ffffff" /> : 'Login'}
+                </Button>
             </div>
-
-            {wrong && <p style={{ color: 'red' }}>{wrong}</p>}
-
-            <Button
-                style={styles.button}
-                disabled={loading}
-                variant="contained"
-                onClick={handleSubmit}
-            >
-                {loading ? <ClipLoader size={20} color="#ffffff" /> : 'Login'}
-            </Button>
         </div>
     );
 }
-
 
 const styles = {
     container: {
         display: 'flex',
         flexDirection: 'column',
-        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        height: '100vh', // Full height to center vertically
         backgroundColor: '#fff',
-        paddingHorizontal: 20,
-        marginTop: '5%'
+        padding: 0,
+        margin: 0,
+        overflow: 'hidden', // Prevent any overflow that might cause scrolling
+    },
+    formContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center', // Center horizontally
+        width: '100%',
+        maxWidth: 300, // Restrict width for better layout
     },
     title: {
         fontSize: 16,
-        marginBottom: 75,
-        textAlign: "left",
-        color: '#959191'
+        marginBottom: 10,
+        textAlign: "center", // Center title text
+        color: '#959191',
     },
     title1: {
         fontSize: 14,
         marginBottom: 40,
-        //alignSelf: "baseline",
-        paddingLeft: 0,
+        textAlign: "center", // Center text
         color: '#959191',
     },
     title2: {
         fontSize: 24,
         marginBottom: 10,
-        //alignSelf: "baseline",
-        paddingLeft: 10,
+        textAlign: 'center', // Center text
         color: '#000000',
-        //paddingHorizontal: 10,
+    },
+    inputContainer: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginBottom: 30,
     },
     inputLogin: {
         width: 250,
@@ -165,33 +172,18 @@ const styles = {
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 5,
-        marginTop: 70,
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 16,
+        marginTop: 20,
     },
     image: {
         width: 200,
         height: 200,
         resizeMode: 'contain',
+        marginBottom: 30,
     },
     icon: {
         marginLeft: 15,
+        cursor: 'pointer', // Make the icon clickable
     },
-    container1: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 8,
-    },
-    container2: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 8,
-        marginLeft: 10
-    },
-}
+};
 
 export default Login;
