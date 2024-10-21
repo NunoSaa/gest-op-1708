@@ -8,7 +8,7 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-
+import EmergencyDetails from '../components/OcorrenciasComponents/EmergencyDetails'; 
 function OcorrenciasDetail() {
 
     const navigate = useNavigate();
@@ -389,144 +389,6 @@ function OcorrenciasDetail() {
         window.history.back(); // Go back to the previous page
     };
 
-    const renderItem = (item) => (
-        <div style={styles.center}>
-            <div style={styles.container}>
-                <div>
-                    <h3 style={styles.title}>{item.desc_classificacao}</h3>
-                </div>
-
-                <div style={styles.rowInfo}>
-                    <span style={styles.infoProp}>Data: </span>
-                    <span style={styles.info}>{item.data_hora_alerta}</span>
-                </div>
-                <div style={styles.rowInfo}>
-                    <span style={styles.infoProp}>Classifcação: </span>
-                    <span style={styles.info}>{item.desc_classificacao}</span>
-                </div>
-                <div style={styles.rowInfo}>
-                    <span style={styles.infoProp}>Estado: </span>
-                    <span style={styles.info}>{item.estado}</span>
-                </div>
-                <div style={styles.rowInfo}>
-                    <span style={styles.infoProp}>Local: </span>
-                    <span style={styles.info}>{item.morada}</span>
-                </div>
-                <div style={styles.rowInfo}>
-                    <span style={styles.infoProp}>Localidade: </span>
-                    <span style={styles.info}>{item.localidade_morada}</span>
-                </div>
-                <div style={styles.rowInfo}>
-                    <span style={styles.infoProp}>Freguesia: </span>
-                    <span style={styles.info}>{item.localidade}</span>
-                </div>
-                <div style={styles.rowInfo}>
-                    <span style={styles.infoProp}>Ponto de Referência: </span>
-                    <span style={styles.info}>{item.ponto_referencia}</span>
-                </div>
-                <div style={styles.rowInfo}>
-                    <span style={styles.infoProp}>Número de elementos: </span>
-                    <span style={styles.info}>{item.n_bombeiros}</span>
-                </div>
-                <div style={styles.rowInfo}>
-                    <span style={styles.infoProp}>Veiculos: </span>
-
-                    <span style={styles.infoViaturas}>{viaturas}</span>
-                </div>
-
-                <div style={styles.row}>
-                    <Button title="Localizar Trajecto" style={styles.button_LocTrajeto}
-                        onClick={() => openMaps()}>
-                        <p style={styles.buttonText}>Localizar Trajecto</p>
-                    </Button>
-                </div>
-
-                <div style={styles.row}>
-                    <Button style={styles.button_ChegadaLocal}
-                        onClick={() => handleSetTimeChegadaLocal()}
-                        disabled={isChegadaLocalSet}>
-                        <p style={{ ...styles.buttonText, marginRight: '5px' }}>Chegada ao Local</p>
-                        <p style={styles.buttonText}>{isChegadaLocalSet ? chegadaLocalTime : currentTime}</p>
-                    </Button>
-
-                    <Button style={styles.button_POSIT}
-                        onClick={() => navigate('/fitaTempo', { state: item })}>
-                        <p style={styles.buttonText}>POSIT</p>
-                        <p style={styles.buttonTextPosit}>.</p>
-                    </Button>
-                </div>
-
-                <div style={styles.row}>
-                    <Button style={styles.button_SaidaLocal}
-                        onClick={() => handleSetTimeSaidaLocal()}
-                        disabled={isSaidaLocalSet}>
-                        <p style={{ ...styles.buttonText, marginRight: '5px' }}>Saída do Local </p>
-                        <p style={styles.buttonText}>{isSaidaLocalSet ? saidaLocalTime : currentTime}</p>
-                    </Button>
-                    <Button style={styles.button_Fotos}
-                        onClick={() => navigate('/takePicturePosit')}>
-                        <p style={styles.buttonText}>Anexar Fotos</p>
-                        <p style={styles.buttonTextOther}>.</p>
-                    </Button>
-                </div>
-
-                <div style={styles.row}>
-                    {(descricao === 'ABSC01' || descricao === 'ABSC02'
-                        || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06'
-                    ) && (
-                            <div>
-                                <Button style={styles.button_ChegadaUnidadeHosp}
-                                    onClick={() => handleSetTimeChegadaUnidadeHosp()}
-                                    disabled={isChegadaUnidadeHospSet}>
-                                    <p style={{ ...styles.buttonText, marginRight: '5px' }}>Chegada à Unidade Hospitalar</p>
-                                    <p style={styles.buttonText}></p>
-                                </Button>
-                                <Button style={styles.button_VerbeteInem}>
-                                    <p style={styles.buttonText}
-                                        onClick={() => {
-                                            console.log('Anexar Verbete button clicked');
-                                            navigate('/verbeteINEM');
-                                        }}>Anexar Verbete</p>
-                                    <p style={styles.buttonTextOther}>.</p>
-                                </Button>
-                            </div>
-                        )}
-                </div>
-
-                <div style={styles.row}>
-                    {(descricao === 'ABSC01' || descricao === 'ABSC02'
-                        || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06'
-                    ) && (
-                            <div>
-                                <Button style={styles.button_Disponivel}
-                                    onClick={() => handleDisponivel()}
-                                    disabled={isDisponivel}>
-                                    <p style={{ ...styles.buttonText, marginRight: '5px' }}>Disponível</p>
-                                    <p style={styles.buttonText}></p>
-                                </Button>
-                            </div>
-                        )}
-                </div>
-
-                <div style={styles.row}>
-                    <div>
-                        <Button style={styles.button_ChegadaUnidade}
-                            onClick={() => handleSetTimeChegadaUnidade()}
-                            disabled={isChegadaUnidadeSet}>
-                            <p style={{ ...styles.buttonText, marginRight: '5px' }}>Chegada à Unidade</p>
-                            <p style={styles.buttonText}>{isChegadaUnidadeSet ? chegadaUnidadeTime : currentTime}</p>
-                        </Button>
-                        <Button style={styles.button_RelatorioFinal}
-                            onClick={() => navigate('/relatorioFinal', { state: item })}>
-                            <p style={styles.buttonText}>Finalizar Relatório</p>
-                            <p style={styles.buttonTextOther}>.</p>
-                        </Button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-
     return (
         <div>
             <AppBar position="static">
@@ -544,11 +406,36 @@ function OcorrenciasDetail() {
                 {loading ? (
                     <div style={styles.center}>
                         <ClipLoader size={50} color="#C0C0C0" />
-                        A carregar...</div> // You can replace this with a loading icon
+                        A carregar...
+                    </div>
                 ) : emergencies.length === 0 ? (
-                    <div>Não foram encontradas ocorrências.</div> // Render message if emergencies array is empty
+                    <div>Não foram encontradas ocorrências.</div>
                 ) : (
-                    emergencies.map(renderItem)
+                    emergencies.map((item) => (
+                        <EmergencyDetails
+                            key={item.id}
+                            item={item}
+                            currentTime={currentTime}
+                            isChegadaLocalSet={false}  // Example: Change based on your state
+                            chegadaLocalTime="15:10"  // Example: Change based on your state
+                            isSaidaLocalSet={false}  // Example: Change based on your state
+                            saidaLocalTime="15:30"  // Example: Change based on your state
+                            isChegadaUnidadeSet={false}  // Example: Change based on your state
+                            chegadaUnidadeTime="15:45"  // Example: Change based on your state
+                            isDisponivel={false}  // Example: Change based on your state
+                            handleSetTimeChegadaLocal={handleSetTimeChegadaLocal}
+                            handleSetTimeSaidaLocal={handleSetTimeSaidaLocal}
+                            handleSetTimeChegadaUnidade={handleSetTimeChegadaUnidade}
+                            handleDisponivel={handleDisponivel}
+                            openMaps={openMaps}
+                            navigate={navigate}
+                            descricao={descricao}
+                            viaturas={viaturas}
+                            isChegadaUnidadeHospSet={false}  // Example state
+                            handleSetTimeChegadaUnidadeHosp={() => console.log('Set Chegada Unidade Hosp')}
+                            isChegadaHospSet={false}  // Example state
+                        />
+                    ))
                 )}
             </div>
         </div>
@@ -556,233 +443,14 @@ function OcorrenciasDetail() {
 };
 
 const styles = {
+    container: {
+        padding: '20px',
+    },
     center: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '110vh',
-    },
-    container: {
-        backgroundColor: "white",  // Your background color
-        padding: 20,               // Optional padding for the container
-        boxSizing: 'border-box',   // Include padding in the element's width and height
-        // Width and height can be adjusted based on content or fixed dimensions
-        width: '100%',              // Example width, adjust as needed
-        maxWidth: '100%',         // Example maximum width, adjust as needed
-        borderRadius: 10,
-    },
-    scrollView: {
-        marginHorizontal: 20,
-    },
-    time: {
-        fontSize: 24,
-        marginBottom: 20,
-    },
-    button: {
-        backgroundColor: 'blue',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderRadius: 5,
-    },
-    buttonText: {
-        color: 'white',
-        marginBottom: 5,
-        fontSize: 12,
-    },
-    buttonTextOther: {
-        color: '#A0A0A0',
-        marginBottom: 5,
-        fontSize: 12,
-    },
-    buttonTextPosit: {
-        color: '#FF6666',
-        marginBottom: 5,
-        fontSize: 12,
-    },
-    row: {
-        flexDirection: 'row',
-        marginBottom: 15,
-    },
-    rowInfo: {
-        flexDirection: 'row',
-        marginBottom: 10,
-        paddingLeft: 25
-    },
-    rowKmsFinais: {
-        flexDirection: 'row',
-        marginTop: 30,
-        paddingLeft: 25,
-        paddingRight: 25
-    },
-    button_ChegadaLocal: {
-        width: "45%",
-        height: 75,
-        backgroundColor: '#FF0000',
-        borderRadius: 10,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 15
-    },
-    button_SaidaLocal: {
-        width: "45%",
-        height: 75,
-        backgroundColor: '#FF8000',
-        borderRadius: 10,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 15
-    },
-    button_ChegadaUnidade: {
-        width: "45%",
-        height: 75,
-        backgroundColor: '#0BAB00',
-        borderRadius: 10,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 15
-    },
-    button_ChegadaUnidadeHosp: {
-        width: "45%",
-        height: 75,
-        backgroundColor: '#e5c605',
-        borderRadius: 10,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 15
-    },
-    button_Disponivel: {
-        width: "45%",
-        height: 75,
-        backgroundColor: '#1cbdda',
-        borderRadius: 10,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 15
-    },
-    button_VerbeteInem: {
-        width: "45%",
-        height: 75,
-        backgroundColor: '#0794cc',
-        borderRadius: 10,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 15
-    },
-    button_Fotos: {
-        width: "45%",
-        height: 75,
-        backgroundColor: '#A0A0A0',
-        borderRadius: 10,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 15
-    },
-    button_RelatorioFinal: {
-        width: "45%",
-        height: 75,
-        backgroundColor: '#076812',
-        borderRadius: 10,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 15
-    },
-    button_POSIT: {
-        width: "45%",
-        height: 75,
-        backgroundColor: '#FF6666',
-        borderRadius: 10,
-        flex: 1,
-        alignItems: 'center',
-        marginLeft: 15,
-    },
-    button_LocTrajeto: {
-        width: "91%",
-        height: "10%",
-        backgroundColor: '#3399FF',
-        padding: 20,
-        borderRadius: 10,
-        alignSelf: "center",
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        display: 'flex',
-        marginLeft: 15,
-        marginRight: 25,
-        marginTop: 25,
-    },
-    button_Inserir: {
-        width: "30%",
-        height: 50,
-        backgroundColor: '#A0A0A0',
-        borderRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    title: {
-        fontSize: 24,
-        paddingBottom: 10,
-        textAlign: "center",
-        marginTop: 10,
-        marginBottom: 15
-    },
-    infoProp: {
-        fontSize: 18,
-        paddingBottom: 10,
-        textAlign: "center",
-        fontWeight: "bold",
-        marginRight: 5,
-    },
-    info: {
-        fontSize: 16,
-        paddingBottom: 10,
-        paddingLeft: 5,
-        textAlign: "center",
-        color: "grey",
-        marginRight: 20,
-    },
-    infoViaturas: {
-        fontSize: 16,
-        paddingBottom: 10,
-        paddingLeft: 5,
-        textAlign: "center",
-        color: "grey",
-        gap: 10,
-    },
-    input: {
-        height: 50,
-        width: "39%",
-        borderColor: 'gray',
-        borderWidth: 1,
-        borderRadius: 10,
-        paddingHorizontal: 10,
-        marginLeft: 15,
-        marginRight: 15
-    },
-    list: {
-        listStyleType: 'none',
-        padding: 0,
-        margin: 0,
-        width: '100%',
-        // other styles as needed
-    },
-    listItem: {
-        display: 'flex',
-        alignItems: 'center',
-        marginBottom: '25px',
-        paddingLeft: 25,
-        // other styles as needed
-    },
-    viatura: {
-        marginRight: '10px',
-        // other styles as needed
+        height: '100vh',
     },
 };
 
