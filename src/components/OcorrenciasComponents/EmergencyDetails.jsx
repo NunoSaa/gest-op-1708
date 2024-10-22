@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button } from '@mui/material';
+import { Button, Chip, Stack } from '@mui/material';
+
 
 const EmergencyDetails = ({
     item,
@@ -24,7 +25,18 @@ const EmergencyDetails = ({
     isChegadaHospSet,
 }) => {
 
-    const isMobile = window.innerWidth <= 768;
+    const infoEstadoStyle = {
+        fontSize: 16,
+        paddingBottom: 0,
+        paddingLeft: 5,
+        textAlign: "center",
+        color: "black",
+        marginRight: 20,
+        backgroundColor: item.corEstado,
+        borderRadius: 20,
+        padding: 10,
+        border: '1px solid black',
+    };
 
     return (
         <div style={styles.center}>
@@ -55,10 +67,7 @@ const EmergencyDetails = ({
                     {/* Event Form */}
                     <div className="event-form" style={{ flexGrow: 1 }}>
                         <section className="header-section">
-                            <div style={{
-                                ...styles.rowInfoContainer,
-                                gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr' // Adjust columns based on screen size
-                            }}>
+                            <div style={styles.rowInfoContainer}>
                                 <div style={styles.rowInfo}>
                                     <span style={styles.infoProp}>Data: </span>
                                     <span style={styles.info}>{item.data_hora_alerta}</span>
@@ -69,7 +78,14 @@ const EmergencyDetails = ({
                                 </div>
                                 <div style={styles.rowInfo}>
                                     <span style={styles.infoProp}>Estado: </span>
-                                    <span style={styles.info}>{item.estado}</span>
+                                    <Chip
+                                        label={item.estado}
+                                        style={{
+                                            fontSize: 16,
+                                            color: "black",
+                                            backgroundColor: item.cor_estado,
+                                        }}
+                                    />
                                 </div>
                                 <div style={styles.rowInfo}>
                                     <span style={styles.infoProp}>Número de elementos: </span>
@@ -106,10 +122,7 @@ const EmergencyDetails = ({
                     {/* Event Form */}
                     <div className="event-form" style={{ flexGrow: 1 }}>
                         <section className="header-section">
-                            <div style={{
-                                ...styles.rowInfoContainer,
-                                gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr' // Adjust columns based on screen size
-                            }}>
+                            <div style={styles.rowInfoContainer}>
                                 <div style={styles.rowInfo}>
                                     <span style={styles.infoProp}>Local: </span>
                                     <span style={styles.info}>{item.morada}</span>
@@ -290,14 +303,15 @@ const styles = {
         display: 'flex',
         justifyContent: 'space-between',
         marginBottom: 15,
-        flexWrap: 'wrap',  // Allow wrapping of items in smaller screens
+        flexWrap: 'wrap',
     },
     rowInfo: {
         display: 'flex',
         justifyContent: 'flex-start',
         marginBottom: 5,
         paddingLeft: 25,
-        flexWrap: 'wrap',  // Info rows will also wrap if needed
+        flexWrap: 'wrap', 
+        alignItems: 'center'  
     },
     rowKmsFinais: {
         flexDirection: 'row',
@@ -426,7 +440,7 @@ const styles = {
         paddingBottom: 10,
         textAlign: "center",
         fontWeight: "bold",
-        marginRight: 5,
+        marginRight: 5,  
     },
     info: {
         fontSize: 16,
