@@ -26,59 +26,91 @@ const IncendiosUrbanosComponent = ({
     localidade,
     handleChange,
 }) => {
+
+    const isMobile = window.innerWidth <= 768;
+
     return (
         <div>
-            <div style={styles.rowInfo}>
-                <h2>ESTOU: </h2>
-                <span style={styles.infoProp}>Estou em: </span>
-                <TextField
-                    style={styles.input}
-                    type="text"
-                    name="estou"
-                    value={estouEm}
-                    onChange={(e) => setEstouEm(e.target.value)}
-                    variant="outlined"
-                    fullWidth
-                />
-            </div>
+            <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                {/* Vertical Column with "Ocorrência" */}
+                <div style={{
+                    width: '25px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    writingMode: 'vertical-lr',
+                    textAlign: 'center',
+                    backgroundColor: '#99CCFF',  // Optional background for visual separation
+                    padding: '10px',
+                    fontWeight: 'bold',
+                    flexShrink: 0,    // Prevents the column from shrinking,
+                    marginBottom: "25px",
+                    transform: 'rotate(180deg)'
+                }}>
+                    Estou
+                </div>
 
-            <div style={styles.rowInfo}>
-                <span style={styles.infoProp}>Latitude N: </span>
-                <TextField
-                    style={styles.input}
-                    type="text"
-                    name="localidade"
-                    value={geolocationGMS.latitude}
-                    disabled
-                    variant="outlined"
-                    fullWidth
-                />
-            </div>
+                {/* Event Form */}
+                <div className="event-form" style={{ flexGrow: 1 }}>
+                    <section className="header-section">
+                        <div style={{
+                            ...styles.rowInfoContainer,
+                            gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr' // Adjust columns based on screen size
+                        }}>
+                            <div style={styles.rowInfo}>
+                                <span style={styles.infoProp}>Estou em: </span>
+                                <TextField
+                                    style={styles.input}
+                                    type="text"
+                                    name="estou"
+                                    value={estouEm}
+                                    onChange={(e) => setEstouEm(e.target.value)}
+                                    variant="outlined"
+                                    fullWidth
+                                />
+                            </div>
 
-            <div style={styles.rowInfo}>
-                <span style={styles.infoProp}>Longitude W: </span>
-                <TextField
-                    style={styles.input}
-                    type="text"
-                    name="localidade"
-                    value={geolocationGMS.longitude}
-                    disabled
-                    variant="outlined"
-                    fullWidth
-                />
-            </div>
+                            <div style={styles.rowInfo}>
+                                <span style={styles.infoProp}>Latitude N: </span>
+                                <TextField
+                                    style={styles.input}
+                                    type="text"
+                                    name="localidade"
+                                    value={geolocationGMS.latitude}
+                                    disabled
+                                    variant="outlined"
+                                    fullWidth
+                                />
+                            </div>
 
-            <div style={styles.rowInfo}>
-                <span style={styles.infoProp}>Freguesia / Município: </span>
-                <TextField
-                    style={styles.input}
-                    type="text"
-                    name="localidade"
-                    value={localidade}
-                    onChange={handleChange}
-                    variant="outlined"
-                    fullWidth
-                />
+                            <div style={styles.rowInfo}>
+                                <span style={styles.infoProp}>Longitude W: </span>
+                                <TextField
+                                    style={styles.input}
+                                    type="text"
+                                    name="localidade"
+                                    value={geolocationGMS.longitude}
+                                    disabled
+                                    variant="outlined"
+                                    fullWidth
+                                />
+                            </div>
+
+                            <div style={styles.rowInfo}>
+                                <span style={styles.infoProp}>Freguesia / Município: </span>
+                                <TextField
+                                    style={styles.input}
+                                    type="text"
+                                    name="localidade"
+                                    value={localidade}
+                                    onChange={handleChange}
+                                    variant="outlined"
+                                    fullWidth
+                                />
+                            </div>
+                        </div>
+                    </section>
+                </div>
             </div>
 
             <h2>VEJO: </h2>

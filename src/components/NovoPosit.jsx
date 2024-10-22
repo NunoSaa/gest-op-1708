@@ -155,7 +155,7 @@ function NovoPosit() {
         rodoviarioLigeiroMercadorias: false,
         rodoviarioPesadoMercadorias: false,
         rodoviarioPesadosPassageiros: false,
-        rodoviarioOutros:false
+        rodoviarioOutros: false
     });
 
     const handleEmVeiculoChange = (event) => {
@@ -397,8 +397,8 @@ function NovoPosit() {
                 .map((key) => elementoComandoDescriptions[key])
                 .join(', ');
 
-            var updatedDescricao = 
-`Estou em ${item.morada}, freguesia de ${item.localidade}
+            var updatedDescricao =
+                `Estou em ${item.morada}, freguesia de ${item.localidade}
 Latitude N: ${geolocationGMS.latitude}, Longitude W: ${geolocationGMS.longitude} `;
 
             if (pontosSituacao != '') {
@@ -510,8 +510,8 @@ Solicito: ${elementoComandofilter}`;
                 .map((key) => elementoComandoDescriptions[key])
                 .join(', ');
 
-            var updatedDescricao =            
-`Estou em ${item.morada}, freguesia de ${item.localidade}
+            var updatedDescricao =
+                `Estou em ${item.morada}, freguesia de ${item.localidade}
 Latitude N: ${geolocationGMS.latitude}, Longitude W: ${geolocationGMS.longitude} `;
 
             if (pontosSituacao != '') {
@@ -583,6 +583,8 @@ Tipo de Carga: ${tipoCarga.tipoCarga}`;
         window.history.back(); // Go back to the previous page
     };
 
+    const isMobile = window.innerWidth <= 768;
+
     return (
 
         <div>
@@ -601,64 +603,126 @@ Tipo de Carga: ${tipoCarga.tipoCarga}`;
 
                 <form onSubmit={handleSubmit}>
 
-                    <div style={styles.rowInfo}>
-                        <span style={styles.infoProp}>Data: </span>
-                        <TextField style={styles.input} value={formData.data} disabled />
+                    <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                        {/* Vertical Column with "Ocorrência" */}
+                        <div style={{
+                            width: '25px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            writingMode: 'vertical-lr',
+                            textAlign: 'center',
+                            backgroundColor: '#99CCFF',  // Optional background for visual separation
+                            padding: '10px',
+                            fontWeight: 'bold',
+                            flexShrink: 0,    // Prevents the column from shrinking,
+                            marginBottom: "25px",
+                            transform: 'rotate(180deg)'
+                        }}>
+                            Ocorrência
+                        </div>
+
+                        {/* Event Form */}
+                        <div className="event-form" style={{ flexGrow: 1 }}>
+                            <section className="header-section">
+                                <div style={{
+                                    ...styles.rowInfoContainer,
+                                    gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr' // Adjust columns based on screen size
+                                }}>
+                                    <div style={styles.rowInfo}>
+                                        <span style={styles.infoProp}>Data: </span>
+                                        <TextField style={styles.input} value={formData.data} disabled />
+                                    </div>
+
+                                    <div style={styles.rowInfo}>
+                                        <span style={styles.infoProp}>Hora: </span>
+                                        <TextField style={styles.input} value={formData.hora} disabled />
+                                    </div>
+
+                                    <div style={styles.rowInfo}>
+                                        <span style={styles.infoProp}>Número Ocorrência: </span>
+                                        <TextField style={styles.input} value={item.id} disabled />
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
                     </div>
 
-                    <div style={styles.rowInfo}>
-                        <span style={styles.infoProp}>Hora: </span>
-                        <TextField style={styles.input} value={formData.hora} disabled />
+                    <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                        {/* Vertical Column with "Ocorrência" */}
+                        <div style={{
+                            width: '25px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            writingMode: 'vertical-lr',
+                            textAlign: 'center',
+                            backgroundColor: '#99CCFF',  // Optional background for visual separation
+                            padding: '10px',
+                            fontWeight: 'bold',
+                            flexShrink: 0,    // Prevents the column from shrinking,
+                            marginBottom: "25px",
+                            transform: 'rotate(180deg)'
+                        }}>
+                            Comunicação
+                        </div>
+
+                        {/* Event Form */}
+                        <div className="event-form" style={{ flexGrow: 1 }}>
+                            <section className="header-section">
+                                <div style={{
+                                    ...styles.rowInfoContainer,
+                                    gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr' // Adjust columns based on screen size
+                                }}>
+                                    <div style={styles.rowInfo}>
+                                        <span style={styles.infoProp}>Tipo: </span>
+                                        <FormControl fullWidth style={styles.input}>
+                                            <InputLabel id="dropdown-label" >Tipo</InputLabel>
+                                            <Select
+                                                labelId="dropdown-label"
+                                                id="dropdown"
+                                                name='tipo'
+                                                value={selectedValue}
+                                                label="Select an Option"
+                                                onChange={handleDropdownChange}
+                                            >
+                                                <MenuItem value={'comunicacao'}>Comunicação</MenuItem>
+                                                <MenuItem value={'posit'}>POSIT</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </div>
+
+                                    <div style={styles.rowInfo}>
+                                        <span style={styles.infoProp}>De:</span>
+                                        <TextField
+                                            style={styles.input}
+                                            type="text"
+                                            name="de"
+                                            value={descricao}
+                                            disabled
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </div>
+
+                                    <div style={styles.rowInfo}>
+                                        <span style={styles.infoProp}>Para: </span>
+                                        <TextField
+                                            style={styles.input}
+                                            type="text"
+                                            name="para"
+                                            value='SALOP'
+                                            disabled
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
                     </div>
 
-                    <div style={styles.rowInfo}>
-                        <span style={styles.infoProp}>Número Ocorrência: </span>
-                        <TextField style={styles.input} value={item.id} disabled />
-                    </div>
 
-                    <div style={styles.rowInfo}>
-                        <span style={styles.infoProp}>Tipo: </span>
-                        <FormControl fullWidth style={styles.input}>
-                            <InputLabel id="dropdown-label" >Tipo</InputLabel>
-                            <Select
-                                labelId="dropdown-label"
-                                id="dropdown"
-                                name='tipo'
-                                value={selectedValue}
-                                label="Select an Option"
-                                onChange={handleDropdownChange}
-                            >
-                                <MenuItem value={'comunicacao'}>Comunicação</MenuItem>
-                                <MenuItem value={'posit'}>POSIT</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </div>
-
-                    <div style={styles.rowInfo}>
-                        <span style={styles.infoProp}>De:</span>
-                        <TextField
-                            style={styles.input}
-                            type="text"
-                            name="de"
-                            value={descricao}
-                            disabled
-                            variant="outlined"
-                            fullWidth
-                        />
-                    </div>
-
-                    <div style={styles.rowInfo}>
-                        <span style={styles.infoProp}>Para: </span>
-                        <TextField
-                            style={styles.input}
-                            type="text"
-                            name="para"
-                            value='SALOP'
-                            disabled
-                            variant="outlined"
-                            fullWidth
-                        />
-                    </div>
 
                     <div style={styles.rowInfo}>
                         {(item.classificacao === '2101' || item.classificacao === '2111' || item.classificacao === '2115'
