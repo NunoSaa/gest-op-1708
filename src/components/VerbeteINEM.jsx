@@ -834,7 +834,7 @@ const styles = {
         borderCollapse: 'collapse',
     },
     th: {
-        backgroundColor: '#003366', // Blue color for headers
+        backgroundColor: '#0065ad', // Blue color for headers
         color: 'white',
         padding: '10px',
         border: '1px solid #ddd',
