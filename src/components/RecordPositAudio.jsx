@@ -4,6 +4,11 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import MicIcon from '@mui/icons-material/Mic';
+import StopIcon from '@mui/icons-material/Stop';
+import DeleteIcon from '@mui/icons-material/Delete'; // Trash icon for resetting
+import DownloadIcon from '@mui/icons-material/Download'; // Download icon for saving
+import UploadIcon from '@mui/icons-material/Upload';
 import { gapi } from 'gapi-script';
 import { useLocation } from "react-router-dom";
 
@@ -264,6 +269,7 @@ const RecordAudioPosit = () => {
                                     disabled={isRecording}
                                     sx={{ height: 60 }}>
                                     Iniciar Gravação
+                                    <MicIcon sx={{ marginRight: 1 }} /> {/* Microphone icon for start */}
                                 </Button>
                             </Grid>
                             <Grid item xs={12} sm={5}>
@@ -275,6 +281,7 @@ const RecordAudioPosit = () => {
                                     disabled={!isRecording}
                                     sx={{ height: 60 }}>
                                     Parar Gravação
+                                    <StopIcon sx={{ marginRight: 1 }} /> {/* Stop icon for stop */}
                                 </Button>
                             </Grid>
                         </Grid>
@@ -292,6 +299,7 @@ const RecordAudioPosit = () => {
                                     disabled={!audioBlob || isUploading}
                                     sx={{ height: 60 }}>
                                     Descartar gravação
+                                    <DeleteIcon sx={{ marginRight: 1 }} /> {/* Trash icon */}
                                 </Button>
                             </Grid>
                         </Grid>
@@ -309,6 +317,7 @@ const RecordAudioPosit = () => {
                                     disabled={!audioBlob}
                                     sx={{ height: 60 }}>
                                     Guardar no dispositivo
+                                    <DownloadIcon sx={{ marginRight: 1 }} /> {/* Download icon */}
                                 </Button>
                             </Grid>
                             <Grid item xs={12} sm={5}>
@@ -320,6 +329,7 @@ const RecordAudioPosit = () => {
                                     disabled={!audioBlob || isUploading}
                                     sx={{ height: 60 }}>
                                     Enviar para Gescorp
+                                    <UploadIcon sx={{ marginRight: 1 }} /> {/* Upload icon */}
                                 </Button>
                             </Grid>
                         </Grid>
