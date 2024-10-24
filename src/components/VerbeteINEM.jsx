@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import { PDFDocument } from 'pdf-lib';
 import { saveAs } from 'file-saver';
+import { useNavigate, useLocation } from "react-router-dom";
 import pdfFile from '../assets/TEMPLATE_INEM.pdf';
 import '../css/Login.css';
 import Button from '@mui/material/Button';
@@ -14,6 +15,12 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import RaceAssessment from '../components/RaceAssessment';
 
 function VerbeteINEM() {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { state } = location;
+    const [item, setItem] = useState(state);
+   
+    console.log(item);
     const [selectedLabelLocalOcorrencia, setSelectedLabelLocalOcorrencia] = useState('Domícilio'); // Default to the label of the first option
 
     // State to hold form data
@@ -56,7 +63,9 @@ function VerbeteINEM() {
             });
 
             const pdfBytes = await pdfDoc.save();
-            saveAs(new Blob([pdfBytes], { type: 'application/pdf' }), 'filled_template.pdf');
+
+            let fileName = 'VerbeteINEM_' + item.numero +'.pdf';
+            saveAs(new Blob([pdfBytes], { type: 'application/pdf' }), fileName);
         } catch (error) {
             console.error('Error filling the PDF template:', error);
         }
@@ -109,233 +118,234 @@ function VerbeteINEM() {
             </AppBar>
 
             <div style={styles.container}>
+                <form onSubmit={handleSubmit}>
 
-                <div style={{ display: 'flex', alignItems: 'stretch' }}>
-                    {/* Vertical Column with "Ocorrência" */}
-                    <div style={{
-                        width: '25px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        writingMode: 'vertical-lr',
-                        textAlign: 'center',
-                        backgroundColor: '#99CCFF',  // Optional background for visual separation
-                        padding: '10px',
-                        fontWeight: 'bold',
-                        flexShrink: 0,    // Prevents the column from shrinking,
-                        marginBottom: "25px",
-                        transform: 'rotate(180deg)'
-                    }}>
-                        Ocorrência
-                    </div>
+                    <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                        {/* Vertical Column with "Ocorrência" */}
+                        <div style={{
+                            width: '25px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            writingMode: 'vertical-lr',
+                            textAlign: 'center',
+                            backgroundColor: '#99CCFF',  // Optional background for visual separation
+                            padding: '10px',
+                            fontWeight: 'bold',
+                            flexShrink: 0,    // Prevents the column from shrinking,
+                            marginBottom: "25px",
+                            transform: 'rotate(180deg)'
+                        }}>
+                            Ocorrência
+                        </div>
 
-                    {/* Event Form */}
-                    <div className="event-form" style={{ flexGrow: 1 }}>
-                        <section className="header-section">
-                            <div style={styles.rowInfo}>
-                                <div style={{ ...styles.inputGroup, flex: 2 }}>
-                                    <label>Entidade</label>
-                                    <TextField
-                                        variant="outlined"
-                                        value="B. V. Vila Pouca de Aguiar"
-                                        disabled
-                                        fullWidth
-                                    />
-                                </div>
-
-                                <div style={styles.inputGroup}>
-                                    <label style={{ paddingLeft: '15px' }}>Meio</label>
-                                    <TextField
-                                        variant="outlined"
-                                        defaultValue="Reserva"
-                                        fullWidth
-                                    />
-                                </div>
-
-                                <div style={styles.inputGroup}>
-                                    <label style={{ paddingLeft: '15px' }}>Nº Evento</label>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth
-                                    />
-                                </div>
-                            </div>
-
-                            <div style={styles.rowInfo}>
-                                <div style={{ ...styles.inputGroup, flex: 2 }}>  {/* 20% */}
-                                    <label>Nº Vítimas</label>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth
-                                    />
-                                </div>
-
-                                <div style={{ ...styles.inputGroup, flex: 8 }}>  {/* 80% */}
-                                    <label style={{ paddingLeft: '15px' }}>Local</label>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth
-                                    />
-                                </div>
-                            </div>
-                        </section>
-
-                        {/* Local Section */}
-                        <section className="local-section">
-                            <div style={styles.rowInfo}>
-                                <div style={{ ...styles.inputGroup, flex: 4 }}>  {/* 50% */}
-                                    <label >Freguesia</label>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth
-                                    />
-                                </div>
-
-                                <div style={{ ...styles.inputGroup, flex: 4 }}>  {/* 50% */}
-                                    <label style={{ paddingLeft: '15px' }}>Concelho</label>
-                                    <TextField
-                                        variant="outlined"
-                                        defaultValue={"Vila Pouca de Aguiar"}
-                                        fullWidth
-                                    />
-                                </div>
-                            </div>
-                        </section>
-
-
-                        {/* Local Section */}
-                        <section className="local-section">
-                            <div style={styles.rowInfo}>
-                                <div style={{ ...styles.inputGroup, flex: 2 }}>  {/* 50% */}
-                                    <label>Caminho do Local</label>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth
-                                    />
-                                </div>
-
-                                <div style={{ ...styles.inputGroup, flex: 2 }}>  {/* 50% */}
-                                    <label style={{ paddingLeft: '15px' }}>Chegada à vitima</label>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth
-                                    />
-                                </div>
-
-                                <div style={{ ...styles.inputGroup, flex: 2 }}>  {/* 50% */}
-                                    <label style={{ paddingLeft: '15px' }}>Caminho U.Saúde</label>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth
-                                    />
-                                </div>
-
-                                <div style={{ ...styles.inputGroup, flex: 2 }}>  {/* 50% */}
-                                    <label style={{ paddingLeft: '15px' }}>Chegada U.Saúde</label>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth
-                                    />
-                                </div>
-
-                                <div style={{ ...styles.inputGroup, flex: 2 }}>  {/* 50% */}
-                                    <label style={{ paddingLeft: '15px' }}>Disponível</label>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth
-                                    />
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                </div>
-
-
-
-
-
-                <div style={{ display: 'flex', alignItems: 'stretch' }}>
-                    {/* Vertical Column with "Ocorrência" */}
-                    <div style={{
-                        width: '25px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        writingMode: 'vertical-lr',
-                        textAlign: 'center',
-                        backgroundColor: '#99CCFF',  // Optional background for visual separation
-                        padding: '10px',
-                        fontWeight: 'bold',
-                        flexShrink: 0,    // Prevents the column from shrinking,
-                        marginBottom: "25px",
-                        transform: 'rotate(180deg)'
-                    }}>
-                        Identificação
-                    </div>
-                    <div className="event-form" style={{ flexGrow: 1 }}>
-                        {/* Victim Details Section */}
-                        <section className="victim-section">
-
-                            <div style={styles.rowInfo}>
-                                <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
-                                    <label>Nome</label>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="form-row">
-                                <div style={{ ...styles.inputGroup, flex: 2 }}>  {/* 50% */}
-                                    <label>Nascimento</label>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth
-                                    />
-                                </div>
-                                <div style={{ ...styles.inputGroup, flex: 1 }}>  {/* 50% */}
-                                    <label style={{ paddingLeft: '15px' }}>Idade</label>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth
-                                    />
-                                </div>
-                                <div style={{ ...styles.inputGroup, flex: 1 }}>  {/* 50% */}
-                                    <label style={{ paddingLeft: '15px' }}>Sexo</label>
-                                    <div className="radio-group">
-                                        <label>
-                                            <input type="radio" name="sexo" value="M" />
-                                            M
-                                        </label>
-                                        <label>
-                                            <input type="radio" name="sexo" value="F" />
-                                            F
-                                        </label>
+                        {/* Event Form */}
+                        <div className="event-form" style={{ flexGrow: 1 }}>
+                            <section className="header-section">
+                                <div style={styles.rowInfo}>
+                                    <div style={{ ...styles.inputGroup, flex: 2 }}>
+                                        <label>Entidade</label>
+                                        <TextField
+                                            variant="outlined"
+                                            value="B. V. Vila Pouca de Aguiar"
+                                            disabled
+                                            fullWidth
+                                        />
                                     </div>
-                                </div>
-                                <div className="form-row">
-                                    <div style={{ ...styles.inputGroup, flex: 3 }}>  {/* 50% */}
-                                        <label style={{ paddingLeft: '25px' }}>Nº SNS</label>
+
+                                    <div style={styles.inputGroup}>
+                                        <label style={{ paddingLeft: '15px' }}>Meio</label>
+                                        <TextField
+                                            variant="outlined"
+                                            defaultValue="Reserva"
+                                            fullWidth
+                                        />
+                                    </div>
+
+                                    <div style={styles.inputGroup}>
+                                        <label style={{ paddingLeft: '15px' }}>Nº Evento</label>
                                         <TextField
                                             variant="outlined"
                                             fullWidth
                                         />
                                     </div>
                                 </div>
-                            </div>
-                            <div style={styles.rowInfo}>
-                                <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
-                                    <label>Residência</label>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth
-                                    />
+
+                                <div style={styles.rowInfo}>
+                                    <div style={{ ...styles.inputGroup, flex: 2 }}>  {/* 20% */}
+                                        <label>Nº Vítimas</label>
+                                        <TextField
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </div>
+
+                                    <div style={{ ...styles.inputGroup, flex: 8 }}>  {/* 80% */}
+                                        <label style={{ paddingLeft: '15px' }}>Local</label>
+                                        <TextField
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                        </section>
+                            </section>
+
+                            {/* Local Section */}
+                            <section className="local-section">
+                                <div style={styles.rowInfo}>
+                                    <div style={{ ...styles.inputGroup, flex: 4 }}>  {/* 50% */}
+                                        <label >Freguesia</label>
+                                        <TextField
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </div>
+
+                                    <div style={{ ...styles.inputGroup, flex: 4 }}>  {/* 50% */}
+                                        <label style={{ paddingLeft: '15px' }}>Concelho</label>
+                                        <TextField
+                                            variant="outlined"
+                                            defaultValue={"Vila Pouca de Aguiar"}
+                                            fullWidth
+                                        />
+                                    </div>
+                                </div>
+                            </section>
+
+
+                            {/* Local Section */}
+                            <section className="local-section">
+                                <div style={styles.rowInfo}>
+                                    <div style={{ ...styles.inputGroup, flex: 2 }}>  {/* 50% */}
+                                        <label>Caminho do Local</label>
+                                        <TextField
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </div>
+
+                                    <div style={{ ...styles.inputGroup, flex: 2 }}>  {/* 50% */}
+                                        <label style={{ paddingLeft: '15px' }}>Chegada à vitima</label>
+                                        <TextField
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </div>
+
+                                    <div style={{ ...styles.inputGroup, flex: 2 }}>  {/* 50% */}
+                                        <label style={{ paddingLeft: '15px' }}>Caminho U.Saúde</label>
+                                        <TextField
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </div>
+
+                                    <div style={{ ...styles.inputGroup, flex: 2 }}>  {/* 50% */}
+                                        <label style={{ paddingLeft: '15px' }}>Chegada U.Saúde</label>
+                                        <TextField
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </div>
+
+                                    <div style={{ ...styles.inputGroup, flex: 2 }}>  {/* 50% */}
+                                        <label style={{ paddingLeft: '15px' }}>Disponível</label>
+                                        <TextField
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
                     </div>
-                </div>
+
+
+
+
+
+                    <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                        {/* Vertical Column with "Ocorrência" */}
+                        <div style={{
+                            width: '25px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            writingMode: 'vertical-lr',
+                            textAlign: 'center',
+                            backgroundColor: '#99CCFF',  // Optional background for visual separation
+                            padding: '10px',
+                            fontWeight: 'bold',
+                            flexShrink: 0,    // Prevents the column from shrinking,
+                            marginBottom: "25px",
+                            transform: 'rotate(180deg)'
+                        }}>
+                            Identificação
+                        </div>
+                        <div className="event-form" style={{ flexGrow: 1 }}>
+                            {/* Victim Details Section */}
+                            <section className="victim-section">
+
+                                <div style={styles.rowInfo}>
+                                    <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
+                                        <label>Nome</label>
+                                        <TextField
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="form-row">
+                                    <div style={{ ...styles.inputGroup, flex: 2 }}>  {/* 50% */}
+                                        <label>Nascimento</label>
+                                        <TextField
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </div>
+                                    <div style={{ ...styles.inputGroup, flex: 1 }}>  {/* 50% */}
+                                        <label style={{ paddingLeft: '15px' }}>Idade</label>
+                                        <TextField
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </div>
+                                    <div style={{ ...styles.inputGroup, flex: 1 }}>  {/* 50% */}
+                                        <label style={{ paddingLeft: '15px' }}>Sexo</label>
+                                        <div className="radio-group">
+                                            <label>
+                                                <input type="radio" name="sexo" value="M" />
+                                                M
+                                            </label>
+                                            <label>
+                                                <input type="radio" name="sexo" value="F" />
+                                                F
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div className="form-row">
+                                        <div style={{ ...styles.inputGroup, flex: 3 }}>  {/* 50% */}
+                                            <label style={{ paddingLeft: '25px' }}>Nº SNS</label>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style={styles.rowInfo}>
+                                    <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
+                                        <label>Residência</label>
+                                        <TextField
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
 
 
                 <div style={{ display: 'flex', alignItems: 'stretch' }}>
@@ -357,404 +367,140 @@ function VerbeteINEM() {
                         Avaliação
                     </div>
                     <div className="event-form" style={{ flexGrow: 1 }}>
-                        <table style={styles.table}>
-                            <thead>
-                                <tr>
-                                    <th style={styles.th}>Hora h:m</th>
-                                    <th style={styles.th}>AVDS OCS</th>
-                                    <th style={styles.th}>Vent. gpm</th>
-                                    <th style={styles.th}>SpO2 %</th>
-                                    <th style={styles.th}>O2 Sup l/min</th>
-                                    <th style={styles.th}>EtCO2 mmHg</th>
-                                    <th style={styles.th}>Pulso bpm</th>
-                                    <th style={styles.th}>ECG ver/r</th>
-                                    <th style={styles.th}>P. Arterial Sistólica</th>
-                                    <th style={styles.th}>P. Arterial Diastólica</th>
-                                    <th style={styles.th}>Pele</th>
-                                    <th style={styles.th}>Temp. °C</th>
-                                    <th style={styles.th}>Pupilas</th>
-                                    <th style={styles.th}>Dor 0-10</th>
-                                    <th style={styles.th}>Glicemia mg/dL</th>
-                                    <th style={styles.th}>NEWS/TAP q.v./0-5</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                    <td style={styles.td}>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-
-
-                <div style={{ display: 'flex', alignItems: 'stretch' }}>
-                    {/* Vertical Column with "Ocorrência" */}
-                    <div style={{
-                        width: '25px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        writingMode: 'vertical-lr',
-                        textAlign: 'center',
-                        backgroundColor: '#99CCFF',  // Optional background for visual separation
-                        padding: '10px',
-                        fontWeight: 'bold',
-                        flexShrink: 0,    // Prevents the column from shrinking,
-                        marginBottom: "25px",
-                        transform: 'rotate(180deg)'
-                    }}>
-                        Historial Clínico
-                    </div>
-                    <div className="event-form" style={{ flexGrow: 1 }}>
-
-                        {/* Victim Details Section */}
-                        <section className="victim-section">
-
-                            <div style={styles.rowInfo}>
-                                <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
-                                    <label>Circunstâncias</label>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth
-                                    />
-                                </div>
-                            </div>
-
-                            <div style={styles.rowInfo}>
-                                <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
-                                    <label>Histórico Doenças</label>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth
-                                    />
-                                </div>
-                            </div>
-
-                            <div style={styles.rowInfo}>
-                                <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
-                                    <label>Alergias</label>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth
-                                    />
-                                </div>
-                            </div>
-
-                            <div style={styles.rowInfo}>
-                                <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
-                                    <label>Medicação Habitual</label>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth
-                                    />
-                                </div>
-                            </div>
-                        </section>
 
                     </div>
                 </div>
 
 
 
-                <div style={{ display: 'flex', alignItems: 'stretch' }}>
-                    {/* Vertical Column with "Ocorrência" */}
-                    <div style={{
-                        width: '25px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        writingMode: 'vertical-lr',
-                        textAlign: 'center',
-                        backgroundColor: '#99CCFF',  // Optional background for visual separation
-                        padding: '10px',
-                        fontWeight: 'bold',
-                        flexShrink: 0,    // Prevents the column from shrinking,
-                        marginBottom: "25px",
-                        transform: 'rotate(180deg)'
-                    }}>
-                        Exame da Vítmia, Procedimentos e Terapêutica
-                    </div>
-                    <div className="event-form" style={{ flexGrow: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                        {/* Vertical Column with "Ocorrência" */}
+                        <div style={{
+                            width: '25px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            writingMode: 'vertical-lr',
+                            textAlign: 'center',
+                            backgroundColor: '#99CCFF',  // Optional background for visual separation
+                            padding: '10px',
+                            fontWeight: 'bold',
+                            flexShrink: 0,    // Prevents the column from shrinking,
+                            marginBottom: "25px",
+                            transform: 'rotate(180deg)'
+                        }}>
+                            Historial Clínico
+                        </div>
+                        <div className="event-form" style={{ flexGrow: 1 }}>
 
+                            {/* Victim Details Section */}
+                            <section className="victim-section">
+
+                                <div style={styles.rowInfo}>
+                                    <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
+                                        <label>Circunstâncias</label>
+                                        <TextField
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </div>
+                                </div>
+
+                                <div style={styles.rowInfo}>
+                                    <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
+                                        <label>Histórico Doenças</label>
+                                        <TextField
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </div>
+                                </div>
+
+                                <div style={styles.rowInfo}>
+                                    <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
+                                        <label>Alergias</label>
+                                        <TextField
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </div>
+                                </div>
+
+                                <div style={styles.rowInfo}>
+                                    <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
+                                        <label>Medicação Habitual</label>
+                                        <TextField
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    </div>
+                                </div>
+                            </section>
+
+                        </div>
                     </div>
-                </div>
 
 
-                <div style={{ display: 'flex', alignItems: 'stretch' }}>
-                    {/* Vertical Column with "Ocorrência" */}
-                    <div style={{
-                        width: '25px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        writingMode: 'vertical-lr',
-                        textAlign: 'center',
-                        backgroundColor: '#99CCFF',  // Optional background for visual separation
-                        padding: '10px',
-                        fontWeight: 'bold',
-                        flexShrink: 0,    // Prevents the column from shrinking,
-                        marginBottom: "25px",
-                        transform: 'rotate(180deg)'
-                    }}>
-                        Observações
-                    </div>
-                    <div className="event-form" style={{ flexGrow: 1 }}>
 
+                    <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                        {/* Vertical Column with "Ocorrência" */}
+                        <div style={{
+                            width: '25px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            writingMode: 'vertical-lr',
+                            textAlign: 'center',
+                            backgroundColor: '#99CCFF',  // Optional background for visual separation
+                            padding: '10px',
+                            fontWeight: 'bold',
+                            flexShrink: 0,    // Prevents the column from shrinking,
+                            marginBottom: "25px",
+                            transform: 'rotate(180deg)'
+                        }}>
+                            Exame da Vítmia, Procedimentos e Terapêutica
+                        </div>
+                        <div className="event-form" style={{ flexGrow: 1 }}>
+
+                        </div>
                     </div>
-                </div>
+
+
+                    <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                        {/* Vertical Column with "Ocorrência" */}
+                        <div style={{
+                            width: '25px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            writingMode: 'vertical-lr',
+                            textAlign: 'center',
+                            backgroundColor: '#99CCFF',  // Optional background for visual separation
+                            padding: '10px',
+                            fontWeight: 'bold',
+                            flexShrink: 0,    // Prevents the column from shrinking,
+                            marginBottom: "25px",
+                            transform: 'rotate(180deg)'
+                        }}>
+                            Observações
+                        </div>
+                        <div className="event-form" style={{ flexGrow: 1 }}>
+
+                        </div>
+                    </div>
+
+                    {/* Add other input fields as needed */}
+                    <Button type="submit" variant="contained" color="primary">
+                        Submit
+                    </Button>
+                </form>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'stretch' }}>
                 <RaceAssessment />
             </div>
 
-
-        </div>
+        </div >
     );
 }
 

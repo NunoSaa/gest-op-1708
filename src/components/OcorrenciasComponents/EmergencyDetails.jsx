@@ -214,15 +214,15 @@ const EmergencyDetails = ({
                     </Button>
                 </div>
 
-                {['ABSC01', 'ABSC02', 'ABSC03', 'ABSC04', 'VOPE06'].includes(descricao) && (
+                {['ABSC01', 'ABSC02', 'ABSC03', 'ABSC04', 'VOPE06', 'USER_ADMIN'].includes(descricao) && (
                     <>
                         <div style={styles.row}>
                             <Button style={styles.button_ChegadaUnidadeHosp} onClick={handleSetTimeChegadaUnidadeHosp} disabled={isChegadaUnidadeHospSet}>
                                 <p style={{ ...styles.buttonText, marginRight: '5px' }}>Chegada à Unidade Hospitalar</p>
                             </Button>
 
-                            <Button style={styles.button_VerbeteInem} onClick={() => navigate('/verbeteINEM')}>
-                                <p style={styles.buttonText}>Anexar Verbete</p>
+                            <Button style={styles.button_VerbeteInem} onClick={() => navigate('/verbeteINEM', { state: item })}>
+                                <p style={styles.buttonText}>Verbete INEM</p>
                                 <p style={styles.buttonTextOther}>.</p>
                             </Button>
                         </div>
