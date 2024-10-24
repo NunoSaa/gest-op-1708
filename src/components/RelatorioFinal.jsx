@@ -129,7 +129,7 @@ function RelatorioFinal() {
         pinhal: 'Pinhal',
         eucalipto: 'Eucalipto',
         carvalho: 'Carvalho',
-        agricola: 'Agricola'
+        agricola: 'Comb. Agricola'
     };
 
     const fetchIncidentReport = async () => {
