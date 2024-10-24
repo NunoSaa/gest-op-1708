@@ -3,12 +3,8 @@ import axios from 'axios';
 import '../css/Login.css';
 import { useNavigate, useLocation } from "react-router-dom";
 import { ClipLoader } from 'react-spinners';
-import Button from '@mui/material/Button';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { AppBar, Toolbar, Typography, IconButton, Button, Box, Grid, CircularProgress } from '@mui/material';
 
 function FitaTempo() {
 
@@ -19,8 +15,6 @@ function FitaTempo() {
     const [loading, setLoading] = useState(false);
     const [item, setItem] = useState(state);
     const [error, setError] = useState(null);
-
-    console.log(item);
 
     useEffect(() => {
         const fetchData = async (id) => {
@@ -42,16 +36,18 @@ function FitaTempo() {
         };
 
         if (item && item.id) {
-            fetchData(item.id); // Fetch data using the ID from state
+            fetchData(item.id);
         }
 
+        // Refresh every minute
         const interval = setInterval(() => {
             if (item && item.id) {
-                fetchData(item.id); // Refetch data every minute
+                // Refetch data every minute
+                fetchData(item.id);
             }
-        }, 60000); // Refresh every minute
+        }, 60000);
 
-        return () => clearInterval(interval); // Cleanup the interval on component unmount
+        return () => clearInterval(interval);
     }, [item]);
 
     const renderItem = (item) => (
@@ -73,153 +69,124 @@ function FitaTempo() {
         </div>
     );
 
+    // Go back to the previous page
     const handleBackClick = () => {
-        window.history.back(); // Go back to the previous page
+        window.history.back();
     };
 
     return (
-
-        <div>
+        <Box>
+            {/* AppBar */}
             <AppBar position="static">
-                <Toolbar style={{ backgroundColor: "#A0A0A0" }}>
-                    <IconButton edge="start" color="inherit" onClick={handleBackClick} aria-label="back">
+                <Toolbar sx={{ backgroundColor: "#A0A0A0" }}>
+                    <IconButton edge="start" color="inherit" onClick={() => navigate(-1)} aria-label="back">
                         <ArrowBackIcon />
                     </IconButton>
-                    <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         Ocorrência
                     </Typography>
                 </Toolbar>
             </AppBar>
 
-            <div style={styles.container}>
-                <div style={styles.row}>
-                    <Button style={styles.button_POSIT}
-                        onClick={() => navigate('/novoPosit', { state: item })}>
-                        <p style={styles.buttonText}>Novo POSIT</p>
-                    </Button>
-                    <Button style={styles.button_POSIT_AUDIO}
-                        onClick={() => navigate('/recordPositAudio', { state: item })}>
-                        <p style={styles.buttonText}>Novo Audio POSIT</p>
-                    </Button>
-                </div>
+            {/* Main Content */}
+            <Box sx={{ p: { xs: 2, sm: 3, md: 5 }, bgcolor: "background.paper", minHeight: '100vh' }}>
+                {/* Action Buttons */}
+                <Grid container spacing={3} justifyContent="center" sx={{ mb: 4 }}>
+                    <Grid item xs={12} sm={6} md={5}>
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            color="error"
+                            onClick={() => navigate('/novoPosit', { state: item })}
+                            sx={{ height: 75, borderRadius: 2, textTransform: 'none' }}
+                        >
+                            <Typography variant="h6">Novo POSIT</Typography>
+                        </Button>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={5}>
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            onClick={() => navigate('/recordPositAudio', { state: item })}
+                            sx={{ height: 75, borderRadius: 2, textTransform: 'none' }}
+                        >
+                            <Typography variant="h6">Novo Áudio POSIT</Typography>
+                        </Button>
+                    </Grid>
+                </Grid>
 
-                <div style={styles.row}>
+                {/* Content - Loading or Time Tape */}
+                <Grid container justifyContent="center">
                     {loading ? (
-                        <div style={styles.center}>
+                        <Box sx={{ textAlign: 'center', mt: 5 }}>
                             <ClipLoader size={50} color="#C0C0C0" />
-                            A carregar...</div> // You can replace this with a loading icon
+                            <Typography variant="h6" sx={{ mt: 2 }}>
+                                A carregar...
+                            </Typography>
+                        </Box>
                     ) : timeTape.length === 0 ? (
-                        <div>Não foram encontrados Registos.</div> // Render message if emergencies array is empty
+                        <Typography variant="h6" color="textSecondary" align="center" sx={{ mt: 5 }}>
+                            Não foram encontrados Registos.
+                        </Typography>
                     ) : (
-                        <div style={styles.rowItem}>
-                            {timeTape.map(renderItem)}
-                        </div>
+                        <Grid container spacing={2} sx={{ mt: 3 }}>
+                            {timeTape.map((item, index) => (
+                                <Grid item xs={12} key={index}>
+                                    {renderItem(item)}
+                                </Grid>
+                            ))}
+                        </Grid>
                     )}
-                </div>
-            </div>
-        </div>
+                </Grid>
+            </Box>
+        </Box>
     );
 };
 
 const styles = {
+    container: {
+        padding: '16px',
+        maxWidth: '960px',
+        margin: '0 auto',
+    },
+    buttonText: {
+        fontSize: '16px',
+        fontWeight: 'bold',
+    },
     center: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         height: '100vh',
     },
-    container: {
-        marginLeft: 25,
-        marginRight: 25,
-        flex: 1,
-        backgroundColor: 'white',
-        paddingTop: 25,
-        paddingBottom: 25,
-        paddingLeft: 25,
-        paddingRight: 25
-    },
-    content: {
-        flex: 1,
-        marginLeft: 25,
+    rowItem: {
+        display: 'flex',
+        flexDirection: 'column',
+        padding: '10px',
     },
     item: {
-        display: 'flex', // Add this to make the item a flex container
+        display: 'flex',
         alignItems: 'center',
         backgroundColor: '#E0E0E0',
-        padding: 20,
-        marginVertical: 5,
-        marginHorizontal: 20,
+        padding: '20px',
+        marginHorizontal: '20px',
         borderColor: '#C0C0C0',
-        border: '1px solid #C0C0C0',
-        borderWidth: 1,
-        borderRadius: 5,
-        marginTop: 15
+        borderWidth: '2px',
+        marginTop: '5px',
+        borderRadius: 10
     },
     row: {
         flexDirection: 'row',
-        marginBottom: 25,
-    },
-    rowInfo: {
-        flexDirection: 'row',
-        marginBottom: 25,
-        paddingLeft: 25
+        marginBottom: '5px',
     },
     title: {
-        fontSize: 24,
-        paddingBottom: 5,
+        fontSize: '24px',
+        paddingBottom: '5px',
     },
     description: {
-        fontSize: 18,
-        paddingBottom: 5,
-    },
-    vehicle: {
-        marginTop: '5',
-        fontSize: 14,
-        fontWeight: 'bold'
-    },
-    rightContainer: {
-        flex: 1,
-        alignItems: 'right',
-        display: 'flex',
-        justifyContent: 'flex-end',
-    },
-    timestamp: {
-        marginRight: 25,
-        marginLeft: 25,
-        color: '#888',
-        fontSize: 16
-    },
-    estado: {
-        fontWeight: 'bold',
-        fontSize: 16
-    },
-    image: {
-        width: 75,
-        height: 75,
-        resizeMode: 'contain',
-    },
-    button_POSIT: {
-        width: "45%",
-        height: 75,
-        backgroundColor: '#FF6666',
-        borderRadius: 10,
-        flex: 1,
-        alignItems: 'center',
-        marginRight: "5%"
-    },
-    button_POSIT_AUDIO: {
-        width: "45%",
-        height: 75,
-        backgroundColor: '#46a3ff',
-        borderRadius: 10,
-        flex: 1,
-        alignItems: 'center',
-        marginRight: "5%"
-    },
-    buttonText: {
-        color: '#000000', // Set the text color to white
-        fontSize: 16,
-        fontWeight: 'bold',
+        fontSize: '18px',
+        paddingBottom: '5px',
     },
 };
 

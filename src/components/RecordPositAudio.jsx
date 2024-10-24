@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, LinearProgress, Typography, CircularProgress, Box, Card } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { Button, LinearProgress, Typography, CircularProgress, Box, Card, Grid } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { gapi } from 'gapi-script'; // Import the gapi library
-import { useNavigate, useLocation } from "react-router-dom";
+import { gapi } from 'gapi-script';
+import { useLocation } from "react-router-dom";
 
 const RecordAudioPosit = () => {
     const [audioBlob, setAudioBlob] = useState(null);
@@ -17,32 +16,24 @@ const RecordAudioPosit = () => {
     const intervalRef = useRef(null);
     const [uploadProgress, setUploadProgress] = useState(0); // Upload progress
     const [isUploading, setIsUploading] = useState(false); // Uploading state
-
-    const navigate = useNavigate();
     const location = useLocation();
     const { state } = location;
     const [item, setItem] = useState(state);
-
-    const theme = useTheme();
-
+    const num_ocorrencia = item.numero;
     const CLIENT_ID = '214123389323-3c7npk6e2hasbi2jt3pnrg1jqvjtm92m.apps.googleusercontent.com';  // Replace with your OAuth Client ID
     const API_KEY = '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';  // Replace with your Google Cloud API Key
     const SCOPES = 'https://www.googleapis.com/auth/drive.file'; // Scope to upload file
 
-    const num_ocorrencia = item.numero; 
-
     const now = new Date();
-
     // Get the current date in the format "YYYY-MM-DD"
     const currentDate = now.toISOString().split('T')[0];
-
     // Get the current time in the format "HH:MM"
     const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
 
+    //Buld the FileName
     let fileName = item.numero + '_POSIT_' + currentDate + '_' + currentHour + '.mp3';
 
     useEffect(() => {
-        // Initialize Google API client on component mount
         function start() {
             gapi.client.init({
                 apiKey: API_KEY,
@@ -73,7 +64,6 @@ const RecordAudioPosit = () => {
         initRecorder();
 
         return () => {
-            // Clean up
             if (recorder) {
                 recorder.stream.getTracks().forEach(track => track.stop());
             }
@@ -86,11 +76,11 @@ const RecordAudioPosit = () => {
             recorder.start();
             setIsRecording(true);
             setProgress(0);
-            setElapsedTime(0); // Reset elapsed time
+            setElapsedTime(0);
             intervalRef.current = setInterval(() => {
-                setElapsedTime((prev) => prev + 1); // Increment elapsed time
-                setProgress((prev) => Math.min(prev + 1, 100)); // Increment progress
-            }, 1000); // Progress increments every 1 second
+                setElapsedTime((prev) => prev + 1);
+                setProgress((prev) => Math.min(prev + 1, 100));
+            }, 1000);
         }
     };
 
@@ -109,7 +99,7 @@ const RecordAudioPosit = () => {
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        a.download = fileName; // Save the file as 'recording.webm'
+        a.download = fileName;
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
@@ -126,25 +116,28 @@ const RecordAudioPosit = () => {
             const folders = response.result.files;
 
             if (folders && folders.length > 0) {
-                // Folder already exists, return the ID
                 return folders[0].id;
             } else {
-                // If folder doesn't exist, create it
                 const createFolderResponse = await gapi.client.drive.files.create({
                     resource: {
                         name: folderName,
                         mimeType: 'application/vnd.google-apps.folder',
-                        parents: [parentFolderId], // Parent folder ID
+                        parents: [parentFolderId],
                     },
                     fields: 'id',
                 });
 
-                return createFolderResponse.result.id; // Return the newly created folder ID
+                return createFolderResponse.result.id;
             }
         } catch (error) {
             console.error(`Error finding or creating folder '${folderName}':`, error);
             return null;
         }
+    };
+
+    const resetRecording = () => {
+        setAudioBlob(null);
+        setElapsedTime(0);
     };
 
     const sendToDrive = async () => {
@@ -163,21 +156,14 @@ const RecordAudioPosit = () => {
             // Step 2: Inside 'Ocorrencias', find or create the 'num_ocorrencia' folder
             const ocorrenciaFolderId = await createOrFindFolder(num_ocorrencia, '1yE6cG3Kwakq1V0ZcI8liMfqF4tLc2E4h');
 
-            const positFolderId = await createOrFindFolder('POSIT', ocorrenciaFolderId, '1yE6cG3Kwakq1V0ZcI8liMfqF4tLc2E4h');
-
             if (!ocorrenciaFolderId) {
-                alert('Erro ao criar a estrutura de pastas no Google Drive');
-                return;
-            }
-
-            if (!positFolderId) {
                 alert('Erro ao criar a estrutura de pastas no Google Drive');
                 return;
             }
 
             // Step 3: Upload the file to the 'num_ocorrencia' folder
             const form = new FormData();
-            metadata.parents = [positFolderId]; // Specify the parent folder (num_ocorrencia folder)
+            metadata.parents = [ocorrenciaFolderId]; // Specify the parent folder (num_ocorrencia folder)
             form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
             form.append('file', file);
 
@@ -197,17 +183,18 @@ const RecordAudioPosit = () => {
 
             xhr.onload = () => {
                 if (xhr.status === 200) {
-                    alert('File uploaded successfully to Google Drive!');
+                    alert('Ficheiro enviado com sucesso para o Google Drive!');
                     setIsUploading(false); // Stop spinner
                     setUploadProgress(0); // Reset progress
+                    resetRecording();
                 } else {
-                    console.error('Error uploading file: ', xhr.responseText);
+                    console.error('Erro no upload do ficheiro para o Google Drive: ', xhr.responseText);
                     setIsUploading(false); // Stop spinner
                 }
             };
 
             xhr.onerror = () => {
-                console.error('Upload failed.');
+                console.error('Erro no upload do ficheiro para o Google Drive.');
                 setIsUploading(false); // Stop spinner
             };
 
@@ -222,6 +209,7 @@ const RecordAudioPosit = () => {
         return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
     };
 
+    // Go back to the previous page
     const handleBackClick = () => {
         window.history.back(); // Go back to the previous page
     };
@@ -234,118 +222,146 @@ const RecordAudioPosit = () => {
                         <ArrowBackIcon />
                     </IconButton>
                     <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
-                        Fita de Tempo
+                        POSIT
                     </Typography>
                 </Toolbar>
             </AppBar>
 
-            <div style={styles.container}>
-                <div style={styles.rowInfo}>
-                    <h2>Audio POSIT</h2>
-                </div>
-
-                <div style={styles.rowInfo}>
-                    <LinearProgress variant="determinate" value={isRecording ? progress : 0} />
-                    {isRecording && (
-                        <Typography variant="body1" style={{ marginTop: theme.spacing(1) }}>
-                            Gravando... Tempo: {formatTime(elapsedTime)}
+            <Box sx={{ p: { xs: 2, sm: 4, md: 6 }, bgcolor: "background.default", minHeight: "100vh" }}>
+                <Grid container spacing={4} justifyContent="center" alignItems="center">
+                    <Grid item xs={12}>
+                        <Typography variant="h4" gutterBottom textAlign="center">
+                            Audio POSIT
                         </Typography>
+                    </Grid>
+
+                    <Grid item xs={12} md={8}>
+                        <LinearProgress variant="determinate" value={isRecording ? progress : 0} />
+                        {isRecording && (
+                            <Typography variant="body1" sx={{ mt: 2, textAlign: 'center' }}>
+                                A gravar audio... Tempo: {formatTime(elapsedTime)}
+                            </Typography>
+                        )}
+                    </Grid>
+
+                    {audioBlob && (
+                        <Grid item xs={12} md={8}>
+                            <audio controls style={styles.player}>
+                                <source src={URL.createObjectURL(audioBlob)} type="audio/webm" />
+                                Your browser does not support the audio tag.
+                            </audio>
+                        </Grid>
                     )}
-                </div>
 
-                {audioBlob && (
-                    <div style={styles.rowInfoCentered}>
-                        <audio controls style={styles.player}>
-                            <source src={URL.createObjectURL(audioBlob)} type="audio/webm" />
-                            Your browser does not support the audio tag.
-                        </audio>
-                    </div>
-                )}
+                    <Grid item xs={12} md={8}>
+                        <Grid container spacing={2} justifyContent="center">
+                            <Grid item xs={12} sm={5}>
+                                <Button
+                                    variant="contained"
+                                    color="success"
+                                    fullWidth
+                                    onClick={startRecording}
+                                    disabled={isRecording}
+                                    sx={{ height: 60 }}>
+                                    Iniciar Gravação
+                                </Button>
+                            </Grid>
+                            <Grid item xs={12} sm={5}>
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    fullWidth
+                                    onClick={stopRecording}
+                                    disabled={!isRecording}
+                                    sx={{ height: 60 }}>
+                                    Parar Gravação
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
 
-                <div style={styles.rowInfoCentered}>
-                    <Button
-                        variant="contained"
-                        color="success"
-                        onClick={startRecording}
-                        disabled={isRecording}
-                        style={styles.button_Inciar}
-                    >
-                        Iniciar Gravação
-                    </Button>
+                    {/* Save and Send Buttons Section */}
+                    <Grid item xs={12} md={8}>
+                        <Grid container spacing={2} justifyContent="center">
+                            <Grid item xs={12} sm={5}>
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    fullWidth
+                                    onClick={resetRecording}
+                                    disabled={!audioBlob || isUploading}
+                                    sx={{ height: 60 }}>
+                                    Descartar gravação
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
 
-                    <Button
-                        variant="contained"
-                        color="error"
-                        onClick={stopRecording}
-                        disabled={!isRecording}
-                        style={styles.button_Parar}
-                    >
-                        Parar Gravação
-                    </Button>
-                </div>
-                <div style={styles.rowInfoCentered}>
-                    <Button
-                        variant="contained"
-                        color="success"
-                        onClick={saveRecording}
-                        disabled={!audioBlob}
-                        style={styles.button_Save}
-                    >
-                        Guardar no dispositivo
-                    </Button>
+                    {/* Save and Send Buttons Section */}
+                    <Grid item xs={12} md={8}>
+                        <Grid container spacing={2} justifyContent="center">
+                            <Grid item xs={12} sm={5}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    fullWidth
+                                    onClick={saveRecording}
+                                    disabled={!audioBlob}
+                                    sx={{ height: 60 }}>
+                                    Guardar no dispositivo
+                                </Button>
+                            </Grid>
+                            <Grid item xs={12} sm={5}>
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    fullWidth
+                                    onClick={sendToDrive}
+                                    disabled={!audioBlob || isUploading}
+                                    sx={{ height: 60 }}>
+                                    Enviar para Gescorp
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
 
-                    <Button
-                        variant="contained"
-                        color="info"
-                        onClick={sendToDrive}
-                        disabled={!audioBlob || isUploading} // Disable while uploading
-                        style={styles.button_Send}
-                    >
-                        Enviar para Gescorp
-                    </Button>
-                </div>
-
-                {/* Modal-like Overlay during upload */}
-                {isUploading && (
-                    <div style={styles.backdrop}>
-                        <Card style={styles.card}>
-                            <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-                                <CircularProgress variant="determinate" value={uploadProgress} />
-                                <Box
-                                    sx={{
-                                        top: 0,
-                                        left: 0,
-                                        bottom: 0,
-                                        right: 0,
-                                        position: 'absolute',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                    }}
-                                >
-                                    <Typography variant="caption" component="div" color="text.secondary">
-                                        {`${uploadProgress}%`}
-                                    </Typography>
-                                </Box>
+                    {isUploading && (
+                        <Grid item xs={12}>
+                            <Box sx={styles.backdrop}>
+                                <Card sx={styles.card}>
+                                    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                                        <CircularProgress variant="determinate" value={uploadProgress} />
+                                        <Box
+                                            sx={{
+                                                top: 0,
+                                                left: 0,
+                                                bottom: 0,
+                                                right: 0,
+                                                position: 'absolute',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                            }}>
+                                            <Typography variant="caption" component="div" color="text.secondary">
+                                                {`${uploadProgress}%`}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                </Card>
                             </Box>
-                        </Card>
-                    </div>
-                )}
-            </div>
+                        </Grid>
+                    )}
+                </Grid>
+            </Box>
         </div>
     );
 };
 
 const styles = {
     container: {
-        marginLeft: 25,
-        marginRight: 25,
-        flex: 1,
-        backgroundColor: 'white',
-        paddingTop: 25,
-        paddingBottom: 25,
-        paddingLeft: 25,
-        paddingRight: 25
+        padding: 16,
+        margin: 'auto',
+        maxWidth: 960,
     },
     rowInfo: {
         flexDirection: 'row',
@@ -353,10 +369,10 @@ const styles = {
     },
     rowInfoCentered: {
         display: 'flex',
-        justifyContent: 'center', // Centers the buttons horizontally
-        alignItems: 'center', // Centers the buttons vertically (optional)
-        gap: 16, // Optional: Adds space between the buttons
-        marginTop: 16, // Optional: Adds some margin at the top
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 16,
+        marginTop: 16,
     },
     button_Inciar: {
         width: "45%",
@@ -387,38 +403,41 @@ const styles = {
     button_Send: {
         width: "35%",
         height: 75,
-        color: "secondary",
+        color: "#349beb",
         borderRadius: 10,
         flex: 1,
         alignItems: 'center',
     },
     player: {
-        width: "80%",
-        height: 75,
+        width: "100%",
         borderRadius: 10,
-        flex: 1,
-        alignItems: 'center',
+        marginTop: 16,
     },
-    // Backdrop overlay
     backdrop: {
         position: 'fixed',
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black background
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        zIndex: 1300, // Make sure it overlays everything else
+        zIndex: 1300,
     },
-    // Card for spinner and upload progress
     card: {
         padding: 20,
         textAlign: 'center',
         backgroundColor: 'white',
         borderRadius: 12,
         boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
+        width: '300px',
+    },
+    discardButton: {
+        position: 'absolute',
+        top: -10,
+        right: 10,
+        zIndex: 1,
     },
 };
 
