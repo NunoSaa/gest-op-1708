@@ -188,6 +188,27 @@ const styles = {
         fontSize: '18px',
         paddingBottom: '5px',
     },
+    vehicle: {
+        marginTop: '5',
+        fontSize: 14,
+        fontWeight: 'bold'
+    },
+    rightContainer: {
+        flex: 1,
+        alignItems: 'right',
+        display: 'flex',
+        justifyContent: 'flex-end',
+    },
+    timestamp: {
+        marginRight: 25,
+        marginLeft: 25,
+        color: '#888',
+        fontSize: 16
+    },
+    estado: {
+        fontWeight: 'bold',
+        fontSize: 16
+    },
 };
 
 export default FitaTempo
