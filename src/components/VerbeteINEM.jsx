@@ -773,14 +773,73 @@ function VerbeteINEM() {
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td style={styles.td}>
-                                            <TextField
-                                                variant="outlined"
-                                                fullWidth
-                                                multiline
-                                                rows={1}
-                                            />
-                                        </td>
+
+                                        <table style={styles.table}>
+                                            <thead>
+                                                <tr>
+                                                    <th style={styles.th}>Presenciada</th>
+                                                    <th style={styles.th}>SBV / DAE</th>
+                                                    <th style={styles.th}>SIV / SAV</th>
+                                                    <th style={styles.th}>1º Ritmo</th>
+                                                    <th style={styles.th}>Nº Choques</th>
+                                                    <th style={styles.th}>Recup.</th>
+                                                    <th style={styles.th}>Susp.</th>
+                                                    <th style={styles.th}>C. Mecânicas</th>
+                                                    <th style={styles.th}>Não realizado</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style={styles.td}>
+                                                        <TextField
+                                                            variant="outlined"
+                                                            fullWidth />
+                                                    </td>
+                                                    <td style={styles.td}>
+                                                        <TextField
+                                                            variant="outlined"
+                                                            fullWidth />
+                                                    </td>
+                                                    <td style={styles.td}>
+                                                        <TextField
+                                                            variant="outlined"
+                                                            fullWidth />
+                                                    </td>
+                                                    <td style={styles.td}>
+                                                        <TextField
+                                                            variant="outlined"
+                                                            fullWidth />
+                                                    </td>
+                                                    <td style={styles.td}>
+                                                        <TextField
+                                                            variant="outlined"
+                                                            fullWidth />
+                                                    </td>
+                                                    <td style={styles.td}>
+                                                        <TextField
+                                                            variant="outlined"
+                                                            fullWidth />
+                                                    </td>
+                                                    <td style={styles.td}>
+                                                        <TextField
+                                                            variant="outlined"
+                                                            fullWidth />
+                                                    </td>
+                                                    <td style={styles.td}>
+                                                        <TextField
+                                                            variant="outlined"
+                                                            fullWidth />
+                                                    </td>
+                                                    <td style={styles.td}>
+                                                        <TextField
+                                                            variant="outlined"
+                                                            fullWidth />
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+
                                     </tr>
                                 </tbody>
                             </table>
@@ -793,14 +852,59 @@ function VerbeteINEM() {
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td style={styles.td}>
-                                            <TextField
-                                                variant="outlined"
-                                                fullWidth
-                                                multiline
-                                                rows={1}
-                                            />
-                                        </td>
+                                        <table style={styles.table}>
+                                            <thead>
+                                                <tr>
+                                                    <th style={styles.th}>Desobstrução</th>
+                                                    <th style={styles.th}>T. Orofaríngeo</th>
+                                                    <th style={styles.th}>T. Laríngeo</th>
+                                                    <th style={styles.th}>Másc. Laríngea</th>
+                                                    <th style={styles.th}>T. Endontraqueal</th>
+                                                    <th style={styles.th}>Vent. Mecânica</th>
+                                                    <th style={styles.th}>CPAP</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style={styles.td}>
+                                                        <TextField
+                                                            variant="outlined"
+                                                            fullWidth />
+                                                    </td>
+                                                    <td style={styles.td}>
+                                                        <TextField
+                                                            variant="outlined"
+                                                            fullWidth />
+                                                    </td>
+                                                    <td style={styles.td}>
+                                                        <TextField
+                                                            variant="outlined"
+                                                            fullWidth />
+                                                    </td>
+                                                    <td style={styles.td}>
+                                                        <TextField
+                                                            variant="outlined"
+                                                            fullWidth />
+                                                    </td>
+                                                    <td style={styles.td}>
+                                                        <TextField
+                                                            variant="outlined"
+                                                            fullWidth />
+                                                    </td>
+                                                    <td style={styles.td}>
+                                                        <TextField
+                                                            variant="outlined"
+                                                            fullWidth />
+                                                    </td>
+                                                    <td style={styles.td}>
+                                                        <TextField
+                                                            variant="outlined"
+                                                            fullWidth />
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
                                     </tr>
                                 </tbody>
                             </table>
@@ -814,12 +918,53 @@ function VerbeteINEM() {
                                 <tbody>
                                     <tr>
                                         <td style={styles.td}>
-                                            <TextField
-                                                variant="outlined"
-                                                fullWidth
-                                                multiline
-                                                rows={1}
-                                            />
+                                            <table style={styles.table}>
+                                                <thead>
+                                                    <tr>
+                                                        <th style={styles.th}>Controlo Temp.</th>
+                                                        <th style={styles.th}>Controlo Hemo.</th>
+                                                        <th style={styles.th}>Penso</th>
+                                                        <th style={styles.th}>Torniquete</th>
+                                                        <th style={styles.th}>Cinto Pélvico</th>
+                                                        <th style={styles.th}>Acesso Venoso</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style={styles.td}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                fullWidth />
+                                                        </td>
+                                                        <td style={styles.td}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                fullWidth />
+                                                        </td>
+                                                        <td style={styles.td}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                fullWidth />
+                                                        </td>
+                                                        <td style={styles.td}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                fullWidth />
+                                                        </td>
+                                                        <td style={styles.td}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                fullWidth />
+                                                        </td>
+                                                        <td style={styles.td}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                fullWidth />
+                                                        </td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -833,14 +978,65 @@ function VerbeteINEM() {
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td style={styles.td}>
-                                            <TextField
-                                                variant="outlined"
-                                                fullWidth
-                                                multiline
-                                                rows={1}
-                                            />
-                                        </td>
+                                    <table style={styles.table}>
+                                                <thead>
+                                                    <tr>
+                                                        <th style={styles.th}>Imobilização</th>
+                                                        <th style={styles.th}>VV AVC</th>
+                                                        <th style={styles.th}>VV Coronária</th>
+                                                        <th style={styles.th}>VV Sepsís</th>
+                                                        <th style={styles.th}>VV Trauma</th>
+                                                        <th style={styles.th}>VV PCR</th>
+                                                        <th style={styles.th}>TEPH</th>
+                                                        <th style={styles.th}>SIV</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style={styles.td}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                fullWidth />
+                                                        </td>
+                                                        <td style={styles.td}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                fullWidth />
+                                                        </td>
+                                                        <td style={styles.td}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                fullWidth />
+                                                        </td>
+                                                        <td style={styles.td}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                fullWidth />
+                                                        </td>
+                                                        <td style={styles.td}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                fullWidth />
+                                                        </td>
+                                                        <td style={styles.td}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                fullWidth />
+                                                        </td>
+                                                        <td style={styles.td}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                fullWidth />
+                                                        </td>
+                                                        <td style={styles.td}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                fullWidth />
+                                                        </td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
                                     </tr>
                                 </tbody>
                             </table>
@@ -887,7 +1083,7 @@ function VerbeteINEM() {
                             Observações
                         </div>
                         <div className="event-form" style={{ flexGrow: 1 }}>
-                            
+
                             <table style={styles.table}>
                                 <thead>
                                     <tr>
