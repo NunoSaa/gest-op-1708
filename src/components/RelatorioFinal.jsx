@@ -2,13 +2,17 @@ import '../css/Login.css';
 import axios from 'axios';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 function RelatorioFinal() {
 
@@ -17,6 +21,11 @@ function RelatorioFinal() {
     const { state } = location;
     const [loading, setLoading] = useState(true);
     const [item, setItem] = useState(state);
+    const [selectedValue, setSelectedValue] = useState(state);
+    const [selectedValue1, setSelectedValue1] = useState(state);
+    const [selectedValue2, setSelectedValue2] = useState(state);
+    const [selectedValue3, setSelectedValue3] = useState(state);
+    const [selectedValue4, setSelectedValue4] = useState(state);
     const [reportData, setReportData] = useState({
         id: '',
         id_relatorio: '',
@@ -50,11 +59,97 @@ function RelatorioFinal() {
         aa_valor5: ''
     });
 
+    const handleDropdownChange = (event) => {
+        const value = event.target.value;
+        setSelectedValue(value);
+
+        // Decode the value using the typologyMap and update aa_outra1
+        const decodedValue = typologyMap[value] || value;
+
+        setReportData((prevState) => ({
+            ...prevState,
+            aa_outra1: decodedValue  // Set the decoded value to aa_outra1
+        }));
+    };
+
+    const handleDropdown1Change = (event) => {
+        const value = event.target.value;
+        setSelectedValue1(value);
+
+        // Decode the value using the typologyMap and update aa_outra1
+        const decodedValue = typologyMap[value] || value;
+
+        setReportData((prevState) => ({
+            ...prevState,
+            aa_outra2: decodedValue  // Set the decoded value to aa_outra1
+        }));
+    };
+
+    const handleDropdown2Change = (event) => {
+        const value = event.target.value;
+        setSelectedValue2(value);
+
+        // Decode the value using the typologyMap and update aa_outra1
+        const decodedValue = typologyMap[value] || value;
+
+        setReportData((prevState) => ({
+            ...prevState,
+            aa_outra3: decodedValue  // Set the decoded value to aa_outra1
+        }));
+    };
+
+    const handleDropdown3Change = (event) => {
+        const value = event.target.value;
+        setSelectedValue3(value);
+
+        // Decode the value using the typologyMap and update aa_outra1
+        const decodedValue = typologyMap[value] || value;
+
+        setReportData((prevState) => ({
+            ...prevState,
+            aa_outra4: decodedValue  // Set the decoded value to aa_outra1
+        }));
+    };
+
+    const handleDropdown4Change = (event) => {
+        const value = event.target.value;
+        setSelectedValue4(value);
+
+        // Decode the value using the typologyMap and update aa_outra1
+        const decodedValue = typologyMap[value] || value;
+
+        setReportData((prevState) => ({
+            ...prevState,
+            aa_outra5: decodedValue  // Set the decoded value to aa_outra1
+        }));
+    };
+
+    const typologyMap = {
+        mato: 'Mato',
+        pinhal: 'Pinhal',
+        eucalipto: 'Eucalipto',
+        carvalho: 'Carvalho',
+        agricola: 'Agricola'
+    };
+
     const fetchIncidentReport = async () => {
         try {
             const response = await axios.get('https://preventech-proxy-service.onrender.com/api/finalreport/getFinalReport?id_ocorrencia=' + item.id);
             if (response.data) {
                 console.log('Fetched Report:', response.data);
+
+                // Decode the aa_outra1 to match the dropdown option
+                const fetchedTypology = response.data[0].aa_outra1;
+                const selectedOption = Object.keys(typologyMap).find(key => typologyMap[key] === fetchedTypology);
+                const fetchedTypology1 = response.data[0].aa_outra2;
+                const selectedOption1 = Object.keys(typologyMap).find(key => typologyMap[key] === fetchedTypology1);
+                const fetchedTypology2 = response.data[0].aa_outra3;
+                const selectedOption2 = Object.keys(typologyMap).find(key => typologyMap[key] === fetchedTypology2);
+                const fetchedTypology3 = response.data[0].aa_outra4;
+                const selectedOption3 = Object.keys(typologyMap).find(key => typologyMap[key] === fetchedTypology3);
+                const fetchedTypology4 = response.data[0].aa_outra5;
+                const selectedOption4 = Object.keys(typologyMap).find(key => typologyMap[key] === fetchedTypology4);
+
 
                 // Set fetched data into state
                 setReportData({
@@ -78,11 +173,11 @@ function RelatorioFinal() {
                     vitimas_apc_feridos: response.data[0].vitimas_apc_feridos || '',
                     vitimas_apc_graves: response.data[0].vitimas_apc_graves || '',
                     vitimas_apc_mortos: response.data[0].vitimas_apc_mortos || '',
-                    aa_outra1: response.data[0].aa_outra1 || '',
-                    aa_outra2: response.data[0].aa_outra2 || '',
-                    aa_outra3: response.data[0].aa_outra3 || '',
-                    aa_outra4: response.data[0].aa_outra4 || '',
-                    aa_outra5: response.data[0].aa_outra5 || '',
+                    aa_outra1: fetchedTypology, // Store decoded value
+                    aa_outra2: fetchedTypology1,
+                    aa_outra3: fetchedTypology2,
+                    aa_outra4: fetchedTypology3,
+                    aa_outra5: fetchedTypology4,
                     aa_valor1: response.data[0].aa_valor1 || '',
                     aa_valor2: response.data[0].aa_valor2 || '',
                     aa_valor3: response.data[0].aa_valor3 || '',
@@ -90,6 +185,11 @@ function RelatorioFinal() {
                     aa_valor5: response.data[0].aa_valor5 || ''
                 });
 
+                setSelectedValue(selectedOption);
+                setSelectedValue1(selectedOption1);
+                setSelectedValue2(selectedOption2);
+                setSelectedValue3(selectedOption3);
+                setSelectedValue4(selectedOption4);
                 console.log('report data: ', reportData)
 
                 setLoading(false);
@@ -112,11 +212,11 @@ function RelatorioFinal() {
 
             if (response.data && response.data.status === 'success') {
                 alert('Dados Guardados com Sucesso');
-            } 
+            }
             else if (response.status === 200) {
                 console.log('Report updated successfully');
                 alert('Dados Guardados com Sucesso');
-            }else {
+            } else {
                 // Handle any other cases (like errors in the response)
                 console.error('Unexpected response:', response.data);
                 alert('Aconteceu um erro ao inserir a informação. Tente mais tarde.');
@@ -327,11 +427,23 @@ function RelatorioFinal() {
                             <div style={styles.incendiosRuraisContainer}>
                                 <div style={styles.incendiosRuraisRow}>
                                     <div style={styles.incendiosRuraisLabel}>Tipologia: </div>
-                                    <TextField
-                                        style={styles.incendiosRuraisInputQt}
-                                        variant="outlined"
-                                        value={reportData.aa_outra1}
-                                        onChange={(e) => handleInputChange('aa_outra1', e.target.value)} />
+                                    <FormControl fullWidth style={styles.incendiosRuraisInputQt}>
+                                        <InputLabel id="dropdown-label" >Tipologia</InputLabel>
+                                        <Select
+                                            labelId="dropdown-label"
+                                            id="dropdown"
+                                            name='tipo'
+                                            value={selectedValue}
+                                            label="Select an Option"
+                                            onChange={handleDropdownChange}>
+
+                                            <MenuItem value={'mato'}>Mato</MenuItem>
+                                            <MenuItem value={'pinhal'}>Pinhal</MenuItem>
+                                            <MenuItem value={'eucalipto'}>Eucalipto</MenuItem>
+                                            <MenuItem value={'carvalho'}>Carvalho</MenuItem>
+                                            <MenuItem value={'agricola'}>Agrícola</MenuItem>
+                                        </Select>
+                                    </FormControl>
                                     <div style={styles.incendiosRuraisLabel}>Área: </div>
                                     <TextField
                                         style={styles.incendiosRuraisInputDesc}
@@ -342,11 +454,23 @@ function RelatorioFinal() {
                                 </div>
                                 <div style={styles.incendiosRuraisRow}>
                                     <div style={styles.incendiosRuraisLabel}>Tipologia: </div>
-                                    <TextField
-                                        style={styles.incendiosRuraisInputQt}
-                                        variant="outlined"
-                                        value={reportData.aa_outra2}
-                                        onChange={(e) => handleInputChange('aa_outra2', e.target.value)} />
+                                    <FormControl fullWidth style={styles.incendiosRuraisInputQt}>
+                                        <InputLabel id="dropdown-label" >Tipologia</InputLabel>
+                                        <Select
+                                            labelId="dropdown-label"
+                                            id="dropdown"
+                                            name='tipo'
+                                            value={selectedValue1}
+                                            label="Select an Option"
+                                            onChange={handleDropdown1Change}>
+
+                                            <MenuItem value={'mato'}>Mato</MenuItem>
+                                            <MenuItem value={'pinhal'}>Pinhal</MenuItem>
+                                            <MenuItem value={'eucalipto'}>Eucalipto</MenuItem>
+                                            <MenuItem value={'carvalho'}>Carvalho</MenuItem>
+                                            <MenuItem value={'agricola'}>Agrícola</MenuItem>
+                                        </Select>
+                                    </FormControl>
                                     <div style={styles.incendiosRuraisLabel}>Área: </div>
                                     <TextField
                                         style={styles.incendiosRuraisInputDesc}
@@ -357,11 +481,23 @@ function RelatorioFinal() {
                                 </div>
                                 <div style={styles.incendiosRuraisRow}>
                                     <div style={styles.incendiosRuraisLabel}>Tipologia: </div>
-                                    <TextField
-                                        style={styles.incendiosRuraisInputQt}
-                                        variant="outlined"
-                                        value={reportData.aa_outra3}
-                                        onChange={(e) => handleInputChange('aa_outra3', e.target.value)} />
+                                    <FormControl fullWidth style={styles.incendiosRuraisInputQt}>
+                                        <InputLabel id="dropdown-label" >Tipologia</InputLabel>
+                                        <Select
+                                            labelId="dropdown-label"
+                                            id="dropdown"
+                                            name='tipo'
+                                            value={selectedValue2}
+                                            label="Select an Option"
+                                            onChange={handleDropdown2Change}>
+
+                                            <MenuItem value={'mato'}>Mato</MenuItem>
+                                            <MenuItem value={'pinhal'}>Pinhal</MenuItem>
+                                            <MenuItem value={'eucalipto'}>Eucalipto</MenuItem>
+                                            <MenuItem value={'carvalho'}>Carvalho</MenuItem>
+                                            <MenuItem value={'agricola'}>Agrícola</MenuItem>
+                                        </Select>
+                                    </FormControl>
                                     <div style={styles.incendiosRuraisLabel}>Área: </div>
                                     <TextField
                                         style={styles.incendiosRuraisInputDesc}
@@ -372,11 +508,23 @@ function RelatorioFinal() {
                                 </div>
                                 <div style={styles.incendiosRuraisRow}>
                                     <div style={styles.incendiosRuraisLabel}>Tipologia: </div>
-                                    <TextField
-                                        style={styles.incendiosRuraisInputQt}
-                                        variant="outlined"
-                                        value={reportData.aa_outra4}
-                                        onChange={(e) => handleInputChange('aa_outra4', e.target.value)} />
+                                    <FormControl fullWidth style={styles.incendiosRuraisInputQt}>
+                                        <InputLabel id="dropdown-label" >Tipologia</InputLabel>
+                                        <Select
+                                            labelId="dropdown-label"
+                                            id="dropdown"
+                                            name='tipo'
+                                            value={selectedValue3}
+                                            label="Select an Option"
+                                            onChange={handleDropdown3Change}>
+
+                                            <MenuItem value={'mato'}>Mato</MenuItem>
+                                            <MenuItem value={'pinhal'}>Pinhal</MenuItem>
+                                            <MenuItem value={'eucalipto'}>Eucalipto</MenuItem>
+                                            <MenuItem value={'carvalho'}>Carvalho</MenuItem>
+                                            <MenuItem value={'agricola'}>Agrícola</MenuItem>
+                                        </Select>
+                                    </FormControl>
                                     <div style={styles.incendiosRuraisLabel}>Área: </div>
                                     <TextField
                                         style={styles.incendiosRuraisInputDesc}
@@ -387,11 +535,23 @@ function RelatorioFinal() {
                                 </div>
                                 <div style={styles.incendiosRuraisRow}>
                                     <div style={styles.incendiosRuraisLabel}>Tipologia: </div>
-                                    <TextField
-                                        style={styles.incendiosRuraisInputQt}
-                                        variant="outlined"
-                                        value={reportData.aa_outra5}
-                                        onChange={(e) => handleInputChange('aa_outra5', e.target.value)} />
+                                    <FormControl fullWidth style={styles.incendiosRuraisInputQt}>
+                                        <InputLabel id="dropdown-label" >Tipologia</InputLabel>
+                                        <Select
+                                            labelId="dropdown-label"
+                                            id="dropdown"
+                                            name='tipo'
+                                            value={selectedValue4}
+                                            label="Select an Option"
+                                            onChange={handleDropdown4Change}>
+
+                                            <MenuItem value={'mato'}>Mato</MenuItem>
+                                            <MenuItem value={'pinhal'}>Pinhal</MenuItem>
+                                            <MenuItem value={'eucalipto'}>Eucalipto</MenuItem>
+                                            <MenuItem value={'carvalho'}>Carvalho</MenuItem>
+                                            <MenuItem value={'agricola'}>Agrícola</MenuItem>
+                                        </Select>
+                                    </FormControl>
                                     <div style={styles.incendiosRuraisLabel}>Área: </div>
                                     <TextField
                                         style={styles.incendiosRuraisInputDesc}
