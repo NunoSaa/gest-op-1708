@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { PDFDocument } from 'pdf-lib';
 import { saveAs } from 'file-saver';
 import { useNavigate, useLocation } from "react-router-dom";
@@ -19,7 +19,7 @@ function VerbeteINEM() {
     const location = useLocation();
     const { state } = location;
     const [item, setItem] = useState(state);
-   
+
     console.log(item);
     const [selectedLabelLocalOcorrencia, setSelectedLabelLocalOcorrencia] = useState('Domícilio'); // Default to the label of the first option
 
@@ -64,7 +64,7 @@ function VerbeteINEM() {
 
             const pdfBytes = await pdfDoc.save();
 
-            let fileName = 'VerbeteINEM_' + item.numero +'.pdf';
+            let fileName = 'VerbeteINEM_' + item.numero + '.pdf';
             saveAs(new Blob([pdfBytes], { type: 'application/pdf' }), fileName);
         } catch (error) {
             console.error('Error filling the PDF template:', error);
@@ -348,31 +348,6 @@ function VerbeteINEM() {
                     </div>
 
 
-                <div style={{ display: 'flex', alignItems: 'stretch' }}>
-                    {/* Vertical Column with "Ocorrência" */}
-                    <div style={{
-                        width: '25px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        writingMode: 'vertical-lr',
-                        textAlign: 'center',
-                        backgroundColor: '#99CCFF',  // Optional background for visual separation
-                        padding: '10px',
-                        fontWeight: 'bold',
-                        flexShrink: 0,    // Prevents the column from shrinking,
-                        marginBottom: "25px",
-                        transform: 'rotate(180deg)'
-                    }}>
-                        Avaliação
-                    </div>
-                    <div className="event-form" style={{ flexGrow: 1 }}>
-
-                    </div>
-                </div>
-
-
-
                     <div style={{ display: 'flex', alignItems: 'stretch' }}>
                         {/* Vertical Column with "Ocorrência" */}
                         <div style={{
@@ -389,54 +364,279 @@ function VerbeteINEM() {
                             marginBottom: "25px",
                             transform: 'rotate(180deg)'
                         }}>
-                            Historial Clínico
+                            Avaliação
                         </div>
                         <div className="event-form" style={{ flexGrow: 1 }}>
-
-                            {/* Victim Details Section */}
-                            <section className="victim-section">
-
-                                <div style={styles.rowInfo}>
-                                    <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
-                                        <label>Circunstâncias</label>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth
-                                        />
-                                    </div>
-                                </div>
-
-                                <div style={styles.rowInfo}>
-                                    <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
-                                        <label>Histórico Doenças</label>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth
-                                        />
-                                    </div>
-                                </div>
-
-                                <div style={styles.rowInfo}>
-                                    <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
-                                        <label>Alergias</label>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth
-                                        />
-                                    </div>
-                                </div>
-
-                                <div style={styles.rowInfo}>
-                                    <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
-                                        <label>Medicação Habitual</label>
-                                        <TextField
-                                            variant="outlined"
-                                            fullWidth
-                                        />
-                                    </div>
-                                </div>
-                            </section>
-
+                            <table style={styles.table}>
+                                <thead>
+                                    <tr>
+                                        <th style={styles.th}>Hora h:m</th>
+                                        <th style={styles.th}>AVDS OCS</th>
+                                        <th style={styles.th}>Vent. gpm</th>
+                                        <th style={styles.th}>SpO2 %</th>
+                                        <th style={styles.th}>O2 Sup l/min</th>
+                                        <th style={styles.th}>EtCO2 mmHg</th>
+                                        <th style={styles.th}>Pulso bpm</th>
+                                        <th style={styles.th}>ECG ver/r</th>
+                                        <th style={styles.th}>P. Arterial Sistólica</th>
+                                        <th style={styles.th}>P. Arterial Diastólica</th>
+                                        <th style={styles.th}>Pele</th>
+                                        <th style={styles.th}>Temp. °C</th>
+                                        <th style={styles.th}>Pupilas</th>
+                                        <th style={styles.th}>Dor 0-10</th>
+                                        <th style={styles.th}>Glicemia mg/dL</th>
+                                        <th style={styles.th}>NEWS/TAP q.v./0-5</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
