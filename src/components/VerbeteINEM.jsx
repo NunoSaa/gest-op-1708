@@ -13,6 +13,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import RaceAssessment from '../components/RaceAssessment';
+import { Box, Grid, Checkbox, FormControlLabel } from '@mui/material';
 
 function VerbeteINEM() {
     const navigate = useNavigate();
@@ -640,6 +641,88 @@ function VerbeteINEM() {
                         </div>
                     </div>
 
+                    <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                        {/* Vertical Column with "Ocorrência" */}
+                        <div style={{
+                            width: '25px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            writingMode: 'vertical-lr',
+                            textAlign: 'center',
+                            backgroundColor: '#99CCFF',  // Optional background for visual separation
+                            padding: '10px',
+                            fontWeight: 'bold',
+                            flexShrink: 0,    // Prevents the column from shrinking,
+                            marginBottom: "25px",
+                            transform: 'rotate(180deg)'
+                        }}>
+                            Historial Clinico
+                        </div>
+                        <div className="event-form" style={{ flexGrow: 1 }}>
+
+                            <div style={styles.rowInfo}>
+                                <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
+                                    <label>Circuntâncias</label>
+                                    <TextField
+                                        variant="outlined"
+                                        fullWidth
+                                    />
+                                </div>
+                            </div>
+
+                            <div style={styles.rowInfo}>
+                                <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
+                                    <label>HIstórico de Doenças</label>
+                                    <TextField
+                                        variant="outlined"
+                                        fullWidth
+                                    />
+                                </div>
+                            </div>
+
+                            <div style={styles.rowInfo}>
+                                <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
+                                    <label>Alergias</label>
+                                    <TextField
+                                        variant="outlined"
+                                        fullWidth
+                                    />
+                                </div>
+                            </div>
+
+                            <div style={styles.rowInfo}>
+                                <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
+                                    <label>Medicação Habitual</label>
+                                    <TextField
+                                        variant="outlined"
+                                        fullWidth
+                                    />
+                                </div>
+                            </div>
+
+                            <div style={styles.rowInfo}>
+                                <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
+                                    <label>Última Refeição</label>
+                                    <TextField
+                                        variant="outlined"
+                                        fullWidth
+                                    />
+                                </div>
+                            </div>
+
+                            <div style={styles.rowInfo}>
+                                <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
+                                    <label>Situações de Risco</label>
+                                    <TextField
+                                        variant="outlined"
+                                        fullWidth
+                                    />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
 
 
                     <div style={{ display: 'flex', alignItems: 'stretch' }}>
@@ -662,6 +745,125 @@ function VerbeteINEM() {
                         </div>
                         <div className="event-form" style={{ flexGrow: 1 }}>
 
+                            <table style={styles.table}>
+                                <thead>
+                                    <tr>
+                                        <th style={styles.th}>Sinais e Sintomas</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth
+                                                multiline
+                                                rows={5}
+                                            />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table style={styles.table}>
+                                <thead>
+                                    <tr>
+                                        <th style={styles.th}>RCP</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth
+                                                multiline
+                                                rows={1}
+                                            />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table style={styles.table}>
+                                <thead>
+                                    <tr>
+                                        <th style={styles.th}>VA / Ventilação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth
+                                                multiline
+                                                rows={1}
+                                            />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table style={styles.table}>
+                                <thead>
+                                    <tr>
+                                        <th style={styles.th}>Circulação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth
+                                                multiline
+                                                rows={1}
+                                            />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table style={styles.table}>
+                                <thead>
+                                    <tr>
+                                        <th style={styles.th}>Protocolos</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth
+                                                multiline
+                                                rows={1}
+                                            />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table style={styles.table}>
+                                <thead>
+                                    <tr>
+                                        <th style={styles.th}>Escalas</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth
+                                                multiline
+                                                rows={1}
+                                            />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
@@ -685,6 +887,66 @@ function VerbeteINEM() {
                             Observações
                         </div>
                         <div className="event-form" style={{ flexGrow: 1 }}>
+                            
+                            <table style={styles.table}>
+                                <thead>
+                                    <tr>
+                                        <th style={styles.th}>Observações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth
+                                                multiline
+                                                rows={5}
+                                            />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table style={styles.table}>
+                                <thead>
+                                    <tr>
+                                        <th style={styles.th}>Não Transporte</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth
+                                                multiline
+                                                rows={1}
+                                            />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table style={styles.table}>
+                                <thead>
+                                    <tr>
+                                        <th style={styles.th}>Transporte</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth
+                                                multiline
+                                                rows={1}
+                                            />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
 
                         </div>
                     </div>
@@ -800,6 +1062,64 @@ const styles = {
         border: '1px solid #ddd',
         textAlign: 'center',
         fontSize: '12px',
+    },
+    formContainer: {
+        padding: '20px',
+        fontFamily: 'Arial, sans-serif',
+    },
+    formSection: {
+        marginBottom: '20px',
+    },
+    sectionTitle: {
+        marginBottom: '10px',
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+        fontSize: '16px',
+    },
+    checkboxSection: {
+        border: '1px solid #ccc',
+        padding: '10px',
+        borderRadius: '4px',
+        marginBottom: '20px',
+        backgroundColor: '#f9f9f9',
+    },
+    checkboxLabel: {
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: '8px',
+    },
+    checkboxInput: {
+        marginRight: '10px',
+    },
+    bodyDiagramContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        border: '1px solid #ccc',
+        height: '250px',
+        marginTop: '10px',
+    },
+    formField: {
+        marginBottom: '10px',
+    },
+    medicationSection: {
+        marginTop: '20px',
+    },
+    medicationFields: {
+        display: 'flex',
+        gap: '15px',
+        marginTop: '10px',
+    },
+    tableContainer: {
+        border: '1px solid #ccc',
+        padding: '20px',
+        backgroundColor: '#f9f9f9',
+        marginTop: '20px',
+    },
+    '@media (max-width: 768px)': {
+        medicationFields: {
+            flexDirection: 'column',
+        },
     },
 };
 
