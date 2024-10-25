@@ -208,7 +208,7 @@ const EmergencyDetails = ({
                         <p style={styles.buttonText}>{isSaidaLocalSet ? saidaLocalTime : currentTime}</p>
                     </Button>
 
-                    <Button style={styles.button_Fotos} onClick={() => navigate('/takePicturePosit')}>
+                    <Button style={styles.button_Fotos} onClick={() => navigate('/takePicturePosit', { state: item })}>
                         <p style={styles.buttonText}>Anexar Fotos</p>
                         <p style={styles.buttonTextOther}>.</p>
                     </Button>

@@ -17,6 +17,8 @@ import SaveIcon from '@mui/icons-material/Save';
 import SendIcon from '@mui/icons-material/Send';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid';
+import { gapi } from 'gapi-script';
+import { useLocation } from "react-router-dom";
 
 const TakePicturePosit = () => {
     const [imageBlob, setImageBlob] = useState(null);
@@ -27,6 +29,34 @@ const TakePicturePosit = () => {
     const [cameraDevices, setCameraDevices] = useState([]);
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
+    const location = useLocation();
+    const [uploadProgress, setUploadProgress] = useState(0); // Upload progress
+    const [isUploading, setIsUploading] = useState(false); // Uploading state
+    const { state } = location;
+    const [item, setItem] = useState(state);
+    const num_ocorrencia = item.numero;
+    const CLIENT_ID = '214123389323-3c7npk6e2hasbi2jt3pnrg1jqvjtm92m.apps.googleusercontent.com';  // Replace with your OAuth Client ID
+    const API_KEY = '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';  // Replace with your Google Cloud API Key
+    const SCOPES = 'https://www.googleapis.com/auth/drive.file'; // Scope to upload file
+
+    const now = new Date();
+    // Get the current date in the format "YYYY-MM-DD"
+    const currentDate = now.toISOString().split('T')[0];
+    // Get the current time in the format "HH:MM"
+    const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
+
+    //Buld the FileName
+    let fileName = `${num_ocorrencia}_POSIT_${currentDate}_${currentHour}.jpeg`;
+
+    function start() {
+        gapi.client.init({
+            apiKey: API_KEY,
+            clientId: CLIENT_ID,
+            discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
+            scope: SCOPES,
+        });
+    }
+    gapi.load('client:auth2', start);
 
     useEffect(() => {
         const getCameraDevices = async () => {
@@ -75,6 +105,96 @@ const TakePicturePosit = () => {
             }
         };
     }, [currentCamera, isPictureTaken]);
+
+    const createOrFindFolder = async (folderName, parentFolderId = 'root') => {
+        try {
+            const response = await gapi.client.drive.files.list({
+                q: `mimeType='application/vnd.google-apps.folder' and name='${folderName}' and trashed=false and '${parentFolderId}' in parents`,
+                fields: 'files(id, name)',
+                spaces: 'drive',
+            });
+
+            const folders = response.result.files;
+
+            if (folders && folders.length > 0) {
+                return folders[0].id;
+            } else {
+                const createFolderResponse = await gapi.client.drive.files.create({
+                    resource: {
+                        name: folderName,
+                        mimeType: 'application/vnd.google-apps.folder',
+                        parents: [parentFolderId],
+                    },
+                    fields: 'id',
+                });
+
+                return createFolderResponse.result.id;
+            }
+        } catch (error) {
+            console.error(`Error finding or creating folder '${folderName}':`, error);
+            return null;
+        }
+    };
+
+    const sendToDrive = async () => {
+        if (!imageBlob) return;
+    
+        gapi.auth2.getAuthInstance().signIn().then(async () => {
+            const file = new Blob([imageBlob], { type: 'image/jpeg' });
+            const metadata = {
+                name: fileName,
+                mimeType: 'image/jpeg',
+            };
+    
+            // Step 1: Find or create the 'Ocorrencias' folder in Google Drive
+            const ocorrenciasFolderId = await createOrFindFolder('1yE6cG3Kwakq1V0ZcI8liMfqF4tLc2E4h');
+    
+            // Step 2: Inside 'Ocorrencias', find or create the 'num_ocorrencia' folder
+            const ocorrenciaFolderId = await createOrFindFolder(num_ocorrencia, ocorrenciasFolderId);
+    
+            if (!ocorrenciaFolderId) {
+                alert('Erro ao criar a estrutura de pastas no Google Drive');
+                return;
+            }
+    
+            // Step 3: Upload the image file to the 'num_ocorrencia' folder
+            const form = new FormData();
+            metadata.parents = [ocorrenciaFolderId];
+            form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+            form.append('file', file);
+    
+            const xhr = new XMLHttpRequest();
+            setIsUploading(true);
+            xhr.open('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', true);
+            xhr.setRequestHeader('Authorization', `Bearer ${gapi.auth.getToken().access_token}`);
+    
+            xhr.upload.onprogress = (event) => {
+                if (event.lengthComputable) {
+                    const percentComplete = Math.round((event.loaded / event.total) * 100);
+                    setUploadProgress(percentComplete);
+                }
+            };
+    
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    alert('Foto enviada com sucesso para o Google Drive!');
+                    setIsUploading(false);
+                    setUploadProgress(0);
+                    discardPicture();
+                } else {
+                    console.error('Erro no upload da foto para o Google Drive: ', xhr.responseText);
+                    setIsUploading(false);
+                }
+            };
+    
+            xhr.onerror = () => {
+                console.error('Erro no upload da foto para o Google Drive.');
+                setIsUploading(false);
+            };
+    
+            xhr.send(form);
+        });
+    };
 
     const drawToCanvas = () => {
         if (canvasRef.current && videoRef.current && !isPictureTaken) {
@@ -143,7 +263,7 @@ const TakePicturePosit = () => {
 
     return (
         <div>
-            <AppBar style={{ backgroundColor: "#A0A0A0" }}position="static">
+            <AppBar style={{ backgroundColor: "#A0A0A0" }} position="static">
                 <Toolbar>
                     <IconButton edge="start" color="inherit" onClick={handleBackClick}>
                         <ArrowBackIcon />
@@ -204,6 +324,7 @@ const TakePicturePosit = () => {
                                 <Button
                                     variant="contained"
                                     color="info"
+                                    onClick={sendToDrive}
                                     startIcon={<SendIcon />}
                                     fullWidth
                                     sx={{ height: 60 }}
