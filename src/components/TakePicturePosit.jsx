@@ -140,8 +140,12 @@ const TakePicturePosit = () => {
                 name: fileName,
                 mimeType: 'image/jpeg',
             };
-            const ocorrenciasFolderId = await createOrFindFolder('Ocorrencias');
-            const ocorrenciaFolderId = await createOrFindFolder(num_ocorrencia, ocorrenciasFolderId);
+            // Step 1: Find or create the 'Ocorrencias' folder in Google Drive shared from centralVPA
+            const ocorrenciasFolderId = await createOrFindFolder('1yE6cG3Kwakq1V0ZcI8liMfqF4tLc2E4h');
+
+            // Step 2: Inside 'Ocorrencias', find or create the 'num_ocorrencia' folder
+            const ocorrenciaFolderId = await createOrFindFolder(num_ocorrencia, '1yE6cG3Kwakq1V0ZcI8liMfqF4tLc2E4h');
+
             if (!ocorrenciaFolderId) {
                 alert('Erro ao criar a estrutura de pastas no Google Drive');
                 return;
