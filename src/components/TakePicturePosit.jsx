@@ -18,6 +18,8 @@ import SendIcon from '@mui/icons-material/Send';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid';
 
+const imageDataUrl = canvasRef.current.toDataURL('image/jpeg');
+
 const TakePicturePosit = () => {
     const [imageBlob, setImageBlob] = useState(null);
     const [isCameraOn, setIsCameraOn] = useState(false);
@@ -53,9 +55,9 @@ const TakePicturePosit = () => {
                 const stream = await navigator.mediaDevices.getUserMedia(constraints);
                 if (videoRef.current) {
                     videoRef.current.srcObject = stream;
-                    videoRef.current.onloadedmetadata = () => videoRef.current.play();
+                    await videoRef.current.play(); // Ensures play() completes
                     setIsCameraOn(true);
-                    if (!isPictureTaken) requestAnimationFrame(drawToCanvas);
+                    if (!isPictureTaken) setTimeout(drawToCanvas, 300); // Delays drawing for Chrome
                 }
             } catch (error) {
                 console.error("Error accessing the camera: ", error);
@@ -66,7 +68,6 @@ const TakePicturePosit = () => {
                 }
             }
         };
-
         initCamera();
 
         return () => {
@@ -76,6 +77,12 @@ const TakePicturePosit = () => {
             }
         };
     }, [currentCamera, isPictureTaken]);
+
+    setTimeout(() => {
+        canvasRef.current.width = videoRef.current.videoWidth || 640; // Set default if zero
+        canvasRef.current.height = videoRef.current.videoHeight || 480;
+        context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+    }, 500); // Adjust delay as necessary
 
     const drawToCanvas = () => {
         if (canvasRef.current && videoRef.current && !isPictureTaken) {
@@ -144,7 +151,7 @@ const TakePicturePosit = () => {
 
     return (
         <div>
-            <AppBar style={{ backgroundColor: "#A0A0A0" }} position="static">
+            <AppBar style={{ backgroundColor: "#A0A0A0" }}position="static">
                 <Toolbar>
                     <IconButton edge="start" color="inherit" onClick={handleBackClick}>
                         <ArrowBackIcon />
