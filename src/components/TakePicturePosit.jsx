@@ -1,10 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Typography } from '@mui/material';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
+import {
+    Button,
+    Typography,
+    AppBar,
+    Toolbar,
+    IconButton,
+    Grid,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+} from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import SaveIcon from '@mui/icons-material/Save';
+import SendIcon from '@mui/icons-material/Send';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid';
 
 const TakePicturePosit = () => {
     const [imageBlob, setImageBlob] = useState(null);
@@ -41,13 +53,9 @@ const TakePicturePosit = () => {
                 const stream = await navigator.mediaDevices.getUserMedia(constraints);
                 if (videoRef.current) {
                     videoRef.current.srcObject = stream;
-                    videoRef.current.onloadedmetadata = () => {
-                        videoRef.current.play(); // Ensure the video is playing
-                    };
+                    videoRef.current.onloadedmetadata = () => videoRef.current.play();
                     setIsCameraOn(true);
-                    if (!isPictureTaken) {
-                        requestAnimationFrame(drawToCanvas); // Start rendering the camera feed
-                    }
+                    if (!isPictureTaken) requestAnimationFrame(drawToCanvas);
                 }
             } catch (error) {
                 console.error("Error accessing the camera: ", error);
@@ -72,10 +80,10 @@ const TakePicturePosit = () => {
     const drawToCanvas = () => {
         if (canvasRef.current && videoRef.current && !isPictureTaken) {
             const context = canvasRef.current.getContext('2d');
-            canvasRef.current.width = videoRef.current.videoWidth; // Set canvas width to video width
-            canvasRef.current.height = videoRef.current.videoHeight; // Set canvas height to video height
+            canvasRef.current.width = videoRef.current.videoWidth;
+            canvasRef.current.height = videoRef.current.videoHeight;
             context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
-            requestAnimationFrame(drawToCanvas); // Continue rendering in real-time
+            requestAnimationFrame(drawToCanvas);
         }
     };
 
@@ -85,10 +93,8 @@ const TakePicturePosit = () => {
             context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
             canvasRef.current.toBlob((blob) => {
                 setImageBlob(blob);
-                setIsPictureTaken(true); // Stop updating the canvas with real-time feed
-                if (videoRef.current) {
-                    videoRef.current.pause(); // Pause the video stream
-                }
+                setIsPictureTaken(true);
+                if (videoRef.current) videoRef.current.pause();
             }, 'image/jpeg');
         }
     };
@@ -105,19 +111,19 @@ const TakePicturePosit = () => {
         a.click();
         window.URL.revokeObjectURL(url);
 
-        resetCameraFeed(); // Resume the camera feed after saving the image
+        resetCameraFeed();
     };
 
     const discardPicture = () => {
         setImageBlob(null);
         setIsPictureTaken(false);
-        resetCameraFeed(); // Resume the camera feed
+        resetCameraFeed();
     };
 
     const resetCameraFeed = () => {
         if (videoRef.current) {
-            videoRef.current.play(); // Resume video playback
-            requestAnimationFrame(drawToCanvas); // Resume real-time feed
+            videoRef.current.play();
+            requestAnimationFrame(drawToCanvas);
         }
     };
 
@@ -138,12 +144,12 @@ const TakePicturePosit = () => {
 
     return (
         <div>
-            <AppBar position="static">
-                <Toolbar style={{ backgroundColor: "#A0A0A0" }}>
-                    <IconButton edge="start" color="inherit" onClick={handleBackClick} aria-label="back">
+            <AppBar style={{ backgroundColor: "#A0A0A0" }} position="static">
+                <Toolbar>
+                    <IconButton edge="start" color="inherit" onClick={handleBackClick}>
                         <ArrowBackIcon />
                     </IconButton>
-                    <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
+                    <Typography variant="h6" sx={{ flexGrow: 1 }}>
                         Ocorrência
                     </Typography>
                 </Toolbar>
@@ -154,8 +160,6 @@ const TakePicturePosit = () => {
                 <DialogContent>
                     <Typography>
                         Camera access is required to take a picture. Please enable camera access in your browser settings.
-                        <br />
-                        On iOS, go to: <strong>Settings &gt; Chrome &gt; Camera</strong> and allow access.
                     </Typography>
                 </DialogContent>
                 <DialogActions>
@@ -165,69 +169,77 @@ const TakePicturePosit = () => {
                 </DialogActions>
             </Dialog>
 
-            <div style={styles.container}>
-                <div style={styles.rowInfo}>
-                    {isCameraOn && (
-                        <canvas ref={canvasRef} style={styles.canvas}></canvas>
-                    )}
-                </div>
+            <Grid container spacing={3} padding={2} justifyContent="center">
+                <Grid item xs={12} sm={10} md={8} lg={6}>
+                    <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        {isCameraOn && <canvas ref={canvasRef} style={{ width: '100%', borderRadius: 10 }} />}
+                    </div>
+                </Grid>
 
-                <div style={styles.rowInfo}>
-                    {!isPictureTaken && (
+                <Grid item xs={12} container justifyContent="center">
+                    {!isPictureTaken ? (
                         <Button
                             variant="contained"
                             color="primary"
                             onClick={takePicture}
-                            style={styles.button_TakePicture}
+                            startIcon={<CameraAltIcon />}
+                            sx={{ minWidth: '200px', height: 60 }}
                         >
                             Tirar Foto
                         </Button>
+                    ) : (
+                        <Grid container spacing={2} justifyContent="center">
+                            <Grid item xs={12} sm={4}>
+                                <Button
+                                    variant="contained"
+                                    color="success"
+                                    onClick={savePicture}
+                                    startIcon={<SaveIcon />}
+                                    fullWidth
+                                    sx={{ height: 60 }}
+                                >
+                                    Guardar no dispositivo
+                                </Button>
+                            </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <Button
+                                    variant="contained"
+                                    color="info"
+                                    startIcon={<SendIcon />}
+                                    fullWidth
+                                    sx={{ height: 60 }}
+                                >
+                                    Enviar para Gescorp
+                                </Button>
+                            </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    onClick={discardPicture}
+                                    startIcon={<DeleteIcon />}
+                                    fullWidth
+                                    sx={{ height: 60 }}
+                                >
+                                    Descartar Foto
+                                </Button>
+                            </Grid>
+                        </Grid>
                     )}
-                </div>
+                </Grid>
 
-                {isPictureTaken && (
-                    <div style={styles.rowInfoCentered}>
-                        <Button
-                            variant="contained"
-                            color="success"
-                            onClick={savePicture}
-                            disabled={!imageBlob}
-                            style={styles.button_Save}
-                        >
-                            Guardar no dispositivo
-                        </Button>
-
-                        <Button
-                            variant="contained"
-                            color="info"
-                            disabled={!imageBlob}
-                            style={styles.button_Send}
-                        >
-                            Enviar para Gescorp
-                        </Button>
-
-                        <Button
-                            variant="contained"
-                            color="error"
-                            onClick={discardPicture}
-                            style={styles.button_Discard}
-                        >
-                            Descartar Foto
-                        </Button>
-                    </div>
-                )}
-
-                <div style={styles.rowInfoCentered}>
+                <Grid item xs={12} container justifyContent="center">
                     <Button
                         variant="contained"
                         color="secondary"
                         onClick={switchCamera}
-                        style={styles.button_SwitchCamera}
+                        startIcon={<FlipCameraAndroidIcon />}
+                        sx={{ minWidth: '200px', height: 60 }}
                     >
                         Alternar Câmera
                     </Button>
-                </div>
-            </div>
+                </Grid>
+            </Grid>
 
             <video ref={videoRef} style={{ display: 'none' }} autoPlay></video>
         </div>
