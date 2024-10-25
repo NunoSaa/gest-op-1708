@@ -18,8 +18,6 @@ import SendIcon from '@mui/icons-material/Send';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid';
 
-const imageDataUrl = canvasRef.current.toDataURL('image/jpeg');
-
 const TakePicturePosit = () => {
     const [imageBlob, setImageBlob] = useState(null);
     const [isCameraOn, setIsCameraOn] = useState(false);
@@ -77,12 +75,6 @@ const TakePicturePosit = () => {
             }
         };
     }, [currentCamera, isPictureTaken]);
-
-    setTimeout(() => {
-        canvasRef.current.width = videoRef.current.videoWidth || 640; // Set default if zero
-        canvasRef.current.height = videoRef.current.videoHeight || 480;
-        context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
-    }, 500); // Adjust delay as necessary
 
     const drawToCanvas = () => {
         if (canvasRef.current && videoRef.current && !isPictureTaken) {
