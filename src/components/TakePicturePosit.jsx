@@ -46,7 +46,7 @@ const TakePicturePosit = () => {
     const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
 
     //Buld the FileName
-    let fileName = `${num_ocorrencia}_POSIT_${currentDate}_${currentHour}.jpeg`;
+    let fileName = `${num_ocorrencia}_Photo_${currentDate}_${currentHour}.jpeg`;
 
     function start() {
         gapi.client.init({
@@ -71,7 +71,6 @@ const TakePicturePosit = () => {
                 console.error('Error getting devices: ', error);
             }
         };
-
         getCameraDevices();
     }, []);
 
@@ -83,9 +82,9 @@ const TakePicturePosit = () => {
                 const stream = await navigator.mediaDevices.getUserMedia(constraints);
                 if (videoRef.current) {
                     videoRef.current.srcObject = stream;
-                    await videoRef.current.play(); // Ensures play() completes
+                    await videoRef.current.play();
                     setIsCameraOn(true);
-                    if (!isPictureTaken) setTimeout(drawToCanvas, 300); // Delays drawing for Chrome
+                    if (!isPictureTaken) requestAnimationFrame(drawToCanvas);
                 }
             } catch (error) {
                 console.error("Error accessing the camera: ", error);
@@ -113,9 +112,7 @@ const TakePicturePosit = () => {
                 fields: 'files(id, name)',
                 spaces: 'drive',
             });
-
             const folders = response.result.files;
-
             if (folders && folders.length > 0) {
                 return folders[0].id;
             } else {
@@ -127,7 +124,6 @@ const TakePicturePosit = () => {
                     },
                     fields: 'id',
                 });
-
                 return createFolderResponse.result.id;
             }
         } catch (error) {
@@ -138,63 +134,37 @@ const TakePicturePosit = () => {
 
     const sendToDrive = async () => {
         if (!imageBlob) return;
-    
         gapi.auth2.getAuthInstance().signIn().then(async () => {
             const file = new Blob([imageBlob], { type: 'image/jpeg' });
             const metadata = {
                 name: fileName,
                 mimeType: 'image/jpeg',
             };
-    
-            // Step 1: Find or create the 'Ocorrencias' folder in Google Drive
-            const ocorrenciasFolderId = await createOrFindFolder('1yE6cG3Kwakq1V0ZcI8liMfqF4tLc2E4h');
-    
-            // Step 2: Inside 'Ocorrencias', find or create the 'num_ocorrencia' folder
+            const ocorrenciasFolderId = await createOrFindFolder('Ocorrencias');
             const ocorrenciaFolderId = await createOrFindFolder(num_ocorrencia, ocorrenciasFolderId);
-    
             if (!ocorrenciaFolderId) {
                 alert('Erro ao criar a estrutura de pastas no Google Drive');
                 return;
             }
-    
-            // Step 3: Upload the image file to the 'num_ocorrencia' folder
             const form = new FormData();
             metadata.parents = [ocorrenciaFolderId];
             form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
             form.append('file', file);
-    
             const xhr = new XMLHttpRequest();
-            setIsUploading(true);
             xhr.open('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', true);
             xhr.setRequestHeader('Authorization', `Bearer ${gapi.auth.getToken().access_token}`);
-    
-            xhr.upload.onprogress = (event) => {
-                if (event.lengthComputable) {
-                    const percentComplete = Math.round((event.loaded / event.total) * 100);
-                    setUploadProgress(percentComplete);
-                }
-            };
-    
             xhr.onload = () => {
                 if (xhr.status === 200) {
                     alert('Foto enviada com sucesso para o Google Drive!');
-                    setIsUploading(false);
-                    setUploadProgress(0);
                     discardPicture();
                 } else {
                     console.error('Erro no upload da foto para o Google Drive: ', xhr.responseText);
-                    setIsUploading(false);
                 }
             };
-    
-            xhr.onerror = () => {
-                console.error('Erro no upload da foto para o Google Drive.');
-                setIsUploading(false);
-            };
-    
             xhr.send(form);
         });
     };
+
 
     const drawToCanvas = () => {
         if (canvasRef.current && videoRef.current && !isPictureTaken) {
@@ -225,7 +195,7 @@ const TakePicturePosit = () => {
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        a.download = 'picture.jpg';
+        a.download = fileName;
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
