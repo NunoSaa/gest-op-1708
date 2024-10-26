@@ -73,7 +73,7 @@ const TakePicturePosit = () => {
         };
         getCameraDevices();
     }, []);
-
+    
     useEffect(() => {
         const initCamera = async () => {
             if (!currentCamera) return;
@@ -82,9 +82,14 @@ const TakePicturePosit = () => {
                 const stream = await navigator.mediaDevices.getUserMedia(constraints);
                 if (videoRef.current) {
                     videoRef.current.srcObject = stream;
+                    videoRef.current.playsInline = true; // Add playsInline attribute
                     await videoRef.current.play();
+                    
                     setIsCameraOn(true);
-                    if (!isPictureTaken) requestAnimationFrame(drawToCanvas);
+                    
+                    if (!isPictureTaken) {
+                        setTimeout(() => requestAnimationFrame(drawToCanvas), 100); // Add slight delay
+                    }
                 }
             } catch (error) {
                 console.error("Error accessing the camera: ", error);
@@ -96,7 +101,7 @@ const TakePicturePosit = () => {
             }
         };
         initCamera();
-
+    
         return () => {
             if (videoRef.current && videoRef.current.srcObject) {
                 const stream = videoRef.current.srcObject;
