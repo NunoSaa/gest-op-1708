@@ -266,7 +266,7 @@ const EmergencyDetails = ({
                 </div>
 
                 <div style={styles.row}>
-                    <Button title="Finalizar Ocorrência" style={styles.button_LocTrajeto} onClick={() => navigate('/homepage')}>
+                    <Button title="Finalizar Ocorrência" style={styles.button_FimOcorrencia} onClick={() => navigate('/homepage')}>
                         <p style={styles.buttonText}>Finalizar Ocorrência</p>
                     </Button>
                 </div>
@@ -306,17 +306,17 @@ const styles = {
     buttonText: {
         color: 'white',
         marginBottom: 5,
-        fontSize: 12,
+        fontSize: 13,
     },
     buttonTextOther: {
         color: '#A0A0A0',
         marginBottom: 5,
-        fontSize: 12,
+        fontSize: 13,
     },
     buttonTextPosit: {
         color: '#FF6666',
         marginBottom: 5,
-        fontSize: 12,
+        fontSize: 13,
     },
     rowInfoContainer: {
         display: 'grid',
@@ -419,7 +419,7 @@ const styles = {
     button_RelatorioFinal: {
         width: "45%",
         height: 75,
-        backgroundColor: '#076812',
+        backgroundColor: '#0004ff',
         borderRadius: 10,
         flex: 1,
         justifyContent: 'center',
@@ -439,6 +439,18 @@ const styles = {
         width: "100%",
         height: "10%",
         backgroundColor: '#3399FF',
+        padding: 20,
+        borderRadius: 10,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 25,
+        marginBottom: 20,
+    },
+    button_FimOcorrencia: {
+        width: "100%",
+        height: "10%",
+        backgroundColor: '#076812',
         padding: 20,
         borderRadius: 10,
         display: 'flex',
