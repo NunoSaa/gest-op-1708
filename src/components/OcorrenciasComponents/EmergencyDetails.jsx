@@ -231,6 +231,11 @@ const EmergencyDetails = ({
                             <Button style={styles.button_Disponivel} onClick={handleDisponivel} disabled={isDisponivel}>
                                 <p style={{ ...styles.buttonText, marginRight: '5px' }}>Disponível</p>
                             </Button>
+
+                            <Button style={styles.button_InserirKms} onClick={() => navigate('/relatorioFinal', { state: item })}>
+                                <p style={styles.buttonText}>Inserir Km's Veículo</p>
+                                <p style={styles.buttonTextOther}>.</p>
+                            </Button>
                         </div>
                     </>
                 )}
@@ -244,6 +249,12 @@ const EmergencyDetails = ({
                     <Button style={styles.button_RelatorioFinal} onClick={() => navigate('/relatorioFinal', { state: item })}>
                         <p style={styles.buttonText}>Finalizar Relatório</p>
                         <p style={styles.buttonTextOther}>.</p>
+                    </Button>
+                </div>
+
+                <div style={styles.row}>
+                    <Button title="Finalizar Ocorrência" style={styles.button_LocTrajeto} onClick={() => navigate('/homepage')}>
+                        <p style={styles.buttonText}>Finalizar Ocorrência</p>
                     </Button>
                 </div>
             </div>
@@ -310,8 +321,8 @@ const styles = {
         justifyContent: 'flex-start',
         marginBottom: 5,
         paddingLeft: 25,
-        flexWrap: 'wrap', 
-        alignItems: 'center'  
+        flexWrap: 'wrap',
+        alignItems: 'center'
     },
     rowKmsFinais: {
         flexDirection: 'row',
@@ -428,6 +439,15 @@ const styles = {
         justifyContent: 'center',
         alignItems: 'center'
     },
+    button_InserirKms: {
+        width: "45%",
+        height: 75,
+        backgroundColor: '#4c33ff',
+        borderRadius: 10,
+        flex: 1,
+        alignItems: 'center',
+        marginLeft: 15,
+    },
     title: {
         fontSize: 24,
         paddingBottom: 10,
@@ -440,7 +460,7 @@ const styles = {
         paddingBottom: 10,
         textAlign: "center",
         fontWeight: "bold",
-        marginRight: 5,  
+        marginRight: 5,
     },
     info: {
         fontSize: 16,
