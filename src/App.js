@@ -15,6 +15,7 @@ import VerbeteINEM from './components/VerbeteINEM';
 import RelatorioFinal from './components/RelatorioFinal';
 import RecordPositAudio from './components/RecordPositAudio';
 import TakePicturePosit from './components/TakePicturePosit';
+import InserirKms from './components/InserirKms'
 import ProtectedRoute from './components/ProtectedRoute'; // Import ProtectedRoute
 
 const isAuthenticated = () => {
@@ -151,6 +152,14 @@ function App() {
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated()}>
               <TakePicturePosit />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/inserirKms"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated()}>
+              <InserirKms />
             </ProtectedRoute>
           }
         />

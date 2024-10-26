@@ -214,6 +214,20 @@ const EmergencyDetails = ({
                     </Button>
                 </div>
 
+                {!['ABSC01', 'ABSC02', 'ABSC03', 'ABSC04', 'VOPE06', 'USER_ADMIN'].includes(descricao) && (
+                    <>
+                        <div style={styles.row}>
+
+                            <div style={styles.buttonPlaceholder}></div>
+
+                            <Button style={styles.button_InserirKms} onClick={() => navigate('/inserirKms', { state: item })}>
+                                <p style={styles.buttonText}>Inserir Km's Veículo</p>
+                                <p style={styles.buttonTextOther}>.</p>
+                            </Button>
+                        </div>
+                    </>
+                )}
+
                 {['ABSC01', 'ABSC02', 'ABSC03', 'ABSC04', 'VOPE06', 'USER_ADMIN'].includes(descricao) && (
                     <>
                         <div style={styles.row}>
@@ -231,8 +245,7 @@ const EmergencyDetails = ({
                             <Button style={styles.button_Disponivel} onClick={handleDisponivel} disabled={isDisponivel}>
                                 <p style={{ ...styles.buttonText, marginRight: '5px' }}>Disponível</p>
                             </Button>
-
-                            <Button style={styles.button_InserirKms} onClick={() => navigate('/relatorioFinal', { state: item })}>
+                            <Button style={styles.button_InserirKms} onClick={() => navigate('/inserirKms', { state: item })}>
                                 <p style={styles.buttonText}>Inserir Km's Veículo</p>
                                 <p style={styles.buttonTextOther}>.</p>
                             </Button>
@@ -380,6 +393,9 @@ const styles = {
         justifyContent: 'center',
         alignItems: 'center',
     },
+    buttonPlaceholder: {
+        width: "48%",     // Matches button width to create equivalent left space
+    },
     button_VerbeteInem: {
         width: "45%",
         height: 75,
@@ -445,8 +461,10 @@ const styles = {
         backgroundColor: '#4c33ff',
         borderRadius: 10,
         flex: 1,
+        display: 'flex',
+        justifyContent: 'center',
         alignItems: 'center',
-        marginLeft: 15,
+        marginLeft: 15 // Matches the marginLeft in button_VerbeteInem
     },
     title: {
         fontSize: 24,
