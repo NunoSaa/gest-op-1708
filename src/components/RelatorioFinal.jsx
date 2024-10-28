@@ -212,14 +212,16 @@ function RelatorioFinal() {
 
             if (response.data && response.data.status === 'success') {
                 alert('Dados Guardados com Sucesso');
+                setTimeout(() => window.history.back(), 0); // Go back after alert
             }
             else if (response.status === 200) {
                 console.log('Report updated successfully');
                 alert('Dados Guardados com Sucesso');
+                setTimeout(() => window.history.back(), 0); // Go back after alert
             } else {
                 // Handle any other cases (like errors in the response)
                 console.error('Unexpected response:', response.data);
-                alert('Aconteceu um erro ao inserir a informação. Tente mais tarde.');
+                setTimeout(() => window.history.back(), 0); // Go back after alert
             }
         } catch (error) {
             console.error('Error updating report:', error);
@@ -437,6 +439,7 @@ function RelatorioFinal() {
                                             label="Select an Option"
                                             onChange={handleDropdownChange}>
 
+                                            <MenuItem value={''}>&nbsp;</MenuItem>
                                             <MenuItem value={'mato'}>Mato</MenuItem>
                                             <MenuItem value={'pinhal'}>Pinhal</MenuItem>
                                             <MenuItem value={'eucalipto'}>Eucalipto</MenuItem>
@@ -464,6 +467,7 @@ function RelatorioFinal() {
                                             label="Select an Option"
                                             onChange={handleDropdown1Change}>
 
+                                            <MenuItem value={''}>&nbsp;</MenuItem>
                                             <MenuItem value={'mato'}>Mato</MenuItem>
                                             <MenuItem value={'pinhal'}>Pinhal</MenuItem>
                                             <MenuItem value={'eucalipto'}>Eucalipto</MenuItem>
@@ -491,6 +495,7 @@ function RelatorioFinal() {
                                             label="Select an Option"
                                             onChange={handleDropdown2Change}>
 
+                                            <MenuItem value={''}>&nbsp;</MenuItem>
                                             <MenuItem value={'mato'}>Mato</MenuItem>
                                             <MenuItem value={'pinhal'}>Pinhal</MenuItem>
                                             <MenuItem value={'eucalipto'}>Eucalipto</MenuItem>
@@ -518,6 +523,7 @@ function RelatorioFinal() {
                                             label="Select an Option"
                                             onChange={handleDropdown3Change}>
 
+                                            <MenuItem value={''}>&nbsp;</MenuItem>
                                             <MenuItem value={'mato'}>Mato</MenuItem>
                                             <MenuItem value={'pinhal'}>Pinhal</MenuItem>
                                             <MenuItem value={'eucalipto'}>Eucalipto</MenuItem>
@@ -545,6 +551,7 @@ function RelatorioFinal() {
                                             label="Select an Option"
                                             onChange={handleDropdown4Change}>
 
+                                            <MenuItem value={''}>&nbsp;</MenuItem>
                                             <MenuItem value={'mato'}>Mato</MenuItem>
                                             <MenuItem value={'pinhal'}>Pinhal</MenuItem>
                                             <MenuItem value={'eucalipto'}>Eucalipto</MenuItem>
