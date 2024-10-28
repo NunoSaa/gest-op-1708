@@ -8,7 +8,7 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import EmergencyDetails from '../components/OcorrenciasComponents/EmergencyDetails'; 
+import EmergencyDetails from '../components/OcorrenciasComponents/EmergencyDetails';
 function OcorrenciasDetail() {
 
     const navigate = useNavigate();
@@ -29,6 +29,7 @@ function OcorrenciasDetail() {
     const [chegadaUnidadeTime, setChegadaUnidadeTime] = useState('');
     const [chegadaUnidadeHospTime, setChegadaUnidadeHospTime] = useState('');
     const [isDisponivel, setDisponivel] = useState('');
+    const [isChegadaHospSet, setChegadaHospSet] = useState('');
     const [emergencies, setEmergencies] = useState([]);
     const descricao = localStorage.getItem('username');
 
@@ -64,6 +65,20 @@ function OcorrenciasDetail() {
             if (response.data) {
                 setEmergencies(response.data);
                 console.log('Fetched Emergencies:', response.data);
+
+                //Set fetched Data into local storage
+                if (response.data.length > 0) {
+                    // Set data to localStorage
+                    try {
+                        localStorage.setItem('EmergencyData', JSON.stringify(response.data));
+                        console.log('Emergency data saved to localStorage successfully');
+                    } catch (e) {
+                        console.error('Error saving data to localStorage:', e);
+                    }
+                } else {
+                    console.log('No emergencies data to save.');
+                }
+
                 setLoading(false);
 
                 // Extract and filter viaturas by descricao
@@ -74,11 +89,6 @@ function OcorrenciasDetail() {
 
                 // Store the filtered vehicles in a ref for immediate access
                 vehicle.current = filteredVehicles;
-
-                //setVehicle(filteredVehicles);
-                console.log('filtered:', filteredVehicles)
-                console.log('Vehicle Object:', vehicle);
-                console.log('tes: ', response.data[0].viaturas[0].descricao)
 
                 if (filteredVehicles[0].hora_chegada_to !== "") {
                     setChegadaLocalTime(filteredVehicles[0].hora_chegada_to)
@@ -94,9 +104,6 @@ function OcorrenciasDetail() {
                     setChegadaUnidadeTime(filteredVehicles[0].hora_chegada)
                     setIsChegadaUnidadeSet(true)
                 }
-
-                // Optionally set loading state to false
-                setLoading(false);
             } else {
                 console.log('No emergencies data');
                 setLoading(false);
@@ -416,13 +423,13 @@ function OcorrenciasDetail() {
                             key={item.id}
                             item={item}
                             currentTime={currentTime}
-                            isChegadaLocalSet={false}  // Example: Change based on your state
-                            chegadaLocalTime="15:10"  // Example: Change based on your state
-                            isSaidaLocalSet={false}  // Example: Change based on your state
-                            saidaLocalTime="15:30"  // Example: Change based on your state
-                            isChegadaUnidadeSet={false}  // Example: Change based on your state
-                            chegadaUnidadeTime="15:45"  // Example: Change based on your state
-                            isDisponivel={false}  // Example: Change based on your state
+                            isChegadaLocalSet={isChegadaLocalSet}
+                            chegadaLocalTime={chegadaLocalTime}
+                            isSaidaLocalSet={isSaidaLocalSet}
+                            saidaLocalTime={saidaLocalTime}
+                            isChegadaUnidadeSet={isChegadaUnidadeSet}
+                            chegadaUnidadeTime={chegadaUnidadeTime}
+                            isDisponivel={isDisponivel}
                             handleSetTimeChegadaLocal={handleSetTimeChegadaLocal}
                             handleSetTimeSaidaLocal={handleSetTimeSaidaLocal}
                             handleSetTimeChegadaUnidade={handleSetTimeChegadaUnidade}
@@ -431,9 +438,9 @@ function OcorrenciasDetail() {
                             navigate={navigate}
                             descricao={descricao}
                             viaturas={viaturas}
-                            isChegadaUnidadeHospSet={false}  // Example state
-                            handleSetTimeChegadaUnidadeHosp={() => console.log('Set Chegada Unidade Hosp')}
-                            isChegadaHospSet={false}  // Example state
+                            isChegadaUnidadeHospSet={isChegadaUnidadeHospSet}
+                            handleSetTimeChegadaUnidadeHosp={handleSetTimeChegadaUnidadeHosp}
+                            isChegadaHospSet={isChegadaHospSet}
                         />
                     ))
                 )}
