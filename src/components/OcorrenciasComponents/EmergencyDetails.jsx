@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Chip, Stack } from '@mui/material';
 
 
@@ -25,18 +25,15 @@ const EmergencyDetails = ({
     isChegadaHospSet,
 }) => {
 
-    const infoEstadoStyle = {
-        fontSize: 16,
-        paddingBottom: 0,
-        paddingLeft: 5,
-        textAlign: "center",
-        color: "black",
-        marginRight: 20,
-        backgroundColor: item.corEstado,
-        borderRadius: 20,
-        padding: 10,
-        border: '1px solid black',
-    };
+     // Determine if "Inserir Km's" should be disabled
+     const isInserirKmsDisabled = viaturas !== descricao;
+
+     // Alert user if descricao does not match viaturas
+     useEffect(() => {
+         if (descricao !== viaturas) {
+             alert('Aviso: O Username de login não corresponde aos Veículos associado a esta Ocorrência');
+         }
+     }, [descricao, viaturas]);
 
     return (
         <div style={styles.center}>
@@ -144,46 +141,6 @@ const EmergencyDetails = ({
                     </div>
                 </div>
 
-                {/*
-                <div style={styles.rowInfoContainer}>
-                    <div style={styles.rowInfo}>
-                        <span style={styles.infoProp}>Data: </span>
-                        <span style={styles.info}>{item.data_hora_alerta}</span>
-                    </div>
-                    <div style={styles.rowInfo}>
-                        <span style={styles.infoProp}>Classificação: </span>
-                        <span style={styles.info}>{item.desc_classificacao}</span>
-                    </div>
-                    <div style={styles.rowInfo}>
-                        <span style={styles.infoProp}>Estado: </span>
-                        <span style={styles.info}>{item.estado}</span>
-                    </div>
-                    <div style={styles.rowInfo}>
-                        <span style={styles.infoProp}>Local: </span>
-                        <span style={styles.info}>{item.morada}</span>
-                    </div>
-                    <div style={styles.rowInfo}>
-                        <span style={styles.infoProp}>Localidade: </span>
-                        <span style={styles.info}>{item.localidade_morada}</span>
-                    </div>
-                    <div style={styles.rowInfo}>
-                        <span style={styles.infoProp}>Freguesia: </span>
-                        <span style={styles.info}>{item.localidade}</span>
-                    </div>
-                    <div style={styles.rowInfo}>
-                        <span style={styles.infoProp}>Ponto de Referência: </span>
-                        <span style={styles.info}>{item.ponto_referencia}</span>
-                    </div>
-                    <div style={styles.rowInfo}>
-                        <span style={styles.infoProp}>Número de elementos: </span>
-                        <span style={styles.info}>{item.n_bombeiros}</span>
-                    </div>
-                    <div style={styles.rowInfo}>
-                        <span style={styles.infoProp}>Veículos: </span>
-                        <span style={styles.infoViaturas}>{viaturas}</span>
-                    </div>
-                </div>
-*/}
                 <div style={styles.row}>
                     <Button title="Localizar Trajecto" style={styles.button_LocTrajeto} onClick={openMaps}>
                         <p style={styles.buttonText}>Localizar Trajecto</p>
@@ -220,7 +177,7 @@ const EmergencyDetails = ({
 
                             <div style={styles.buttonPlaceholder}></div>
 
-                            <Button style={styles.button_InserirKms} onClick={() => navigate('/inserirKms', { state: item })}>
+                            <Button style={styles.button_InserirKms} onClick={() => navigate('/inserirKms', { state: item })} disabled={isInserirKmsDisabled}>
                                 <p style={styles.buttonText}>Inserir Km's Veículo</p>
                                 <p style={styles.buttonTextOther}>.</p>
                             </Button>
@@ -245,7 +202,7 @@ const EmergencyDetails = ({
                             <Button style={styles.button_Disponivel} onClick={handleDisponivel} disabled={isDisponivel}>
                                 <p style={{ ...styles.buttonText, marginRight: '5px' }}>Disponível</p>
                             </Button>
-                            <Button style={styles.button_InserirKms} onClick={() => navigate('/inserirKms', { state: item })}>
+                            <Button style={styles.button_InserirKms} onClick={() => navigate('/inserirKms', { state: item })} disabled={isInserirKmsDisabled}>
                                 <p style={styles.buttonText}>Inserir Km's Veículo</p>
                                 <p style={styles.buttonTextOther}>.</p>
                             </Button>
