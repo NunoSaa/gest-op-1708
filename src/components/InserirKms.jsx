@@ -11,16 +11,93 @@ function InserirKms() {
 
     const location = useLocation();
     const { state } = location;
-    const [timeTape, setTimeTape] = useState([]);
     let navigate = useNavigate()
     const [loading, setLoading] = useState(false);
     const [item, setItem] = useState(state);
     const [error, setError] = useState(null);
+    const descricao = localStorage.getItem('username');
+    const emergency = JSON.parse(localStorage.getItem('EmergencyData')); // Parse if stored as stringified JSON
 
+    // Extract and filter viaturas by descricao
+    const vehicles = item.viaturas || [];
+    const filteredVehicles = vehicles.filter(
+        (vehicle) => vehicle.descricao === descricao
+    );
 
-    // Go back to the previous page
-    const handleBackClick = () => {
-        window.history.back();
+    // Initialize kmFim state based on existing km_fim value
+    const [kmFim, setKmFim] = useState(filteredVehicles[0]?.km_fim || '');
+
+    // Function to handle kmFim TextField change
+    const handleKmFimChange = (event) => {
+        setKmFim(event.target.value); // Update kmFim state on every change
+        console.log(kmFim)
+    };
+
+    const handleSetKmsVeiculo = async () => {
+        const vehicle = filteredVehicles[0];
+        const missingFields = [];
+
+        // Check required fields and add missing ones to the array
+        if (!vehicle) {
+            alert("No vehicle data found.");
+            return;
+        }
+        if (!vehicle.id_oco_viatura) missingFields.push("ID Ocorrência Viatura");
+        if (!vehicle.id_viatura) missingFields.push("ID Viatura");
+        if (!vehicle.hora_saida) missingFields.push("Hora Saída");
+        if (!vehicle.data_saida) missingFields.push("Data Saída");
+        if (!vehicle.data_chegada_to) missingFields.push("Data Chegada TO");
+        if (!vehicle.hora_chegada_to) missingFields.push("Hora Chegada TO");
+        if (!vehicle.data_saida_to) missingFields.push("Data Saída TO");
+        if (!vehicle.hora_saida_to) missingFields.push("Hora Saída TO");
+        if (!vehicle.hora_chegada) missingFields.push("Hora Chegada CB");
+        if (!vehicle.data_chegada) missingFields.push("Data Chegada CB");
+        if (!vehicle.km_inicio) missingFields.push("Km Início");
+        if (!kmFim) missingFields.push("Km Finais");
+
+        // If any fields are missing, alert the user and stop the function
+        if (missingFields.length > 0) {
+            alert(`Os seguintes campos estão em falta: ${missingFields.join(", ")}`);
+            return;
+        }
+
+        // Check if km_fim is a valid number and greater than or equal to km_inicio
+        const kmInicio = parseFloat(vehicle.km_inicio);
+        const kmFimValue = parseFloat(kmFim);
+        if (isNaN(kmFimValue) || kmFimValue <= kmInicio) {
+            alert("Por favor insira um valor válido (Km's inicio superiores a Km's finais)");
+            return;
+        }
+ 
+        // If all validations pass, proceed with the API call
+        try {
+            const response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentDetails', {
+                id_ocorrencia: emergency[0].id,
+                id_oco_viatura: vehicle.id_oco_viatura,
+                id_viatura: vehicle.id_viatura,
+                hora_saida: vehicle.hora_saida,
+                data_saida: vehicle.data_saida,
+                data_chegada_to: vehicle.data_chegada_to,
+                hora_chegada_to: vehicle.hora_chegada_to,
+                data_saida_to: vehicle.data_saida_to,
+                hora_saida_to: vehicle.hora_saida_to,
+                hora_chegada: vehicle.hora_chegada,
+                data_chegada: vehicle.data_chegada,
+                km_inicio: vehicle.km_inicio,
+                km_fim: kmFim
+            });
+
+            if (response.data && response.data.status === 'success') {
+                console.log('Chegada time updated:', response.data);
+                alert("Km's Finais inseridos com sucesso!");
+                setError(null);
+                setTimeout(() => window.history.back(), 0); // Go back after alert
+            }
+        } catch (error) {
+            console.error('Error updating chegada time:', error);
+            alert("Erro ao inserir Km's Finais!");
+            setError('Error updating chegada time');
+        }
     };
 
     return (
@@ -64,15 +141,15 @@ function InserirKms() {
                                 <div style={styles.rowInfoContainer}>
                                     <div style={styles.rowInfo}>
                                         <span style={styles.infoProp}>Tipologia : </span>
-                                        <span style={styles.info}>{item.viaturas[0].descricao}</span>
+                                        <span style={styles.info}>{filteredVehicles[0].descricao}</span>
                                     </div>
                                     <div style={styles.rowInfo}>
                                         <span style={styles.infoProp}>Veículo: </span>
-                                        <span style={styles.info}>{item.viaturas[0].marca + ' ' + item.viaturas[0].modelo}</span>
+                                        <span style={styles.info}>{filteredVehicles[0].marca + ' ' + filteredVehicles[0].modelo}</span>
                                     </div>
                                     <div style={styles.rowInfo}>
                                         <span style={styles.infoProp}>Matrícula: </span>
-                                        <span style={styles.info}>{item.viaturas[0].matricula}</span>
+                                        <span style={styles.info}>{filteredVehicles[0].matricula}</span>
                                     </div>
                                 </div>
                             </section>
@@ -130,14 +207,17 @@ function InserirKms() {
                                 <div style={styles.rowInfoKmsContainer}>
                                     <div style={styles.rowInfo}>
                                         <span style={styles.infoProp}>Km's Início: </span>
-                                        <span style={styles.info}>{item.viaturas[0].km_inicio}</span>
+                                        <span style={styles.info}>{filteredVehicles[0].km_inicio}</span>
                                     </div>
 
                                     <div style={styles.rowInfo}>
                                         <span style={styles.infoProp}>Km's Finais: </span>
                                         <TextField
                                             style={styles.inputCell}
-                                            variant="outlined" />
+                                            variant="outlined"
+                                            value={kmFim} // Bind TextField value to kmFim state
+                                            onChange={handleKmFimChange} // Update kmFim on change
+                                        />
                                     </div>
                                 </div>
                             </section>
@@ -151,7 +231,7 @@ function InserirKms() {
                                 type="submit"
                                 fullWidth
                                 style={styles.button_SAVE}
-                                onClick={''}
+                                onClick={handleSetKmsVeiculo}  // Trigger the update function
                             >
                                 <p style={styles.buttonText}>Inserir Km's</p>
                             </Button>

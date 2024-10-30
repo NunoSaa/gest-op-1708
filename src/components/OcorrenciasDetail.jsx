@@ -149,6 +149,7 @@ function OcorrenciasDetail() {
                 hora_saida: vehicle.current[0].hora_saida,
                 data_saida: vehicle.current[0].data_saida,
                 km_inicio: vehicle.current[0].km_inicio,
+                km_fim: '',
                 data_chegada_to: currentDate,
                 hora_chegada_to: currentHour
             });
@@ -208,6 +209,7 @@ function OcorrenciasDetail() {
                 data_chegada_to: vehicle.current[0].data_chegada_to,
                 hora_chegada_to: vehicle.current[0].hora_chegada_to,
                 km_inicio: vehicle.current[0].km_inicio,
+                km_fim: '',
                 data_saida_to: currentDate,
                 hora_saida_to: currentHour
             });
@@ -322,6 +324,7 @@ function OcorrenciasDetail() {
                 data_saida_to: vehicle.current[0].data_saida_to,
                 hora_saida_to: vehicle.current[0].hora_saida_to,
                 km_inicio: vehicle.current[0].km_inicio,
+                km_fim: '',
                 data_chegada: currentDate,
                 hora_chegada: currentHour
             });
