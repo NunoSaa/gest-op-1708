@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Chip, Stack } from '@mui/material';
+
 
 
 const EmergencyDetails = ({
@@ -25,15 +26,24 @@ const EmergencyDetails = ({
     isChegadaHospSet,
 }) => {
 
-     // Determine if "Inserir Km's" should be disabled
-     const isInserirKmsDisabled = viaturas !== descricao;
+    const isInserirKmsDisabled = viaturas !== descricao;
+    const incidentReport = JSON.parse(localStorage.getItem('IncidentReport'));
+    const emergency = JSON.parse(localStorage.getItem('EmergencyData'));
 
-     // Alert user if descricao does not match viaturas
-     useEffect(() => {
-         if (descricao !== viaturas) {
-             alert('Aviso: O Username de login não corresponde aos Veículos associado a esta Ocorrência');
-         }
-     }, [descricao, viaturas]);
+    const vehicles = emergency[0].viaturas || [];
+    const filteredVehicles = vehicles.filter(
+        (vehicle) => vehicle.descricao === descricao
+    );
+
+    const [kmFim, setKmFim] = useState(
+        filteredVehicles.length > 0 && filteredVehicles[0].km_fim
+    );
+
+    useEffect(() => {
+        if (descricao !== viaturas) {
+            alert('Aviso: O Username de login não corresponde aos Veículos associado a esta Ocorrência');
+        }
+    }, [descricao, viaturas]);
 
     return (
         <div style={styles.center}>
@@ -43,7 +53,6 @@ const EmergencyDetails = ({
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'stretch' }}>
-                    {/* Vertical Column with "Ocorrência" */}
                     <div style={{
                         width: '25px',
                         display: 'flex',
@@ -51,10 +60,10 @@ const EmergencyDetails = ({
                         alignItems: 'center',
                         writingMode: 'vertical-lr',
                         textAlign: 'center',
-                        backgroundColor: '#99CCFF',  // Optional background for visual separation
+                        backgroundColor: '#99CCFF',
                         padding: '10px',
                         fontWeight: 'bold',
-                        flexShrink: 0,    // Prevents the column from shrinking,
+                        flexShrink: 0,
                         marginBottom: "25px",
                         transform: 'rotate(180deg)'
                     }}>
@@ -98,7 +107,6 @@ const EmergencyDetails = ({
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'stretch' }}>
-                    {/* Vertical Column with "Ocorrência" */}
                     <div style={{
                         width: '25px',
                         display: 'flex',
@@ -106,17 +114,16 @@ const EmergencyDetails = ({
                         alignItems: 'center',
                         writingMode: 'vertical-lr',
                         textAlign: 'center',
-                        backgroundColor: '#99CCFF',  // Optional background for visual separation
+                        backgroundColor: '#99CCFF',
                         padding: '10px',
                         fontWeight: 'bold',
-                        flexShrink: 0,    // Prevents the column from shrinking,
+                        flexShrink: 0,
                         marginBottom: "25px",
                         transform: 'rotate(180deg)'
                     }}>
                         Local
                     </div>
 
-                    {/* Event Form */}
                     <div className="event-form" style={{ flexGrow: 1 }}>
                         <section className="header-section">
                             <div style={styles.rowInfoContainer}>
@@ -223,12 +230,23 @@ const EmergencyDetails = ({
                 </div>
 
                 <div style={styles.row}>
-                    <Button title="Finalizar Ocorrência" style={styles.button_FimOcorrencia} onClick={() => navigate('/homepage')}>
+                    <Button
+                        title="Finalizar Ocorrência"
+                        style={styles.button_FimOcorrencia}
+                        onClick={() => {
+                            if (incidentReport && incidentReport.descricao.length > 0 && kmFim != 0) {
+                                localStorage.removeItem("IncidentReport");
+                                localStorage.removeItem("EmergencyData");
+                                navigate('/homepage');
+                            } else {
+                                alert("Dados não preenchidos (Km's veículo / Relatório Final). Por favor, preencha antes de finalizar.");
+                            }
+                        }}>
                         <p style={styles.buttonText}>Finalizar Ocorrência</p>
                     </Button>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

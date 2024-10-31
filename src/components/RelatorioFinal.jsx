@@ -190,7 +190,6 @@ function RelatorioFinal() {
                 setSelectedValue2(selectedOption2);
                 setSelectedValue3(selectedOption3);
                 setSelectedValue4(selectedOption4);
-                console.log('report data: ', reportData)
 
                 setLoading(false);
             } else {
@@ -203,6 +202,9 @@ function RelatorioFinal() {
         }
     };
 
+    console.log('report data: ', reportData)
+    localStorage.setItem('IncidentReport', JSON.stringify(reportData));
+
     const updateIncidentsReport = async () => {
         try {
             const response = await axios.post('https://preventech-proxy-service.onrender.com/api/finalreport/updateIncidentsReport', {
@@ -211,6 +213,7 @@ function RelatorioFinal() {
             });
 
             if (response.data && response.data.status === 'success') {
+                localStorage.setItem('IncidentReport', JSON.stringify(reportData));
                 alert('Dados Guardados com Sucesso');
                 setTimeout(() => window.history.back(), 0); // Go back after alert
             }
