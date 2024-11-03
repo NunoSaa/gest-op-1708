@@ -24,6 +24,8 @@ import SinaisSintomasComponent from './VerbeteINEMComponents/SinaisSintomasCompo
 import OcorrenciaComponent from './VerbeteINEMComponents/OcorrenciaComponent.jsx';
 import IdentificacaoComponent from './VerbeteINEMComponents/IdentificacaoComponent.jsx';
 import AvaliacaoComponent from './VerbeteINEMComponents/AvaliacaoComponent.jsx';
+import DownloadIcon from '@mui/icons-material/Download'; // Download icon for saving
+import UploadIcon from '@mui/icons-material/Upload';
 
 function VerbeteINEM() {
     const navigate = useNavigate();
@@ -438,10 +440,37 @@ function VerbeteINEM() {
                         </div>
                     </div>
 
-                    {/* Add other input fields as needed */}
+                    {/* Add other input fields as needed 
                     <Button type="submit" variant="contained" color="primary">
                         Guardar No Dispositivo
                     </Button>
+                    */}
+
+                    <Grid item xs={12} md={8}>
+                        <Grid container spacing={2} justifyContent="center">
+                            <Grid item xs={12} sm={5}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    fullWidth
+                                    sx={{ height: 60 }}
+                                    onClick={handleSubmit}>
+                                    Guardar no dispositivo
+                                    <DownloadIcon sx={{ marginRight: 1 }} /> {/* Download icon */}
+                                </Button>
+                            </Grid>
+                            <Grid item xs={12} sm={5}>
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    fullWidth
+                                    sx={{ height: 60 }}>
+                                    Enviar para Gescorp
+                                    <UploadIcon sx={{ marginRight: 1 }} /> {/* Upload icon */}
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
 
                 </form>
             </div>
