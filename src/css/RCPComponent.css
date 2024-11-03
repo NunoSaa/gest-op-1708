@@ -1,0 +1,8 @@
+.custom-checkbox {
+    width: 30px;  /* Set width */
+    height: 30px; /* Set height */
+}
+
+.custom-checkbox .MuiSvgIcon-root {
+    font-size: 30px; /* Adjust the icon size */
+}
