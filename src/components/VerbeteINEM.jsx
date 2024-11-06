@@ -26,15 +26,43 @@ import IdentificacaoComponent from './VerbeteINEMComponents/IdentificacaoCompone
 import AvaliacaoComponent from './VerbeteINEMComponents/AvaliacaoComponent.jsx';
 import DownloadIcon from '@mui/icons-material/Download'; // Download icon for saving
 import UploadIcon from '@mui/icons-material/Upload';
+import { gapi } from 'gapi-script';
+
 
 function VerbeteINEM() {
     const navigate = useNavigate();
     const location = useLocation();
     const { state } = location;
     const [item, setItem] = useState(state);
+    const [pdfBlob, setPdfBlob] = useState(null);
+    const [uploadProgress, setUploadProgress] = useState(0); // Upload progress
+    const [isUploading, setIsUploading] = useState(false); // Uploading state
+    const num_ocorrencia = item.numero;
+    const CLIENT_ID = '214123389323-3c7npk6e2hasbi2jt3pnrg1jqvjtm92m.apps.googleusercontent.com';  // Replace with your OAuth Client ID
+    const API_KEY = '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';  // Replace with your Google Cloud API Key
+    const SCOPES = 'https://www.googleapis.com/auth/drive.file'; // Scope to upload file
 
-    console.log(item);
+    useEffect(() => {
+        function start() {
+            gapi.client.init({
+                apiKey: API_KEY,
+                clientId: CLIENT_ID,
+                discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
+                scope: SCOPES,
+            });
+        }
+        gapi.load('client:auth2', start);
+
+    }, []);
+
     const [selectedLabelLocalOcorrencia, setSelectedLabelLocalOcorrencia] = useState('Domícilio'); // Default to the label of the first option
+    const now = new Date();
+    // Get the current date in the format "YYYY-MM-DD"
+    const currentDate = now.toISOString().split('T')[0];
+    // Get the current time in the format "HH:MM"
+    const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
+    //Buld the FileName
+    let fileName = item.numero + '_VERBETE_INEM_' + currentDate + '_' + currentHour + '.pdf';
 
     // State to hold form data
     const [formData, updateFormData] = useState({
@@ -75,30 +103,23 @@ function VerbeteINEM() {
         }
     };
 
-    // Function to fill the PDF template with data
+    // Update fillPdfTemplate to return the filled PDF blob
     const fillPdfTemplate = async (templateUrl, data) => {
         try {
             const existingPdfBytes = await fetch(templateUrl).then(res => res.arrayBuffer());
             const pdfDoc = await PDFDocument.load(existingPdfBytes);
             const form = pdfDoc.getForm();
 
-            console.log(data)
-
-            // Fill the fields with data from the form
             Object.keys(data).forEach(key => {
-                console.log("data:", data);
-                console.log("key:", key);
-
                 const field = form.getField(key);
                 if (field) {
-                    field.setText(data[key]); // Set the value of the field
+                    field.setText(data[key]);
                 }
             });
 
             const pdfBytes = await pdfDoc.save();
+            return new Blob([pdfBytes], { type: 'application/pdf' }); // Return the filled PDF blob
 
-            let fileName = 'VerbeteINEM_' + item.numero + '.pdf';
-            saveAs(new Blob([pdfBytes], { type: 'application/pdf' }), fileName);
         } catch (error) {
             console.error('Error filling the PDF template:', error);
         }
@@ -121,7 +142,7 @@ function VerbeteINEM() {
             hora_local: filteredVehicles[0].hora_saida || '',
             hora_vitima: filteredVehicles[0].hora_chegada_to || '',
             hora_caminho: filteredVehicles[0].hora_saida_to || '',
-            hora_hospital:  '',
+            hora_hospital: '',
             hora_disponivel: filteredVehicles[0].hora_chegada || '',
         }));
 
@@ -202,6 +223,106 @@ function VerbeteINEM() {
         window.history.back(); // Go back to the previous page
     };
 
+    // Function to create or find a folder in Google Drive
+    const createOrFindFolder = async (folderName, parentFolderId = 'root') => {
+        try {
+            const response = await gapi.client.drive.files.list({
+                q: `mimeType='application/vnd.google-apps.folder' and name='${folderName}' and trashed=false and '${parentFolderId}' in parents`,
+                fields: 'files(id, name)',
+                spaces: 'drive',
+            });
+
+            const folders = response.result.files;
+            if (folders && folders.length > 0) {
+                return folders[0].id;
+            } else {
+                const createFolderResponse = await gapi.client.drive.files.create({
+                    resource: {
+                        name: folderName,
+                        mimeType: 'application/vnd.google-apps.folder',
+                        parents: [parentFolderId],
+                    },
+                    fields: 'id',
+                });
+                return createFolderResponse.result.id;
+            }
+        } catch (error) {
+            console.error(`Error finding or creating folder '${folderName}':`, error);
+            return null;
+        }
+    };
+
+
+    // Upload the filled PDF to Google Drive
+    const sendToDrive = async (pdfBytes) => {
+
+        const templateUrl = pdfFile; // Path to your PDF template
+        let file = new Blob([pdfBlob], { type: 'application/pdf' });
+
+        // Fill the PDF template with formData and get the filled PDF blob
+        file = await fillPdfTemplate(templateUrl, formData);
+
+        gapi.auth2.getAuthInstance().signIn().then(async () => {
+            const metadata = {
+                name: fileName,
+                mimeType: 'application/pdf',
+            };
+
+            // Step 1: Find or create the 'Ocorrencias' folder in Google Drive shared from centralVPA
+            const ocorrenciasFolderId = await createOrFindFolder('1yE6cG3Kwakq1V0ZcI8liMfqF4tLc2E4h');
+
+            // Step 2: Inside 'Ocorrencias', find or create the 'num_ocorrencia' folder
+            const ocorrenciaFolderId = await createOrFindFolder(num_ocorrencia, '1yE6cG3Kwakq1V0ZcI8liMfqF4tLc2E4h');
+
+            if (!ocorrenciaFolderId) {
+                alert('Erro ao criar a estrutura de pastas no Google Drive');
+                return;
+            }
+
+            console.log(ocorrenciaFolderId);
+
+            if (!ocorrenciaFolderId) {
+                alert('Error creating the folder structure in Google Drive.');
+                return;
+            }
+
+            const form = new FormData();
+            metadata.parents = [ocorrenciaFolderId];
+            form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+            form.append('file', new Blob([file], { type: 'application/pdf' }));
+
+            console.log(form);
+            const xhr = new XMLHttpRequest();
+            setIsUploading(true);
+            xhr.open('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', true);
+            xhr.setRequestHeader('Authorization', `Bearer ${gapi.auth.getToken().access_token}`);
+
+            xhr.upload.onprogress = (event) => {
+                if (event.lengthComputable) {
+                    const percentComplete = Math.round((event.loaded / event.total) * 100);
+                    setUploadProgress(percentComplete);
+                }
+            };
+
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    alert('File successfully uploaded to Google Drive!');
+                    setIsUploading(false);
+                    setUploadProgress(0);
+                } else {
+                    console.error('Error uploading file to Google Drive:', xhr.responseText);
+                    setIsUploading(false);
+                }
+            };
+
+            xhr.onerror = () => {
+                console.error('Error uploading file to Google Drive.');
+                setIsUploading(false);
+            };
+
+            xhr.send(form);
+        });
+    };
 
     return (
         <div>
@@ -464,7 +585,8 @@ function VerbeteINEM() {
                                     variant="contained"
                                     color="secondary"
                                     fullWidth
-                                    sx={{ height: 60 }}>
+                                    sx={{ height: 60 }}
+                                    onClick={sendToDrive}>
                                     Enviar para Gescorp
                                     <UploadIcon sx={{ marginRight: 1 }} /> {/* Upload icon */}
                                 </Button>
