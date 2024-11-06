@@ -498,6 +498,7 @@ function OcorrenciasDetail() {
                             handleSetTimeChegadaUnidadeHosp={handleSetTimeChegadaUnidadeHosp}
                             isChegadaHospSet={isChegadaHospSet}
                             handleFinalizarOcorrencia={handleFinalizarOcorrencia}
+                            emergencies={emergencies}
                         />
                     ))
                 )}

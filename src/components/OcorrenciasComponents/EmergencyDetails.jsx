@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Chip, Stack } from '@mui/material';
-
+import { Button, Chip, Stack, Checkbox } from '@mui/material';
+import EPH_RequestComponent from './EPH_RequestComponent';
+import AcidenteRequestComponent from './AcidenteRequestComponent';
 
 
 const EmergencyDetails = ({
@@ -25,11 +26,14 @@ const EmergencyDetails = ({
     handleSetTimeChegadaUnidadeHosp,
     isChegadaHospSet,
     handleFinalizarOcorrencia,
+    emergencies
 }) => {
 
     const isInserirKmsDisabled = viaturas !== descricao;
     const incidentReport = JSON.parse(localStorage.getItem('IncidentReport'));
     const emergency = JSON.parse(localStorage.getItem('EmergencyData'));
+
+    console.log("emergencies = ", emergencies)
 
     const vehicles = emergency[0].viaturas || [];
     const filteredVehicles = vehicles.filter(
@@ -41,7 +45,16 @@ const EmergencyDetails = ({
     );
 
     useEffect(() => {
-        if (descricao !== viaturas) {
+        // Split the viaturas string by comma and remove extra spaces
+        const viaturasArray = viaturas.split(',').map(item => item.trim());
+
+        // Check if the descricao matches any value in the viaturas array
+        const isMatch = viaturasArray.some(viatura => viatura === descricao);
+
+        console.log(viaturasArray);
+
+        if (!isMatch) {
+
             alert('Aviso: O Username de login não corresponde aos Veículos associado a esta Ocorrência');
         }
     }, [descricao, viaturas]);
@@ -148,6 +161,16 @@ const EmergencyDetails = ({
                         </section>
                     </div>
                 </div>
+
+                {/* Vitima */}
+                {emergencies[0]?.requestList[0] && emergencies[0].requestList[0].tipo_pedido === "emergenciaph" && (
+                    <EPH_RequestComponent emergencies={emergencies} />
+                )}
+
+                {/* Vitima */}
+                {emergencies[0]?.requestList[0] && emergencies[0].requestList[0].tipo_pedido === "acidente" && (
+                    <AcidenteRequestComponent emergencies={emergencies} />
+                )}
 
                 <div style={styles.row}>
                     <Button title="Localizar Trajecto" style={styles.button_LocTrajeto} onClick={openMaps}>
