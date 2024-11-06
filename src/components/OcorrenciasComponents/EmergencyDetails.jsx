@@ -163,12 +163,12 @@ const EmergencyDetails = ({
                 </div>
 
                 {/* Vitima */}
-                {emergencies[0]?.requestList[0] && emergencies[0].requestList[0].tipo_pedido === "emergenciaph" && (
+                {emergencies?.[0]?.requestList?.[0]?.tipo_pedido === "emergenciaph" && (
                     <EPH_RequestComponent emergencies={emergencies} />
                 )}
 
                 {/* Vitima */}
-                {emergencies[0]?.requestList[0] && emergencies[0].requestList[0].tipo_pedido === "acidente" && (
+                {emergencies?.[0]?.requestList?.[0]?.tipo_pedido === "acidente" && (
                     <AcidenteRequestComponent emergencies={emergencies} />
                 )}
 
