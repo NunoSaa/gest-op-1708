@@ -33,17 +33,21 @@ function OcorrenciasDetail() {
     const [emergencies, setEmergencies] = useState([]);
     const descricao = localStorage.getItem('username');
     const incidentReport = JSON.parse(localStorage.getItem('IncidentReport'));
-    const emergency = JSON.parse(localStorage.getItem('EmergencyData'));
+    // State for kmFim, initially set to null or false
+    const [kmFim, setKmFim] = useState(null);
 
-    const vehicles = emergency[0].viaturas || [];
-    const filteredVehicles = vehicles.filter(
-        (vehicle) => vehicle.descricao === descricao
-    );
-
-    const [kmFim, setKmFim] = useState(
-        filteredVehicles.length > 0 && filteredVehicles[0].km_fim
-    );
-
+    // Load EmergencyData from localStorage if available on component mount
+    useEffect(() => {
+        const localEmergencyData = localStorage.getItem('EmergencyData');
+        if (localEmergencyData) {
+            const parsedData = JSON.parse(localEmergencyData);
+            setEmergencies(parsedData);
+            setLoading(false);
+        } else {
+            // Fetch if not available in localStorage
+            fetchEmergencies();
+        }
+    }, []);
 
     useEffect(() => {
         let intervalId;
@@ -99,6 +103,11 @@ function OcorrenciasDetail() {
                     (vehicle) => vehicle.descricao === descricao
                 );
 
+                 // Set `kmFim` if available in filtered vehicles
+                 if (filteredVehicles.length > 0) {
+                    setKmFim(filteredVehicles[0].km_fim);
+                }
+
                 // Store the filtered vehicles in a ref for immediate access
                 vehicle.current = filteredVehicles;
 
@@ -129,6 +138,7 @@ function OcorrenciasDetail() {
     useEffect(() => {
 
         fetchEmergencies(); // Initial fetch
+
         const intervalId = setInterval(fetchEmergencies, 60000); // Fetch every minute
 
         return () => clearInterval(intervalId); // Cleanup on unmount
@@ -378,12 +388,12 @@ function OcorrenciasDetail() {
 
             try {
                 let response = null;
-    
+
                 response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
                     id_ocorrencia: emergencies[0].id,
                     id_estado: '10'
                 });
-    
+
                 if (response.data && response.data.status === 'success') {
                     alert(descricao + ' Ocorrencia Finalizada com Sucesso');
 
@@ -391,7 +401,7 @@ function OcorrenciasDetail() {
                     localStorage.removeItem("EmergencyData");
                     navigate('/homepage');
                 }
-    
+
             } catch (error) {
                 console.error('Error updating chegada time:', error);
                 setError('Error updating chegada time');
@@ -399,7 +409,7 @@ function OcorrenciasDetail() {
         } else {
             alert("Dados não preenchidos (Km's veículo / Relatório Final). Por favor, preencha antes de finalizar.");
         }
-        
+
     }
 
     const openMaps = () => {
