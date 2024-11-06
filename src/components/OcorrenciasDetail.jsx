@@ -32,6 +32,18 @@ function OcorrenciasDetail() {
     const [isChegadaHospSet, setChegadaHospSet] = useState('');
     const [emergencies, setEmergencies] = useState([]);
     const descricao = localStorage.getItem('username');
+    const incidentReport = JSON.parse(localStorage.getItem('IncidentReport'));
+    const emergency = JSON.parse(localStorage.getItem('EmergencyData'));
+
+    const vehicles = emergency[0].viaturas || [];
+    const filteredVehicles = vehicles.filter(
+        (vehicle) => vehicle.descricao === descricao
+    );
+
+    const [kmFim, setKmFim] = useState(
+        filteredVehicles.length > 0 && filteredVehicles[0].km_fim
+    );
+
 
     useEffect(() => {
         let intervalId;
@@ -337,7 +349,8 @@ function OcorrenciasDetail() {
                     || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06') {
                     await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
                         id_ocorrencia: emergencies[0].id,
-                        id_estado: '10'
+                        //id_estado: '10'
+                        id_estado: '8'
                     });
                 }
                 else {
@@ -358,6 +371,36 @@ function OcorrenciasDetail() {
             setError('Error updating chegada time');
         }
     };
+
+    const handleFinalizarOcorrencia = async () => {
+
+        if (incidentReport && incidentReport.descricao.length > 0 && kmFim != 0) {
+
+            try {
+                let response = null;
+    
+                response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
+                    id_ocorrencia: emergencies[0].id,
+                    id_estado: '10'
+                });
+    
+                if (response.data && response.data.status === 'success') {
+                    alert(descricao + ' Ocorrencia Finalizada com Sucesso');
+
+                    localStorage.removeItem("IncidentReport");
+                    localStorage.removeItem("EmergencyData");
+                    navigate('/homepage');
+                }
+    
+            } catch (error) {
+                console.error('Error updating chegada time:', error);
+                setError('Error updating chegada time');
+            }
+        } else {
+            alert("Dados não preenchidos (Km's veículo / Relatório Final). Por favor, preencha antes de finalizar.");
+        }
+        
+    }
 
     const openMaps = () => {
         if (!item) return;
@@ -444,6 +487,7 @@ function OcorrenciasDetail() {
                             isChegadaUnidadeHospSet={isChegadaUnidadeHospSet}
                             handleSetTimeChegadaUnidadeHosp={handleSetTimeChegadaUnidadeHosp}
                             isChegadaHospSet={isChegadaHospSet}
+                            handleFinalizarOcorrencia={handleFinalizarOcorrencia}
                         />
                     ))
                 )}

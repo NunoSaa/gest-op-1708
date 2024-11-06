@@ -24,6 +24,7 @@ const EmergencyDetails = ({
     isChegadaUnidadeHospSet,
     handleSetTimeChegadaUnidadeHosp,
     isChegadaHospSet,
+    handleFinalizarOcorrencia,
 }) => {
 
     const isInserirKmsDisabled = viaturas !== descricao;
@@ -233,15 +234,7 @@ const EmergencyDetails = ({
                     <Button
                         title="Finalizar Ocorrência"
                         style={styles.button_FimOcorrencia}
-                        onClick={() => {
-                            if (incidentReport && incidentReport.descricao.length > 0 && kmFim != 0) {
-                                localStorage.removeItem("IncidentReport");
-                                localStorage.removeItem("EmergencyData");
-                                navigate('/homepage');
-                            } else {
-                                alert("Dados não preenchidos (Km's veículo / Relatório Final). Por favor, preencha antes de finalizar.");
-                            }
-                        }}>
+                        onClick={handleFinalizarOcorrencia}>
                         <p style={styles.buttonText}>Finalizar Ocorrência</p>
                     </Button>
                 </div>
