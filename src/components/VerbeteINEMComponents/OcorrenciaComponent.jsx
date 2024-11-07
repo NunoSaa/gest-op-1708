@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextField, FormGroup, FormControlLabel, Checkbox, Card, CardContent, formControlClasses } from '@mui/material';
 
-const OcorrenciaComponent = ({ formData, handleChange }) => {
+const OcorrenciaComponent = ({ formData, handleChange}) => {
     const today = new Date().toLocaleDateString("pt-PT"); // Format as "DD/MM/YYYY"
 
     return (
@@ -23,7 +23,9 @@ const OcorrenciaComponent = ({ formData, handleChange }) => {
                         <label style={{ paddingLeft: '15px' }}>Meio</label>
                         <TextField
                             variant="outlined"
+                            value={formData.meio}
                             defaultValue="Reserva"
+                            onChange={handleChange}
                             fullWidth
                         />
                     </div>
@@ -31,8 +33,11 @@ const OcorrenciaComponent = ({ formData, handleChange }) => {
                     <div style={styles.inputGroup}>
                         <label style={{ paddingLeft: '15px' }}>Nº Evento</label>
                         <TextField
+                            name="nr_vitimas"
                             variant="outlined"
                             fullWidth
+                            value={formData.numero_codu}
+                            onChange={handleChange}
                         />
                     </div>
 
@@ -50,8 +55,11 @@ const OcorrenciaComponent = ({ formData, handleChange }) => {
                     <div style={{ ...styles.inputGroup, flex: 2 }}>
                         <label>Nº Vítimas</label>
                         <TextField
+                            name="nr_vitimas"
                             variant="outlined"
                             fullWidth
+                            value={formData.nr_vitimas}
+                            onChange={handleChange}
                         />
                     </div>
 
@@ -61,8 +69,8 @@ const OcorrenciaComponent = ({ formData, handleChange }) => {
                             name="local"
                             variant="outlined"
                             fullWidth
-                            value={formData.local} // Controlled component
-                            onChange={handleChange} // Handle change from parent
+                            value={formData.local}
+                            onChange={handleChange}
                         />
                     </div>
                 </div>
@@ -77,8 +85,8 @@ const OcorrenciaComponent = ({ formData, handleChange }) => {
                             name="freguesia"
                             variant="outlined"
                             fullWidth
-                            value={formData.freguesia} // Controlled component
-                            onChange={handleChange} // Handle change from parent
+                            value={formData.freguesia}
+                            onChange={handleChange}
                         />
                     </div>
 

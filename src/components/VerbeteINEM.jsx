@@ -135,10 +135,19 @@ function VerbeteINEM() {
         const filteredVehicles = vehicles.filter(
             (vehicle) => vehicle.descricao === descricao
         );
+
+        // Extract morada and numero_morada and concatenate
+        const morada = emergency[0].requestList?.[0]?.morada || '';
+        const numero_morada = emergency[0].requestList?.[0]?.numero_morada || '';
+        const local = morada + (numero_morada ? ', nº ' + numero_morada : ''); // Concatenate morada and numero_morada
+
         // Update formData with emergency data for local and freguesia
         updateFormData(prevFormData => ({
             ...prevFormData,
             freguesia: emergency[0].localidade || '',
+            local: local,
+            //numero_codu: emergency[0].requestList[0].numero_codu || 0,
+            nr_vitimas: '',
             hora_local: filteredVehicles[0].hora_saida || '',
             hora_vitima: filteredVehicles[0].hora_chegada_to || '',
             hora_caminho: filteredVehicles[0].hora_saida_to || '',
