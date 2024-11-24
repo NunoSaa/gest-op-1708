@@ -1,26 +1,31 @@
 import React from 'react';
 import { TextField, FormGroup, FormControlLabel, Checkbox, Card, CardContent, formControlClasses } from '@mui/material';
 
-const HistorialClinicoComponent = ({
-}) => {
+const HistorialClinicoComponent = ({ formData, handleChange }) => {
     return (
         <div>
             <div style={styles.rowInfo}>
                 <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
                     <label>Circuntâncias</label>
                     <TextField
+                        name = "circunstancias"
                         variant="outlined"
                         fullWidth
+                        value={formData.circunstancias}
+                        onChange={handleChange}
                     />
                 </div>
             </div>
 
             <div style={styles.rowInfo}>
                 <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
-                    <label>HIstórico de Doenças</label>
+                    <label>Histórico de Doenças</label>
                     <TextField
+                        name = "historico"
                         variant="outlined"
                         fullWidth
+                        value={formData.historico}
+                        onChange={handleChange}
                     />
                 </div>
             </div>
@@ -29,8 +34,11 @@ const HistorialClinicoComponent = ({
                 <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
                     <label>Alergias</label>
                     <TextField
+                        name = "alergias"
                         variant="outlined"
                         fullWidth
+                        value={formData.alergias}
+                        onChange={handleChange}
                     />
                 </div>
             </div>
@@ -39,8 +47,11 @@ const HistorialClinicoComponent = ({
                 <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
                     <label>Medicação Habitual</label>
                     <TextField
+                        name = "medicacao_1"
                         variant="outlined"
                         fullWidth
+                        value={formData.medicacao_1}
+                        onChange={handleChange}
                     />
                 </div>
             </div>
@@ -49,8 +60,11 @@ const HistorialClinicoComponent = ({
                 <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
                     <label>Última Refeição</label>
                     <TextField
+                        name="ultima_refeicao"
                         variant="outlined"
                         fullWidth
+                        value={formData.ultima_refeicao}
+                        onChange={handleChange}
                     />
                 </div>
             </div>
@@ -59,8 +73,11 @@ const HistorialClinicoComponent = ({
                 <div style={{ ...styles.inputGroup, flex: 10 }}>  {/* 50% */}
                     <label>Situações de Risco</label>
                     <TextField
+                        name="situacao_risco"
                         variant="outlined"
                         fullWidth
+                        value={formData.situacao_risco}
+                        onChange={handleChange}
                     />
                 </div>
             </div>

@@ -1,8 +1,7 @@
 import React from 'react';
 import { TextField, FormGroup, FormControlLabel, Checkbox, Card, CardContent, formControlClasses } from '@mui/material';
 
-const VentilacaoComponent = ({
-}) => {
+const VentilacaoComponent = ({ formData, handleChange }) => {
     return (
         <table style={{ ...styles.table, marginTop: '10px' }}>
             <thead>
@@ -28,44 +27,65 @@ const VentilacaoComponent = ({
                             <tr>
                                 <td style={styles.td}>
                                     <Checkbox
-                                        name="presenciada"
-                                        className="custom-checkbox"
+                                        name="ventilacao_desobstrucao"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData.ventilacao_desobstrucao}
+                                        onChange={handleChange}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
-                                        name="presenciada"
-                                        className="custom-checkbox"
+                                        name="ventilacao_orofaringeo"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData.ventilacao_orofaringeo}
+                                        onChange={handleChange}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
-                                        name="presenciada"
-                                        className="custom-checkbox"
+                                        name="ventilacao_laringeo"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData.ventilacao_laringeo}
+                                        onChange={handleChange}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
-                                        name="presenciada"
-                                        className="custom-checkbox"
+                                        name="ventilacao_masc_laringea"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData.ventilacao_masc_laringea}
+                                        onChange={handleChange}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
-                                        name="presenciada"
-                                        className="custom-checkbox"
+                                        name="ventilacao_t_endotraqueal"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData.ventilacao_t_endotraqueal}
+                                        onChange={handleChange}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
-                                        name="presenciada"
-                                        className="custom-checkbox"
+                                        name="ventilacao_mecanica"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData.ventilacao_mecanica}
+                                        onChange={handleChange}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
-                                        name="presenciada"
-                                        className="custom-checkbox"
+                                         name="ventilacao_cpap"
+                                         variant="outlined"
+                                         fullWidth
+                                         value={formData.ventilacao_cpap}
+                                         onChange={handleChange}
                                     />
                                 </td>
                             </tr>

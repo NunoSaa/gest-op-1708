@@ -9,7 +9,11 @@ import Button from '@mui/material/Button';
 const AvaliacaoComponent = () => {
 
     const [age, setAge] = React.useState('');
+    const [age1, setAge1] = React.useState('');
+    const [age2, setAge2] = React.useState('');
     const [open, setOpen] = React.useState(false);
+    const [open1, setOpen1] = React.useState(false);
+    const [open2, setOpen2] = React.useState(false);
 
     const handleChange = (event) => {
         setAge(event.target.value);
@@ -21,6 +25,30 @@ const AvaliacaoComponent = () => {
 
     const handleOpen = () => {
         setOpen(true);
+    };
+
+    const handleChange1 = (event) => {
+        setAge1(event.target.value);
+    };
+
+    const handleClose1 = () => {
+        setOpen1(false);
+    };
+
+    const handleOpen1 = () => {
+        setOpen1(true);
+    };
+
+    const handleChange2 = (event) => {
+        setAge2(event.target.value);
+    };
+
+    const handleClose2 = () => {
+        setOpen2(false);
+    };
+
+    const handleOpen2 = () => {
+        setOpen2(true);
     };
 
     return (
@@ -151,9 +179,24 @@ const AvaliacaoComponent = () => {
                                 fullWidth />
                         </td>
                         <td style={styles.td}>
-                            <TextField
-                                variant="outlined"
-                                fullWidth />
+                            <FormControl sx={{ s: 1, minWidth: 30 }}>
+                                <Select
+                                    labelId="demo-controlled-open-select-label"
+                                    id="demo-controlled-open-select"
+                                    open={open1}
+                                    onClose={handleClose1}
+                                    onOpen={handleOpen1}
+                                    value={age1}
+                                    onChange={handleChange1}
+                                    inputProps={{
+                                        style: { height: '26px', display: 'flex', alignItems: 'center' },
+                                    }}>
+                                    <MenuItem value={"A"}>A</MenuItem>
+                                    <MenuItem value={"V"}>V</MenuItem>
+                                    <MenuItem value={"D"}>D</MenuItem>
+                                    <MenuItem value={"S"}>S</MenuItem>
+                                </Select>
+                            </FormControl>
                         </td>
                         <td style={styles.td}>
                             <TextField
@@ -233,9 +276,24 @@ const AvaliacaoComponent = () => {
                                 fullWidth />
                         </td>
                         <td style={styles.td}>
-                            <TextField
-                                variant="outlined"
-                                fullWidth />
+                            <FormControl sx={{ s: 1, minWidth: 30 }}>
+                                <Select
+                                    labelId="demo-controlled-open-select-label"
+                                    id="demo-controlled-open-select"
+                                    open={open2}
+                                    onClose={handleClose2}
+                                    onOpen={handleOpen2}
+                                    value={age2}
+                                    onChange={handleChange2}
+                                    inputProps={{
+                                        style: { height: '26px', display: 'flex', alignItems: 'center' },
+                                    }}>
+                                    <MenuItem value={"A"}>A</MenuItem>
+                                    <MenuItem value={"V"}>V</MenuItem>
+                                    <MenuItem value={"D"}>D</MenuItem>
+                                    <MenuItem value={"S"}>S</MenuItem>
+                                </Select>
+                            </FormControl>
                         </td>
                         <td style={styles.td}>
                             <TextField

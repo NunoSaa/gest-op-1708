@@ -21,8 +21,6 @@ const ProtocolosComponent = ({
                                 <th style={styles.th}>VV Sepsís</th>
                                 <th style={styles.th}>VV Trauma</th>
                                 <th style={styles.th}>VV PCR</th>
-                                <th style={styles.th}>TEPH</th>
-                                <th style={styles.th}>SIV</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -62,16 +60,6 @@ const ProtocolosComponent = ({
                                         name="presenciada"
                                         className="custom-checkbox"
                                     />
-                                </td>
-                                <td style={styles.td}>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth />
-                                </td>
-                                <td style={styles.td}>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth />
                                 </td>
                             </tr>
 

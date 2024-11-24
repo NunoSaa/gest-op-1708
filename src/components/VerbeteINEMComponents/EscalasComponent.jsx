@@ -1,8 +1,7 @@
 import React from 'react';
 import { TextField, FormGroup, FormControlLabel, Checkbox, Card, CardContent, formControlClasses } from '@mui/material';
 
-const EscalasComponent = ({
-}) => {
+const EscalasComponent = ({ formData, handleChange }) => {
     return (
         <table style={{ ...styles.table, marginTop: '10px' }}>
             <thead>
@@ -26,28 +25,48 @@ const EscalasComponent = ({
                             <tr>
                                 <td style={styles.td}>
                                     <TextField
+                                        name="escalas_cincinatti"
                                         variant="outlined"
-                                        fullWidth />
+                                        fullWidth
+                                        value={formData.escalas_cincinatti} 
+                                        onChange={handleChange}
+                                    />
                                 </td>
                                 <td style={styles.td}>
                                     <TextField
+                                        name="escalas_proacs"
                                         variant="outlined"
-                                        fullWidth />
+                                        fullWidth
+                                        value={formData.escalas_proacs}
+                                        onChange={handleChange}
+                                    />
                                 </td>
                                 <td style={styles.td}>
                                     <TextField
+                                        name="escalas_rts"
                                         variant="outlined"
-                                        fullWidth />
+                                        fullWidth
+                                        value={formData.escalas_rts}
+                                        onChange={handleChange}
+                                    />
                                 </td>
                                 <td style={styles.td}>
                                     <TextField
+                                        name="escalas_mgap"
                                         variant="outlined"
-                                        fullWidth />
+                                        fullWidth
+                                        value={formData.escalas_mgap}
+                                        onChange={handleChange}
+                                    />
                                 </td>
                                 <td style={styles.td}>
                                     <TextField
+                                        name="escalas_race"
                                         variant="outlined"
-                                        fullWidth />
+                                        fullWidth
+                                        value={formData.escalas_race}
+                                        onChange={handleChange}
+                                    />
                                 </td>
                             </tr>
 

@@ -1,8 +1,7 @@
 import React from 'react';
 import { TextField, FormGroup, FormControlLabel, Checkbox, Card, CardContent, formControlClasses } from '@mui/material';
 
-const CirculacaoComponent = ({
-}) => {
+const CirculacaoComponent = ({ formData, handleChange }) => {
     return (
         <table style={{ ...styles.table, marginTop: '10px' }}>
             <thead>
@@ -27,38 +26,56 @@ const CirculacaoComponent = ({
                             <tr>
                                 <td style={styles.td}>
                                     <Checkbox
-                                        name="presenciada"
-                                        className="custom-checkbox"
+                                        name="circulacao_controlo_temp"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData.circulacao_controlo_temp}
+                                        onChange={handleChange}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
-                                        name="presenciada"
-                                        className="custom-checkbox"
+                                        name="circulacao_controlo_hemo"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData.circulacao_controlo_hemo}
+                                        onChange={handleChange}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
-                                        name="presenciada"
-                                        className="custom-checkbox"
+                                        name="circulacao_penso"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData.circulacao_penso}
+                                        onChange={handleChange}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
-                                        name="presenciada"
-                                        className="custom-checkbox"
+                                        name="circulacao_torniquete"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData.circulacao_torniquete}
+                                        onChange={handleChange}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
-                                        name="presenciada"
-                                        className="custom-checkbox"
+                                        name="ciculacao_cinto"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData.ciculacao_cinto}
+                                        onChange={handleChange}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
-                                        name="presenciada"
-                                        className="custom-checkbox"
+                                        name="ciculacao_acesso"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData.ciculacao_acesso}
+                                        onChange={handleChange}
                                     />
                                 </td>
                             </tr>

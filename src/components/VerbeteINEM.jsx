@@ -2,11 +2,12 @@ import React, { useState, useEffect, useContext, createContext } from 'react';
 import { PDFDocument } from 'pdf-lib';
 import { saveAs } from 'file-saver';
 import { useNavigate, useLocation } from "react-router-dom";
-import pdfFile from '../assets/TEMPLATE_INEM.pdf';
+import pdfFile from '../assets/Verbete-INEM.pdf';
 import '../css/Login.css';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import '../css/EmergencyForm.css';
+import '../css/VerbeteINEM.css'
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -17,7 +18,7 @@ import RCPComponent from './VerbeteINEMComponents/RCPComponent';
 import VentilacaoComponent from './VerbeteINEMComponents/VentilacaoComponent';
 import CirculacaoComponent from './VerbeteINEMComponents/CirculacaoComponent';
 import ProtocolosComponent from './VerbeteINEMComponents/ProtocolosComponent';
-import { Box, Grid, Checkbox, FormControlLabel } from '@mui/material';
+import { Box, CircularProgress, Card, Grid, Checkbox, FormControlLabel } from '@mui/material';
 import EscalasComponent from './VerbeteINEMComponents/EscalasComponent';
 import HistorialClinicoComponent from './VerbeteINEMComponents/HistorialClinicoComponent.jsx';
 import SinaisSintomasComponent from './VerbeteINEMComponents/SinaisSintomasComponent.jsx';
@@ -27,6 +28,7 @@ import AvaliacaoComponent from './VerbeteINEMComponents/AvaliacaoComponent.jsx';
 import DownloadIcon from '@mui/icons-material/Download'; // Download icon for saving
 import UploadIcon from '@mui/icons-material/Upload';
 import { gapi } from 'gapi-script';
+import Utils from '../utils/utils.js';
 
 
 function VerbeteINEM() {
@@ -67,6 +69,7 @@ function VerbeteINEM() {
     // State to hold form data
     const [formData, updateFormData] = useState({
         //ocorrencia
+        entidade: 'B. V. Vila Pouca de Aguiar',
         local: '',
         freguesia: '',
         hora_local: '',
@@ -83,47 +86,45 @@ function VerbeteINEM() {
         mes_1: '',
         ano_1: '',
         idade: '',
-        sexo: '',
+        sexoM: '',
+        sexoF: '',
 
+        //Historial Clinico
+        circunstancias: '',
+        historico: '',
+        alergias: '',
+        medicacao_1: '',
+        ultima_refeicao: '',
+        situacao_risco: '',
+
+        //Sinais e Sintomas
+        sinais_sintomas: '',
+
+        //VA / Ventilacao
+        ventilacao_desobstrucao: '',
+        ventilacao_orofaringeo: '',
+        ventilacao_laringeo: '',
+        ventilacao_masc_laringea: '',
+        ventilacao_t_endotraqueal: '',
+        ventilacao_mecanica: '',
+        ventilacao_cpap: '',
+
+        //Circulação
+        circulacao_controlo_temp: '',
+        circulacao_controlo_hemo: '',
+        circulacao_penso: '',
+        circulacao_torniquete: '',
+        ciculacao_cinto: '',
+        ciculacao_acesso: '',
+
+        //Escalas
+        escalas_cincinatti: '',
+        escalas_proacs: '',
+        escalas_rts: '',
+        escalas_mgap: '',
+        escalas_race: '',
 
     });
-
-    // Function to get form field names from the PDF template
-    const getFormFieldNames = async (templateUrl) => {
-        try {
-            const existingPdfBytes = await fetch(templateUrl).then(res => res.arrayBuffer());
-            const pdfDoc = await PDFDocument.load(existingPdfBytes);
-            const form = pdfDoc.getForm();
-            const fields = form.getFields();
-            const fieldNames = fields.map(field => field.getName());
-            console.log('Form Field Names:', fieldNames);
-            return fieldNames;
-        } catch (error) {
-            console.error('Error fetching or parsing the PDF template:', error);
-        }
-    };
-
-    // Update fillPdfTemplate to return the filled PDF blob
-    const fillPdfTemplate = async (templateUrl, data) => {
-        try {
-            const existingPdfBytes = await fetch(templateUrl).then(res => res.arrayBuffer());
-            const pdfDoc = await PDFDocument.load(existingPdfBytes);
-            const form = pdfDoc.getForm();
-
-            Object.keys(data).forEach(key => {
-                const field = form.getField(key);
-                if (field) {
-                    field.setText(data[key]);
-                }
-            });
-
-            const pdfBytes = await pdfDoc.save();
-            return new Blob([pdfBytes], { type: 'application/pdf' }); // Return the filled PDF blob
-
-        } catch (error) {
-            console.error('Error filling the PDF template:', error);
-        }
-    };
 
     // Load data from localStorage when the component mounts
     useEffect(() => {
@@ -146,9 +147,9 @@ function VerbeteINEM() {
             ...prevFormData,
             freguesia: emergency[0].localidade || '',
             local: local,
-            //numero_codu: emergency[0].requestList[0].numero_codu || 0,
-            nr_vitimas: '',
-            hora_local: filteredVehicles[0].hora_saida || '',
+            nr_evento: emergency[0].requestList[0].numero_codu || '',
+            //nr_vitimas: '1',
+            hora_local: filteredVehicles[0].hora_saida !== null ? filteredVehicles[0].hora_saida : '',
             hora_vitima: filteredVehicles[0].hora_chegada_to || '',
             hora_caminho: filteredVehicles[0].hora_saida_to || '',
             hora_hospital: '',
@@ -160,107 +161,56 @@ function VerbeteINEM() {
     }, [item]);
 
     const handleChange = (e) => {
-        const { name, value, type, checked } = e.target || e; // Account for the event structure
+        const { name, value, type, checked } = e.target; // Destructure event
         const isNascimento = name === 'nascimento';
         const isSexoM = name === 'sexoM';
         const isSexoF = name === 'sexoF';
 
-        // Skip updating formData for 'nascimento', 'sexoM', and 'sexoF'
-        if (isNascimento || isSexoM || isSexoF) {
-            updateFormData(prevFormData => {
-                let updatedData = { ...prevFormData };
+        updateFormData((prevFormData) => {
+            let updatedData = { ...prevFormData };
 
-                // If handling "sexoM" or "sexoF", set "sexo" based on checkbox states
-                if (isSexoM || isSexoF) {
-                    updatedData.sexo = checked ? (isSexoM ? 'M' : 'F') : ''; // Set "M" or "F" based on checked box
+            if (isNascimento) {
+                // Handle 'nascimento' field
+                if (value) {
+
+                    const birthDate = new Date(value); // Convert string value to Date
+                    const day = birthDate.getDate().toString().padStart(2, '0');
+                    const month = (birthDate.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed
+                    const year = birthDate.getFullYear();
+
+                    // Update date parts
+                    updatedData.dia_1 = day.toString();
+                    updatedData.mes_1 = month.toString();
+                    updatedData.ano_1 = year.toString();
+
+                    // Calculate age
+                    const calculatedAge = Utils.calculateAge(birthDate);
+                    updatedData.idade = calculatedAge.toString(); // Convert to string
                 }
+            } else if (isSexoM || isSexoF) {
+                // Handle 'sexoM' or 'sexoF'
+                updatedData.sexoM = checked ? (isSexoM ? 'X' : '') : '';
+                updatedData.sexoF = checked ? (isSexoF ? 'X' : '') : '';
+            } else {
+                // General update for other fields
+                updatedData[name] = type === 'checkbox' ? (checked ? 'X' : '') : value;
+            }
 
-                // If handling "nascimento", calculate and update "idade" and date parts without storing "nascimento"
-                if (isNascimento && value) {
-                    const formattedDate = value.toISOString().split('T')[0];
-                    const [year, month, day] = formattedDate.split('-');
-                    const birthDate = new Date(year, month - 1, day);
-
-                    updatedData.dia_1 = day;
-                    updatedData.mes_1 = month;
-                    updatedData.ano_1 = year;
-                    updatedData.idade = calculateAge(birthDate).toString(); // Convert age to string
-                }
-
-                return updatedData;
-            });
-        } else {
-            // Update other fields as normal
-            updateFormData(prevFormData => ({
-                ...prevFormData,
-                [name]: type === 'checkbox' ? checked : value
-            }));
-        }
-
-
+            return updatedData;
+        });
     };
 
-    // Helper function to calculate age based on a birthdate
-    const calculateAge = (birthDate) => {
-        const today = new Date();
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const monthDiff = today.getMonth() - birthDate.getMonth();
-        const dayDiff = today.getDate() - birthDate.getDate();
-
-        // Adjust age if birthdate hasn't occurred yet this year
-        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-            age--;
-        }
-
-        return age;
-    };
-
-    const handleDropdownLocalOcorrenciaChange = (event) => {
-        const value = event.target.value; // Use the value directly
-        setSelectedLabelLocalOcorrencia(value); // Update the state
-    };
-
-    const handleSubmit = (e) => {
+    const saveToDevice = (e) => {
         e.preventDefault(); // Prevent the default form submission behavior
 
         console.log("formData before submission:", formData); // Log formData to check its state
         const templateUrl = pdfFile; // Path to your PDF template
-        fillPdfTemplate(templateUrl, formData); // Pass entire formData object
+        Utils.fillPdfTemplate(templateUrl, formData); // Pass entire formData object
     };
 
     const handleBackClick = () => {
         window.history.back(); // Go back to the previous page
     };
-
-    // Function to create or find a folder in Google Drive
-    const createOrFindFolder = async (folderName, parentFolderId = 'root') => {
-        try {
-            const response = await gapi.client.drive.files.list({
-                q: `mimeType='application/vnd.google-apps.folder' and name='${folderName}' and trashed=false and '${parentFolderId}' in parents`,
-                fields: 'files(id, name)',
-                spaces: 'drive',
-            });
-
-            const folders = response.result.files;
-            if (folders && folders.length > 0) {
-                return folders[0].id;
-            } else {
-                const createFolderResponse = await gapi.client.drive.files.create({
-                    resource: {
-                        name: folderName,
-                        mimeType: 'application/vnd.google-apps.folder',
-                        parents: [parentFolderId],
-                    },
-                    fields: 'id',
-                });
-                return createFolderResponse.result.id;
-            }
-        } catch (error) {
-            console.error(`Error finding or creating folder '${folderName}':`, error);
-            return null;
-        }
-    };
-
 
     // Upload the filled PDF to Google Drive
     const sendToDrive = async (pdfBytes) => {
@@ -269,7 +219,8 @@ function VerbeteINEM() {
         let file = new Blob([pdfBlob], { type: 'application/pdf' });
 
         // Fill the PDF template with formData and get the filled PDF blob
-        file = await fillPdfTemplate(templateUrl, formData);
+        file = await Utils.fillPdfTemplate(templateUrl, formData);
+        console.log("formData before submission:", formData); // Log formData to check its state
 
         gapi.auth2.getAuthInstance().signIn().then(async () => {
             const metadata = {
@@ -278,10 +229,10 @@ function VerbeteINEM() {
             };
 
             // Step 1: Find or create the 'Ocorrencias' folder in Google Drive shared from centralVPA
-            const ocorrenciasFolderId = await createOrFindFolder('1yE6cG3Kwakq1V0ZcI8liMfqF4tLc2E4h');
+            const ocorrenciasFolderId = await Utils.createOrFindFolder('1yE6cG3Kwakq1V0ZcI8liMfqF4tLc2E4h');
 
             // Step 2: Inside 'Ocorrencias', find or create the 'num_ocorrencia' folder
-            const ocorrenciaFolderId = await createOrFindFolder(num_ocorrencia, '1yE6cG3Kwakq1V0ZcI8liMfqF4tLc2E4h');
+            const ocorrenciaFolderId = await Utils.createOrFindFolder(num_ocorrencia, '1yE6cG3Kwakq1V0ZcI8liMfqF4tLc2E4h');
 
             if (!ocorrenciaFolderId) {
                 alert('Erro ao criar a estrutura de pastas no Google Drive');
@@ -300,7 +251,6 @@ function VerbeteINEM() {
             form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
             form.append('file', new Blob([file], { type: 'application/pdf' }));
 
-            console.log(form);
             const xhr = new XMLHttpRequest();
             setIsUploading(true);
             xhr.open('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', true);
@@ -315,21 +265,21 @@ function VerbeteINEM() {
 
             xhr.onload = () => {
                 if (xhr.status === 200) {
-                    alert('File successfully uploaded to Google Drive!');
-                    setIsUploading(false);
-                    setUploadProgress(0);
+                    alert('Ficheiro enviado com sucesso para o Google Drive!');
+                    setIsUploading(false); // Stop spinner
+                    setUploadProgress(0); // Reset progress
                 } else {
-                    console.error('Error uploading file to Google Drive:', xhr.responseText);
-                    setIsUploading(false);
+                    console.error('Erro no upload do ficheiro para o Google Drive: ', xhr.responseText);
+                    setIsUploading(false); // Stop spinner
                 }
             };
 
             xhr.onerror = () => {
-                console.error('Error uploading file to Google Drive.');
-                setIsUploading(false);
+                console.error('Erro no upload do ficheiro para o Google Drive.');
+                setIsUploading(false); // Stop spinner
             };
 
-            xhr.send(form);
+            xhr.send(form); // Send the form data
         });
     };
 
@@ -346,8 +296,8 @@ function VerbeteINEM() {
                 </Toolbar>
             </AppBar>
 
-            <div style={styles.container}>
-                <form onSubmit={handleSubmit}>
+            <div className="container">
+                <form onSubmit={saveToDevice}>
 
                     {/* Ocorrência */}
                     <div style={{ display: 'flex', alignItems: 'stretch' }}>
@@ -370,9 +320,6 @@ function VerbeteINEM() {
 
                         <OcorrenciaComponent formData={formData} handleChange={handleChange} />
                     </div>
-
-
-
 
                     {/* Identificação */}
                     <div style={{ display: 'flex', alignItems: 'stretch' }}>
@@ -440,7 +387,7 @@ function VerbeteINEM() {
                         <div className="event-form" style={{ flexGrow: 1 }}>
 
                             {/* Historial Clinico */}
-                            <HistorialClinicoComponent />
+                            <HistorialClinicoComponent formData={formData} handleChange={handleChange} />
 
                         </div>
                     </div>
@@ -461,51 +408,32 @@ function VerbeteINEM() {
                             marginBottom: "25px",
                             transform: 'rotate(180deg)'
                         }}>
-                            Exame da Vítima, Procedimentos e Terapêutica
+                            Exame da Vítima, Terapêutica e Observações
                         </div>
                         <div className="event-form" style={{ flexGrow: 1 }}>
 
                             {/* Sinais e Sintomas */}
-                            <SinaisSintomasComponent />
+                            <SinaisSintomasComponent formData={formData} handleChange={handleChange} />
 
-                            {/* RCP */}
-                            <RCPComponent />
-
-                            {/* VA / Ventilação */}
-                            <VentilacaoComponent />
-
-                            {/* Circulação */}
-                            <CirculacaoComponent />
-
-                            {/* Protocolos */}
-                            <ProtocolosComponent />
-
-                            {/* Escalas */}
-                            <EscalasComponent />
-
-                        </div>
-                    </div>
-
-
-                    <div style={{ display: 'flex', alignItems: 'stretch' }}>
-                        {/* Vertical Column with "Ocorrência" */}
-                        <div style={{
-                            width: '25px',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            writingMode: 'vertical-lr',
-                            textAlign: 'center',
-                            backgroundColor: '#99CCFF',  // Optional background for visual separation
-                            padding: '10px',
-                            fontWeight: 'bold',
-                            flexShrink: 0,    // Prevents the column from shrinking,
-                            marginBottom: "25px",
-                            transform: 'rotate(180deg)'
-                        }}>
-                            Observações
-                        </div>
-                        <div className="event-form" style={{ flexGrow: 1 }}>
+                            <table style={styles.table}>
+                                <thead>
+                                    <tr>
+                                        <th style={styles.th}>Farmacologia</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style={styles.td}>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth
+                                                multiline
+                                                rows={5}
+                                            />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
 
                             <table style={styles.table}>
                                 <thead>
@@ -526,6 +454,44 @@ function VerbeteINEM() {
                                     </tr>
                                 </tbody>
                             </table>
+
+                        </div>
+                    </div>
+
+                    {/* Exame da Vítima, Procedimentos e Terapêutica */}
+                    <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                        <div style={{
+                            width: '25px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            writingMode: 'vertical-lr',
+                            textAlign: 'center',
+                            backgroundColor: '#99CCFF',
+                            padding: '10px',
+                            fontWeight: 'bold',
+                            flexShrink: 0,
+                            marginBottom: "25px",
+                            transform: 'rotate(180deg)'
+                        }}>
+                            Procedimentos
+                        </div>
+                        <div className="event-form" style={{ flexGrow: 1 }}>
+
+                            {/* RCP */}
+                            <RCPComponent />
+
+                            {/* VA / Ventilação */}
+                            <VentilacaoComponent formData={formData} handleChange={handleChange} />
+
+                            {/* Circulação */}
+                            <CirculacaoComponent formData={formData} handleChange={handleChange} />
+
+                            {/* Protocolos */}
+                            <ProtocolosComponent />
+
+                            {/* Escalas */}
+                            <EscalasComponent formData={formData} handleChange={handleChange} />
 
                             <table style={styles.table}>
                                 <thead>
@@ -570,12 +536,6 @@ function VerbeteINEM() {
                         </div>
                     </div>
 
-                    {/* Add other input fields as needed 
-                    <Button type="submit" variant="contained" color="primary">
-                        Guardar No Dispositivo
-                    </Button>
-                    */}
-
                     <Grid item xs={12} md={8}>
                         <Grid container spacing={2} justifyContent="center">
                             <Grid item xs={12} sm={5}>
@@ -584,7 +544,7 @@ function VerbeteINEM() {
                                     color="primary"
                                     fullWidth
                                     sx={{ height: 60 }}
-                                    onClick={handleSubmit}>
+                                    onClick={saveToDevice}>
                                     Guardar no dispositivo
                                     <DownloadIcon sx={{ marginRight: 1 }} /> {/* Download icon */}
                                 </Button>
@@ -603,6 +563,72 @@ function VerbeteINEM() {
                         </Grid>
                     </Grid>
 
+                    {isUploading && (
+                        <Box
+                            sx={{
+                                position: "fixed",
+                                top: 0,
+                                left: 0,
+                                width: "100%",
+                                height: "100%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                backgroundColor: "rgba(0, 0, 0, 0.7)", // Dark overlay
+                                zIndex: 1300, // Ensure it's above other elements
+                            }}
+                        >
+                            <Card
+                                sx={{
+                                    padding: 4,
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    backgroundColor: "white",
+                                    borderRadius: "16px",
+                                    boxShadow: 5,
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        position: "relative",
+                                        display: "inline-flex",
+                                        width: "150px",
+                                        height: "150px",
+                                    }}
+                                >
+                                    <CircularProgress
+                                        variant="determinate"
+                                        value={uploadProgress}
+                                        size={150}
+                                        thickness={5}
+                                    />
+                                    <Box
+                                        sx={{
+                                            top: 0,
+                                            left: 0,
+                                            bottom: 0,
+                                            right: 0,
+                                            position: "absolute",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                        }}
+                                    >
+                                        <Typography variant="h6" component="div" color="text.secondary">
+                                            {`${uploadProgress}%`}
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                                <Typography variant="body1" sx={{ marginTop: 2 }}>
+                                    A enviar para Google Drive, por favor aguarde...
+                                </Typography>
+                            </Card>
+                        </Box>
+                    )}
+
+
                 </form>
             </div>
 
@@ -616,76 +642,6 @@ function VerbeteINEM() {
 }
 
 const styles = {
-    container: {
-        marginLeft: 15,
-        marginRight: 15,
-        flex: 1,
-        backgroundColor: 'white',
-        paddingTop: 25,
-        paddingBottom: 25,
-        paddingLeft: 15,
-        paddingRight: 15,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'stretch',
-    },
-    rowInfo: {
-        display: 'flex',
-        flexDirection: 'row',
-        marginBottom: 15,
-        justifyContent: 'space-between',
-        width: '100%',
-    },
-    inputGroup: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center', // Ensure the label and input are vertically aligned
-        flex: 1, // Let it grow to fill available space (you can adjust the flex value for custom widths)
-        gap: '10px', // Optional gap between label and input
-    },
-    column: {
-        display: 'flex',
-        flexDirection: 'column',
-        flex: 1,
-        marginRight: 15,
-    },
-    infoProp: {
-        fontSize: 18,
-        paddingBottom: 10,
-        textAlign: "left",
-        fontWeight: "bold",
-        marginBottom: 5,
-    },
-    input: {
-        height: 50,
-        width: '100%',
-        borderColor: 'gray',
-        borderWidth: 1,
-        borderRadius: 10,
-        paddingHorizontal: 10,
-        marginTop: 5,
-        marginBottom: 15
-    },
-    rowButton: {
-        display: 'flex',
-        justifyContent: 'center',
-        marginTop: 25,
-    },
-    button_SAVE: {
-        width: "100%",
-        height: 75,
-        backgroundColor: '#99FF99',
-        borderRadius: 10,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 25,
-    },
-    buttonText: {
-        color: '#000000',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
     table: {
         width: '100%',
         borderCollapse: 'collapse',
@@ -711,64 +667,6 @@ const styles = {
         border: '1px solid #ddd',
         textAlign: 'center',
         fontSize: '12px',
-    },
-    formContainer: {
-        padding: '20px',
-        fontFamily: 'Arial, sans-serif',
-    },
-    formSection: {
-        marginBottom: '20px',
-    },
-    sectionTitle: {
-        marginBottom: '10px',
-        fontWeight: 'bold',
-        textTransform: 'uppercase',
-        fontSize: '16px',
-    },
-    checkboxSection: {
-        border: '1px solid #ccc',
-        padding: '10px',
-        borderRadius: '4px',
-        marginBottom: '20px',
-        backgroundColor: '#f9f9f9',
-    },
-    checkboxLabel: {
-        display: 'flex',
-        alignItems: 'center',
-        marginBottom: '8px',
-    },
-    checkboxInput: {
-        marginRight: '10px',
-    },
-    bodyDiagramContainer: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        border: '1px solid #ccc',
-        height: '250px',
-        marginTop: '10px',
-    },
-    formField: {
-        marginBottom: '10px',
-    },
-    medicationSection: {
-        marginTop: '20px',
-    },
-    medicationFields: {
-        display: 'flex',
-        gap: '15px',
-        marginTop: '10px',
-    },
-    tableContainer: {
-        border: '1px solid #ccc',
-        padding: '20px',
-        backgroundColor: '#f9f9f9',
-        marginTop: '20px',
-    },
-    '@media (max-width: 768px)': {
-        medicationFields: {
-            flexDirection: 'column',
-        },
     },
 };
 

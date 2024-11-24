@@ -33,10 +33,10 @@ const OcorrenciaComponent = ({ formData, handleChange}) => {
                     <div style={styles.inputGroup}>
                         <label style={{ paddingLeft: '15px' }}>Nº Evento</label>
                         <TextField
-                            name="nr_vitimas"
+                            name="nr_evento"
                             variant="outlined"
                             fullWidth
-                            value={formData.numero_codu}
+                            value={formData.nr_evento}
                             onChange={handleChange}
                         />
                     </div>
@@ -52,13 +52,13 @@ const OcorrenciaComponent = ({ formData, handleChange}) => {
                 </div>
 
                 <div style={styles.rowInfo}>
-                    <div style={{ ...styles.inputGroup, flex: 2 }}>
-                        <label>Nº Vítimas</label>
+                    <div style={{ ...styles.inputGroup, flex: 4 }}>
+                        <label>Motivo</label>
                         <TextField
-                            name="nr_vitimas"
+                            name="motivo"
                             variant="outlined"
                             fullWidth
-                            value={formData.nr_vitimas}
+                            value={formData.motivo}
                             onChange={handleChange}
                         />
                     </div>

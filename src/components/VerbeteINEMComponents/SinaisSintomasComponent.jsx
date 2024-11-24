@@ -1,8 +1,7 @@
 import React from 'react';
 import { TextField, FormGroup, FormControlLabel, Checkbox, Card, CardContent, formControlClasses } from '@mui/material';
 
-const SinaisSintomasComponent = ({
-}) => {
+const SinaisSintomasComponent = ({ formData, handleChange }) => {
     return (
         <table style={{ ...styles.table, marginTop: '10px' }}>
             <thead>
@@ -14,10 +13,13 @@ const SinaisSintomasComponent = ({
                 <tr>
                     <td style={styles.td}>
                         <TextField
+                            name="sinais_sintomas"
                             variant="outlined"
                             fullWidth
                             multiline
                             rows={5}
+                            value={formData.sinais_sintomas}
+                            onChange={handleChange}
                         />
                     </td>
                 </tr>
