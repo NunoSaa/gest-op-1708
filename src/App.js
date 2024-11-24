@@ -16,6 +16,7 @@ import RelatorioFinal from './components/RelatorioFinal';
 import RecordPositAudio from './components/RecordPositAudio';
 import TakePicturePosit from './components/TakePicturePosit';
 import InserirKms from './components/InserirKms'
+import OcorrenciasDashboad from './components/OcorrenciasDashboard/OcorrenciasDashboard';
 import ProtectedRoute from './components/ProtectedRoute'; // Import ProtectedRoute
 
 const isAuthenticated = () => {
@@ -160,6 +161,14 @@ function App() {
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated()}>
               <InserirKms />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated()}>
+              <OcorrenciasDashboad />
             </ProtectedRoute>
           }
         />

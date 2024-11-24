@@ -24,7 +24,7 @@ function Login({ history }) {
     let navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault(); 
+        e.preventDefault();
         setLoading(true);
         try {
             const response = await axios.post('https://preventech-proxy-service.onrender.com/api/login/authentication', { username, password });
@@ -37,17 +37,22 @@ function Login({ history }) {
                 }
             } else {
                 // Assuming your API returns a token upon successful login
-                navigate('/homepage');
+                //navigate('/homepage');
                 if (response.data.user.role === 'admin') {
                     localStorage.setItem('tokenAdmin', response.data.token);
                     localStorage.setItem('username', response.data.user.username);
-
                     window.location.href = '/adminHomePage';
+                    
                 } else if (response.data.user.role === 'user') {
                     localStorage.setItem('token', response.data.token);
                     localStorage.setItem('username', response.data.user.username);
-
                     window.location.href = '/homepage';
+
+                } else if (response.data.user.role === 'dashboard') {
+                    localStorage.setItem('token', response.data.token);
+                    localStorage.setItem('username', response.data.user.username);
+
+                    window.location.href = '/dashboard';
                 }
             }
         } catch (error) {
@@ -71,8 +76,8 @@ function Login({ history }) {
             <div style={styles.title}>Bombeiros Vila Pouca de Aguiar</div>
             <div style={styles.title2}>Entrar</div>
             <div style={styles.title1}>Olá. Bem Vindo!</div>
-            <div style={styles.formContainer}> 
-                <div className="mb-4 flex" style={styles.inputContainer}> 
+            <div style={styles.formContainer}>
+                <div className="mb-4 flex" style={styles.inputContainer}>
                     <TextField
                         style={styles.inputLogin}
                         id="standard-basic"
@@ -80,7 +85,7 @@ function Login({ history }) {
                         variant="standard"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        onKeyDown={handleKeyDown} 
+                        onKeyDown={handleKeyDown}
                     />
                     <div style={{ position: 'relative' }}>
                         <TextField
@@ -91,7 +96,7 @@ function Login({ history }) {
                             variant="standard"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            onKeyDown={handleKeyDown} 
+                            onKeyDown={handleKeyDown}
                         />
                         <span style={styles.icon} onClick={handleShowPassword}>
                             <IconKit className="absolute" icon={showPassword ? eye : eyeOff} size={24} />
