@@ -29,6 +29,9 @@ import DownloadIcon from '@mui/icons-material/Download'; // Download icon for sa
 import UploadIcon from '@mui/icons-material/Upload';
 import { gapi } from 'gapi-script';
 import Utils from '../utils/utils.js';
+import FarmacologiaComponent from './VerbeteINEMComponents/FarmacologiaComponent.jsx';
+import NaoTransporteComponent from './VerbeteINEMComponents/NaoTransporteComponent.jsx';
+import TransporteComponent from './VerbeteINEMComponents/TransporteComponent.jsx';
 
 
 function VerbeteINEM() {
@@ -117,6 +120,14 @@ function VerbeteINEM() {
         ciculacao_cinto: '',
         ciculacao_acesso: '',
 
+        //Protocolos
+        protocolos_imo: '',
+        protocolos_avc: '',
+        protocolos_coronaria: '',
+        protocolos_sepsis: '',
+        protocolos_trauma: '',
+        protocolos_pcr: '',
+
         //Escalas
         escalas_cincinatti: '',
         escalas_proacs: '',
@@ -124,7 +135,44 @@ function VerbeteINEM() {
         escalas_mgap: '',
         escalas_race: '',
 
+        //Não Transporte
+        n_transporte_abandonou: '',
+        n_transporte_medica: '',
+        n_transporte_morte: '',
+        n_transporte_desativacao: '',
+        recusa_proprio: '',
+        recusa_representante: '',
+        recusa_avaliacao: '',
+        recusa_tratamento: '',
+
+        //Transporte
+        transporte_primario: '',
+        transporte_secundario: '',
+        acompanhamento_medico: '',
+        transporte_unidade_origem: '',
+        transporte_nr_processo_origem: '',
+        transporte_unidade_destino: '',
+        transporte_nr_processo_destino: '',
+        transporte_responsavel_meio: '',
+        transporte_nr_profissional: '',
     });
+
+    // Load data from localStorage when the component mounts
+    useEffect(() => {
+        const savedData = localStorage.getItem('VerbeteData');
+        if (savedData) {
+            updateFormData(JSON.parse(savedData)); // Load saved data
+        }
+    }, []); // Empty dependency array ensures this runs only once on mount
+
+    // Save formData to localStorage every minute
+    useEffect(() => {
+        const saveInterval = setInterval(() => {
+            localStorage.setItem('VerbeteData', JSON.stringify(formData));
+        }, 60000); // 60000ms = 1 minute
+
+        return () => clearInterval(saveInterval); // Clear interval on component unmount
+    }, [formData]); // Dependency ensures it tracks the latest `formData`
 
     // Load data from localStorage when the component mounts
     useEffect(() => {
@@ -163,8 +211,7 @@ function VerbeteINEM() {
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target; // Destructure event
         const isNascimento = name === 'nascimento';
-        const isSexoM = name === 'sexoM';
-        const isSexoF = name === 'sexoF';
+        const isSexo = name === 'sexoM' || name === 'sexoF';
 
         updateFormData((prevFormData) => {
             let updatedData = { ...prevFormData };
@@ -172,27 +219,21 @@ function VerbeteINEM() {
             if (isNascimento) {
                 // Handle 'nascimento' field
                 if (value) {
-
-                    const birthDate = new Date(value); // Convert string value to Date
-                    const day = birthDate.getDate().toString().padStart(2, '0');
-                    const month = (birthDate.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed
-                    const year = birthDate.getFullYear();
-
-                    // Update date parts
-                    updatedData.dia_1 = day.toString();
-                    updatedData.mes_1 = month.toString();
-                    updatedData.ano_1 = year.toString();
-
-                    // Calculate age
-                    const calculatedAge = Utils.calculateAge(birthDate);
-                    updatedData.idade = calculatedAge.toString(); // Convert to string
+                    const birthDate = new Date(value);
+                    if (!isNaN(birthDate)) {
+                        updatedData.dia_1 = birthDate.getDate().toString().padStart(2, '0');
+                        updatedData.mes_1 = (birthDate.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed
+                        updatedData.ano_1 = birthDate.getFullYear().toString();
+                        updatedData.idade = Utils.calculateAge(birthDate).toString();
+                    }
                 }
-            } else if (isSexoM || isSexoF) {
+            } else if (isSexo) {
                 // Handle 'sexoM' or 'sexoF'
-                updatedData.sexoM = checked ? (isSexoM ? 'X' : '') : '';
-                updatedData.sexoF = checked ? (isSexoF ? 'X' : '') : '';
-            } else {
-                // General update for other fields
+                updatedData.sexoM = name === 'sexoM' ? (checked ? 'X' : '') : '';
+                updatedData.sexoF = name === 'sexoF' ? (checked ? 'X' : '') : '';
+            }
+            else {
+                // General field update
                 updatedData[name] = type === 'checkbox' ? (checked ? 'X' : '') : value;
             }
 
@@ -266,6 +307,7 @@ function VerbeteINEM() {
             xhr.onload = () => {
                 if (xhr.status === 200) {
                     alert('Ficheiro enviado com sucesso para o Google Drive!');
+                    localStorage.removeItem("VerbeteData");
                     setIsUploading(false); // Stop spinner
                     setUploadProgress(0); // Reset progress
                 } else {
@@ -415,25 +457,8 @@ function VerbeteINEM() {
                             {/* Sinais e Sintomas */}
                             <SinaisSintomasComponent formData={formData} handleChange={handleChange} />
 
-                            <table style={styles.table}>
-                                <thead>
-                                    <tr>
-                                        <th style={styles.th}>Farmacologia</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td style={styles.td}>
-                                            <TextField
-                                                variant="outlined"
-                                                fullWidth
-                                                multiline
-                                                rows={5}
-                                            />
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            {/* Farmacologia */}
+                            <FarmacologiaComponent formData={formData} handleChange={handleChange} />
 
                             <table style={styles.table}>
                                 <thead>
@@ -488,50 +513,16 @@ function VerbeteINEM() {
                             <CirculacaoComponent formData={formData} handleChange={handleChange} />
 
                             {/* Protocolos */}
-                            <ProtocolosComponent />
+                            <ProtocolosComponent formData={formData} handleChange={handleChange} />
 
                             {/* Escalas */}
                             <EscalasComponent formData={formData} handleChange={handleChange} />
 
-                            <table style={styles.table}>
-                                <thead>
-                                    <tr>
-                                        <th style={styles.th}>Não Transporte</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td style={styles.td}>
-                                            <TextField
-                                                variant="outlined"
-                                                fullWidth
-                                                multiline
-                                                rows={1}
-                                            />
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            {/* Não Transporte */}
+                            <NaoTransporteComponent formData={formData} handleChange={handleChange} />
 
-                            <table style={styles.table}>
-                                <thead>
-                                    <tr>
-                                        <th style={styles.th}>Transporte</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td style={styles.td}>
-                                            <TextField
-                                                variant="outlined"
-                                                fullWidth
-                                                multiline
-                                                rows={1}
-                                            />
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            {/* Transporte */}
+                            <TransporteComponent formData={formData} handleChange={handleChange} />
 
                         </div>
                     </div>

@@ -10,15 +10,15 @@ const RCPComponent = () => {
                     <th style={styles.th} colSpan={9}>RCP</th>
                 </tr>
                 <tr>
-                    <th style={styles.th}>Presenciada</th>
-                    <th style={styles.th}>SBV / DAE</th>
-                    <th style={styles.th}>SIV / SAV</th>
-                    <th style={styles.th}>1º Ritmo</th>
-                    <th style={styles.th}>Nº Choques</th>
-                    <th style={styles.th}>Recup.</th>
-                    <th style={styles.th}>Susp.</th>
-                    <th style={styles.th}>C. Mecânicas</th>
-                    <th style={styles.th}>Não realizado</th>
+                    <th style={styles.th_1}>Presenciada</th>
+                    <th style={styles.th_1}>SBV / DAE</th>
+                    <th style={styles.th_1}>SIV / SAV</th>
+                    <th style={styles.th_1}>1º Ritmo</th>
+                    <th style={styles.th_1}>Nº Choques</th>
+                    <th style={styles.th_1}>Recup.</th>
+                    <th style={styles.th_1}>Susp.</th>
+                    <th style={styles.th_1}>C. Mecânicas</th>
+                    <th style={styles.th_1}>Não realizado</th>
                 </tr>
             </thead>
             <tbody>
@@ -142,6 +142,14 @@ const styles = {
     },
     th: {
         backgroundColor: '#0065ad', // Blue color for headers
+        color: 'white',
+        padding: '10px',
+        border: '1px solid #ddd',
+        textAlign: 'center',
+        fontSize: '12px',
+    },
+    th_1: {
+        backgroundColor: '#3F9CFA', // Blue color for headers
         color: 'white',
         padding: '10px',
         border: '1px solid #ddd',

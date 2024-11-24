@@ -1,8 +1,7 @@
 import React from 'react';
 import { TextField, FormGroup, FormControlLabel, Checkbox, Card, CardContent, formControlClasses } from '@mui/material';
 
-const ProtocolosComponent = ({
-}) => {
+const ProtocolosComponent = ({ formData, handleChange }) => {
     return (
         <table style={{ ...styles.table, marginTop: '10px' }}>
             <thead>
@@ -15,50 +14,68 @@ const ProtocolosComponent = ({
                     <table style={styles.table}>
                         <thead>
                             <tr>
-                                <th style={styles.th}>Imobilização</th>
-                                <th style={styles.th}>VV AVC</th>
-                                <th style={styles.th}>VV Coronária</th>
-                                <th style={styles.th}>VV Sepsís</th>
-                                <th style={styles.th}>VV Trauma</th>
-                                <th style={styles.th}>VV PCR</th>
+                                <th style={styles.th_1}>Imobilização</th>
+                                <th style={styles.th_1}>VV AVC</th>
+                                <th style={styles.th_1}>VV Coronária</th>
+                                <th style={styles.th_1}>VV Sepsís</th>
+                                <th style={styles.th_1}>VV Trauma</th>
+                                <th style={styles.th_1}>VV PCR</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td style={styles.td}>
                                     <Checkbox
-                                        name="presenciada"
-                                        className="custom-checkbox"
+                                        name="protocolos_imo"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData.protocolos_imo}
+                                        onChange={handleChange}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
-                                        name="presenciada"
-                                        className="custom-checkbox"
+                                        name="protocolos_avc"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData.protocolos_avc}
+                                        onChange={handleChange}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
-                                        name="presenciada"
-                                        className="custom-checkbox"
+                                        name="protocolos_coronaria"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData.protocolos_coronaria}
+                                        onChange={handleChange}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
-                                        name="presenciada"
-                                        className="custom-checkbox"
+                                        name="protocolos_sepsis"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData.protocolos_sepsis}
+                                        onChange={handleChange}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
-                                        name="presenciada"
-                                        className="custom-checkbox"
+                                        name="protocolos_trauma"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData.protocolos_trauma}
+                                        onChange={handleChange}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
-                                        name="presenciada"
-                                        className="custom-checkbox"
+                                        name="protocolos_pcr"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData.protocolos_pcr}
+                                        onChange={handleChange}
                                     />
                                 </td>
                             </tr>
@@ -148,6 +165,14 @@ const styles = {
     },
     th: {
         backgroundColor: '#0065ad', // Blue color for headers
+        color: 'white',
+        padding: '10px',
+        border: '1px solid #ddd',
+        textAlign: 'center',
+        fontSize: '12px',
+    },
+    th_1: {
+        backgroundColor: '#3F9CFA', // Blue color for headers
         color: 'white',
         padding: '10px',
         border: '1px solid #ddd',

@@ -31,7 +31,7 @@ const OcorrenciaComponent = ({ formData, handleChange}) => {
                     </div>
 
                     <div style={styles.inputGroup}>
-                        <label style={{ paddingLeft: '15px' }}>Nº Evento</label>
+                        <label style={{ paddingLeft: '15px' }}>Nº CODU</label>
                         <TextField
                             name="nr_evento"
                             variant="outlined"

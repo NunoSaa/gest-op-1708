@@ -14,13 +14,13 @@ const VentilacaoComponent = ({ formData, handleChange }) => {
                     <table style={styles.table}>
                         <thead>
                             <tr>
-                                <th style={styles.th}>Desobstrução</th>
-                                <th style={styles.th}>T. Orofaríngeo</th>
-                                <th style={styles.th}>T. Laríngeo</th>
-                                <th style={styles.th}>Másc. Laríngea</th>
-                                <th style={styles.th}>T. Endontraqueal</th>
-                                <th style={styles.th}>Vent. Mecânica</th>
-                                <th style={styles.th}>CPAP</th>
+                                <th style={styles.th_1}>Desobstrução</th>
+                                <th style={styles.th_1}>T. Orofaríngeo</th>
+                                <th style={styles.th_1}>T. Laríngeo</th>
+                                <th style={styles.th_1}>Másc. Laríngea</th>
+                                <th style={styles.th_1}>T. Endontraqueal</th>
+                                <th style={styles.th_1}>Vent. Mecânica</th>
+                                <th style={styles.th_1}>CPAP</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -175,6 +175,14 @@ const styles = {
     },
     th: {
         backgroundColor: '#0065ad', // Blue color for headers
+        color: 'white',
+        padding: '10px',
+        border: '1px solid #ddd',
+        textAlign: 'center',
+        fontSize: '12px',
+    },
+    th_1: {
+        backgroundColor: '#3F9CFA', // Blue color for headers
         color: 'white',
         padding: '10px',
         border: '1px solid #ddd',

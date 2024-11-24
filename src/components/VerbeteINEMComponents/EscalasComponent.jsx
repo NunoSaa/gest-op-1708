@@ -14,11 +14,11 @@ const EscalasComponent = ({ formData, handleChange }) => {
                     <table style={styles.table}>
                         <thead>
                             <tr>
-                                <th style={styles.th}>Cincinatti</th>
-                                <th style={styles.th}>PROACS</th>
-                                <th style={styles.th}>RTS</th>
-                                <th style={styles.th}>MGAP</th>
-                                <th style={styles.th}>RACE</th>
+                                <th style={styles.th_1}>Cincinatti</th>
+                                <th style={styles.th_1}>PROACS</th>
+                                <th style={styles.th_1}>RTS</th>
+                                <th style={styles.th_1}>MGAP</th>
+                                <th style={styles.th_1}>RACE</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -155,6 +155,14 @@ const styles = {
     },
     th: {
         backgroundColor: '#0065ad', // Blue color for headers
+        color: 'white',
+        padding: '10px',
+        border: '1px solid #ddd',
+        textAlign: 'center',
+        fontSize: '12px',
+    },
+    th_1: {
+        backgroundColor: '#3F9CFA', // Blue color for headers
         color: 'white',
         padding: '10px',
         border: '1px solid #ddd',

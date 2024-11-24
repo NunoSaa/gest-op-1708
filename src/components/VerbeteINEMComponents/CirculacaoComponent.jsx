@@ -14,12 +14,12 @@ const CirculacaoComponent = ({ formData, handleChange }) => {
                     <table style={styles.table}>
                         <thead>
                             <tr>
-                                <th style={styles.th}>Controlo Temp.</th>
-                                <th style={styles.th}>Controlo Hemo.</th>
-                                <th style={styles.th}>Penso</th>
-                                <th style={styles.th}>Torniquete</th>
-                                <th style={styles.th}>Cinto Pélvico</th>
-                                <th style={styles.th}>Acesso Venoso</th>
+                                <th style={styles.th_1}>Controlo Temp.</th>
+                                <th style={styles.th_1}>Controlo Hemo.</th>
+                                <th style={styles.th_1}>Penso</th>
+                                <th style={styles.th_1}>Torniquete</th>
+                                <th style={styles.th_1}>Cinto Pélvico</th>
+                                <th style={styles.th_1}>Acesso Venoso</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -165,6 +165,14 @@ const styles = {
     },
     th: {
         backgroundColor: '#0065ad', // Blue color for headers
+        color: 'white',
+        padding: '10px',
+        border: '1px solid #ddd',
+        textAlign: 'center',
+        fontSize: '12px',
+    },
+    th_1: {
+        backgroundColor: '#3F9CFA', // Blue color for headers
         color: 'white',
         padding: '10px',
         border: '1px solid #ddd',
