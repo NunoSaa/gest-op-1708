@@ -32,6 +32,7 @@ import Utils from '../utils/utils.js';
 import FarmacologiaComponent from './VerbeteINEMComponents/FarmacologiaComponent.jsx';
 import NaoTransporteComponent from './VerbeteINEMComponents/NaoTransporteComponent.jsx';
 import TransporteComponent from './VerbeteINEMComponents/TransporteComponent.jsx';
+import ObservacoesComponent from './VerbeteINEMComponents/ObservacoesComponent.jsx';
 
 
 function VerbeteINEM() {
@@ -46,6 +47,7 @@ function VerbeteINEM() {
     const CLIENT_ID = '214123389323-3c7npk6e2hasbi2jt3pnrg1jqvjtm92m.apps.googleusercontent.com';  // Replace with your OAuth Client ID
     const API_KEY = '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';  // Replace with your Google Cloud API Key
     const SCOPES = 'https://www.googleapis.com/auth/drive.file'; // Scope to upload file
+
 
     useEffect(() => {
         function start() {
@@ -69,10 +71,14 @@ function VerbeteINEM() {
     //Buld the FileName
     let fileName = item.numero + '_VERBETE_INEM_' + currentDate + '_' + currentHour + '.pdf';
 
+    let transporte_unidade_destino_tmp = '';
+    let [transporte_unidade_origem_tmp, setTransporteUnidadeOrigemTmp] = React.useState('na'); // Default to 'na'
+
     // State to hold form data
     const [formData, updateFormData] = useState({
         //ocorrencia
         entidade: 'B. V. Vila Pouca de Aguiar',
+        motivo: '',
         local: '',
         freguesia: '',
         hora_local: '',
@@ -92,6 +98,10 @@ function VerbeteINEM() {
         sexoM: '',
         sexoF: '',
 
+        //Avaliacao
+        avaliacao_hora: '',
+        avaliacao_avds: '',
+
         //Historial Clinico
         circunstancias: '',
         historico: '',
@@ -102,6 +112,31 @@ function VerbeteINEM() {
 
         //Sinais e Sintomas
         sinais_sintomas: '',
+
+        //Farmacologia
+        farmacologia_hora: '',
+        farmacologia_farmaco: '',
+        farmacologia_dose: '',
+        farmacologia_via: '',
+        farmacologia_hora1: '',
+        farmacologia_farmaco1: '',
+        farmacologia_dose1: '',
+        farmacologia_via1: '',
+        farmacologia_hora2: '',
+        farmacologia_farmaco2: '',
+        farmacologia_dose2: '',
+        farmacologia_via2: '',
+        farmacologia_hora3: '',
+        farmacologia_farmaco3: '',
+        farmacologia_dose3: '',
+        farmacologia_via3: '',
+        farmacologia_hora4: '',
+        farmacologia_farmaco4: '',
+        farmacologia_dose4: '',
+        farmacologia_via4: '',
+
+        //Observacoes
+        observacoes: '',
 
         //VA / Ventilacao
         ventilacao_desobstrucao: '',
@@ -212,9 +247,19 @@ function VerbeteINEM() {
         const { name, value, type, checked } = e.target; // Destructure event
         const isNascimento = name === 'nascimento';
         const isSexo = name === 'sexoM' || name === 'sexoF';
+        const isTransporteUnidadeOrigem = name === 'transporte_unidade_origem';
+        const isTransporteUnidadeDestino = name === 'transporte_unidade_destino';
+
+        const transporteMapping = {
+            ch_vila_real: 'C.H. Vila Real',
+            ch_chaves: 'C.H. Chaves',
+            na: 'N/A',
+        };
 
         updateFormData((prevFormData) => {
-            let updatedData = { ...prevFormData };
+            let updatedData = { ...prevFormData, 
+                transporte_unidade_origem: transporteMapping[transporte_unidade_origem_tmp] || transporte_unidade_origem_tmp};
+            
 
             if (isNascimento) {
                 // Handle 'nascimento' field
@@ -232,6 +277,24 @@ function VerbeteINEM() {
                 updatedData.sexoM = name === 'sexoM' ? (checked ? 'X' : '') : '';
                 updatedData.sexoF = name === 'sexoF' ? (checked ? 'X' : '') : '';
             }
+            else if (isTransporteUnidadeOrigem) {
+                // Update the local state for the raw value
+                setTransporteUnidadeOrigemTmp(value); // Raw value
+                console.log("Raw value:", value);
+            
+                // Update the mapped value in formData
+                updatedData.transporte_unidade_origem = transporteMapping[value] || value; // Mapped value
+                console.log("Mapped value:", updatedData.transporte_unidade_origem);
+            }
+            else if (isTransporteUnidadeDestino) {
+                transporte_unidade_destino_tmp = value; // Raw value
+                console.log(transporte_unidade_destino_tmp)
+                updatedData.transporte_unidade_destino = transporteMapping[value] || value; // Mapped value
+                console.log(updatedData.transporte_unidade_destino)
+            }
+            else if(name == 'circulacao_controlo_temp'){
+                updatedData.circulacao_controlo_temp = name === 'circulacao_controlo_temp' ? (checked ? 'X' : '') : '';
+            }
             else {
                 // General field update
                 updatedData[name] = type === 'checkbox' ? (checked ? 'X' : '') : value;
@@ -241,12 +304,48 @@ function VerbeteINEM() {
         });
     };
 
-    const saveToDevice = (e) => {
-        e.preventDefault(); // Prevent the default form submission behavior
+    const saveToDevice = async (e) => {
+        e.preventDefault(); // Prevent default form submission
 
-        console.log("formData before submission:", formData); // Log formData to check its state
-        const templateUrl = pdfFile; // Path to your PDF template
-        Utils.fillPdfTemplate(templateUrl, formData); // Pass entire formData object
+        try {
+            console.log("formData before submission:", formData); // Debugging
+            if (!pdfFile) {
+                throw new Error("PDF template path is missing.");
+            }
+
+            const templateUrl = pdfFile; // Path to your PDF template
+
+            // Ensure formData has necessary fields
+            if (!formData || Object.keys(formData).length === 0) {
+                throw new Error("formData is empty or invalid.");
+            }
+
+            // Call the function to generate the filled PDF
+            const generatedPdf = await Utils.fillPdfTemplate(templateUrl, formData);
+
+            // Check if the generatedPdf is valid
+            if (!generatedPdf) {
+                throw new Error("PDF generation failed.");
+            }
+
+            // Create a Blob from the generated PDF
+            const pdfBlob = new Blob([generatedPdf], { type: "application/pdf" });
+
+            // Create a download link
+            const downloadUrl = URL.createObjectURL(pdfBlob);
+            const link = document.createElement("a");
+            link.href = downloadUrl;
+            link.download = fileName; // Name for the downloaded file
+            document.body.appendChild(link); // Append the link to the body
+            link.click(); // Trigger the download
+            document.body.removeChild(link); // Clean up the DOM
+
+            console.log("PDF saved successfully.");
+            alert("PDF saved successfully.");
+        } catch (error) {
+            console.error("Error during PDF generation or save:", error);
+            alert("An error occurred while saving the PDF. Please try again.");
+        }
     };
 
     const handleBackClick = () => {
@@ -405,7 +504,7 @@ function VerbeteINEM() {
                             Avaliação
                         </div>
 
-                        <AvaliacaoComponent />
+                        <AvaliacaoComponent formData={formData} handleChange={handleChange}/>
                     </div>
 
                     {/* Historial Clinico */}
@@ -460,25 +559,7 @@ function VerbeteINEM() {
                             {/* Farmacologia */}
                             <FarmacologiaComponent formData={formData} handleChange={handleChange} />
 
-                            <table style={styles.table}>
-                                <thead>
-                                    <tr>
-                                        <th style={styles.th}>Observações</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td style={styles.td}>
-                                            <TextField
-                                                variant="outlined"
-                                                fullWidth
-                                                multiline
-                                                rows={5}
-                                            />
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <ObservacoesComponent formData={formData} handleChange={handleChange}/>
 
                         </div>
                     </div>

@@ -1,8 +1,22 @@
 import React from 'react';
 import { TextField, FormGroup, FormControlLabel, Checkbox, Card, CardContent, formControlClasses } from '@mui/material';
 
-const OcorrenciaComponent = ({ formData, handleChange}) => {
+const OcorrenciaComponent = ({ formData, handleChange }) => {
     const today = new Date().toLocaleDateString("pt-PT"); // Format as "DD/MM/YYYY"
+
+    const handleTimeChange = (e) => {
+        const { name, value } = e.target;
+
+        // Format the time to hh:mm
+        const formattedTime = value.slice(0, 5); // Extract first 5 characters (hh:mm)
+
+        handleChange({
+            target: {
+                name,
+                value: formattedTime, // Set the formatted time
+            },
+        });
+    };
 
     return (
         <div className="event-form" style={{ flexGrow: 1 }}>
@@ -106,51 +120,56 @@ const OcorrenciaComponent = ({ formData, handleChange}) => {
                     <div style={{ ...styles.inputGroup, flex: 2 }}>
                         <label style={{ paddingLeft: '0px' }}>Caminho do Local</label>
                         <TextField
-                            name="caminhoLocal"
+                            name="hora_local"
                             variant="outlined"
                             fullWidth
-                            value={formData.hora_local} // Assuming you want to manage this value
-                            onChange={handleChange} // Ensure this is handled correctly
+                            type="time" // Use time input type
+                            value={formData.hora_local || ''} // Set default value
+                            onChange={handleTimeChange} // Use custom handler
                         />
                     </div>
                     <div style={{ ...styles.inputGroup, flex: 2 }}>
                         <label style={{ paddingLeft: '15px' }}>Chegada à vitima</label>
                         <TextField
-                            name="chegadaVitima"
+                            name="hora_local"
                             variant="outlined"
                             fullWidth
-                            value={formData.hora_vitima} // Manage this state similarly
-                            onChange={handleChange}
+                            type="time" // Use time input type
+                            value={formData.hora_vitima || ''} // Set default value
+                            onChange={handleTimeChange} // Use custom handler
                         />
                     </div>
                     <div style={{ ...styles.inputGroup, flex: 2 }}>
                         <label style={{ paddingLeft: '15px' }}>Caminho U.Saúde</label>
                         <TextField
-                            name="caminhoUSaude"
+                            name="hora_local"
                             variant="outlined"
                             fullWidth
-                            value={formData.hora_caminho} // Manage this state similarly
-                            onChange={handleChange}
+                            type="time" // Use time input type
+                            value={formData.hora_caminho || ''} // Set default value
+                            onChange={handleTimeChange} // Use custom handler
                         />
                     </div>
                     <div style={{ ...styles.inputGroup, flex: 2 }}>
                         <label style={{ paddingLeft: '15px' }}>Chegada U.Saúde</label>
                         <TextField
-                            name="chegadaUSaude"
+                            name="hora_local"
                             variant="outlined"
                             fullWidth
-                            value={formData.hora_hospital} // Manage this state similarly
-                            onChange={handleChange}
+                            type="time" // Use time input type
+                            value={formData.hora_hospital || ''} // Set default value
+                            onChange={handleTimeChange} // Use custom handler
                         />
                     </div>
                     <div style={{ ...styles.inputGroup, flex: 2 }}>
                         <label style={{ paddingLeft: '15px' }}>Disponível</label>
                         <TextField
-                            name="disponivel"
+                            name="hora_local"
                             variant="outlined"
                             fullWidth
-                            value={formData.hora_disponivel} // Manage this state similarly
-                            onChange={handleChange}
+                            type="time" // Use time input type
+                            value={formData.hora_disponivel || ''} // Set default value
+                            onChange={handleTimeChange} // Use custom handler
                         />
                     </div>
                 </div>

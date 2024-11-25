@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextField, Checkbox, Select, MenuItem } from '@mui/material';
 
-const TransporteComponent = ({ formData, handleChange }) => {
+const TransporteComponent = ({ formData, transporte_unidade_origem_tmp, transporte_unidade_destino_tmp, handleChange }) => {
     return (
         <table style={{ ...styles.table, marginTop: '10px' }}>
             <thead>
@@ -59,7 +59,7 @@ const TransporteComponent = ({ formData, handleChange }) => {
                                     name="transporte_unidade_origem"
                                     variant="outlined"
                                     fullWidth
-                                    value={formData.transporte_unidade_origem || 'na'}
+                                    value={transporte_unidade_origem_tmp || ''}
                                     onChange={handleChange}
                                 >
                                     <MenuItem value="na">N/A</MenuItem>
@@ -89,7 +89,7 @@ const TransporteComponent = ({ formData, handleChange }) => {
                                     name="transporte_unidade_destino"
                                     variant="outlined"
                                     fullWidth
-                                    value={formData.transporte_unidade_destino || 'na'}
+                                    value={transporte_unidade_destino_tmp || 'na'}
                                     onChange={handleChange}
                                 >
                                     <MenuItem value="na">N/A</MenuItem>

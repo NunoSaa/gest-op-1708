@@ -6,7 +6,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 
-const AvaliacaoComponent = () => {
+const AvaliacaoComponent = ({ formData, handleChange }) => {
 
     const [age, setAge] = React.useState('');
     const [age1, setAge1] = React.useState('');
@@ -15,7 +15,21 @@ const AvaliacaoComponent = () => {
     const [open1, setOpen1] = React.useState(false);
     const [open2, setOpen2] = React.useState(false);
 
-    const handleChange = (event) => {
+    const handleTimeChange = (e) => {
+        const { name, value } = e.target;
+
+        // Format the time to hh:mm
+        const formattedTime = value.slice(0, 5); // Extract first 5 characters (hh:mm)
+
+        handleChange({
+            target: {
+                name,
+                value: formattedTime, // Set the formatted time
+            },
+        });
+    };
+
+    const handleAgeChange = (event) => {
         setAge(event.target.value);
     };
 
@@ -78,8 +92,13 @@ const AvaliacaoComponent = () => {
                     <tr>
                         <td style={styles.td}>
                             <TextField
+                                name="avaliacao_hora"
                                 variant="outlined"
-                                fullWidth />
+                                fullWidth
+                                type="time" // Use time input type
+                                value={formData.avaliacao_hora || ''} // Set default value
+                                onChange={handleTimeChange} // Use custom handler
+                            />
                         </td>
                         <td style={styles.td}>
                             <FormControl sx={{ s: 1, minWidth: 30 }}>
@@ -89,8 +108,8 @@ const AvaliacaoComponent = () => {
                                     open={open}
                                     onClose={handleClose}
                                     onOpen={handleOpen}
-                                    value={age}
-                                    onChange={handleChange}
+                                    value={formData.avaliacao_avds}
+                                    onChange={handleAgeChange}
                                     inputProps={{
                                         style: { height: '26px', display: 'flex', alignItems: 'center' },
                                     }}>

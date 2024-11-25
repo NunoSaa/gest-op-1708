@@ -2,6 +2,21 @@ import React from 'react';
 import { TextField, FormGroup, FormControlLabel, Checkbox, Card, CardContent, formControlClasses } from '@mui/material';
 
 const FarmacologiaComponent = ({ formData, handleChange }) => {
+
+    const handleTimeChange = (e) => {
+        const { name, value } = e.target;
+
+        // Format the time to hh:mm
+        const formattedTime = value.slice(0, 5); // Extract first 5 characters (hh:mm)
+
+        handleChange({
+            target: {
+                name,
+                value: formattedTime, // Set the formatted time
+            },
+        });
+    };
+
     return (
         <table style={{ ...styles.table, marginTop: '10px' }}>
             <thead>
@@ -25,189 +40,194 @@ const FarmacologiaComponent = ({ formData, handleChange }) => {
                                 <tr>
                                     <td style={styles.td}>
                                         <TextField
-                                            name="hora"
+                                            name="farmacologia_hora"
                                             variant="outlined"
                                             fullWidth
-                                            value={formData.hora}
-                                            onChange={handleChange}
+                                            type="time" // Use time input type
+                                            value={formData.farmacologia_hora || ''} // Set default value
+                                            onChange={handleTimeChange} // Use custom handler
                                         />
                                     </td>
                                     <td style={{ ...styles.td, width: '50%' }}> {/* Double-sized cell */}
                                         <TextField
-                                            name="farmaco"
+                                            name="farmacologia_farmaco"
                                             variant="outlined"
                                             fullWidth
-                                            value={formData.farmaco}
+                                            value={formData.farmacologia_farmaco}
                                             onChange={handleChange}
                                         />
                                     </td>
                                     <td style={styles.td}>
                                         <TextField
-                                            name="dose"
+                                            name="farmacologia_dose"
                                             variant="outlined"
                                             fullWidth
-                                            value={formData.dose}
+                                            value={formData.farmacologia_dose}
                                             onChange={handleChange}
                                         />
                                     </td>
                                     <td style={styles.td}>
                                         <TextField
-                                            name="via"
+                                            name="farmacologia_via"
                                             variant="outlined"
                                             fullWidth
-                                            value={formData.via}
+                                            value={formData.farmacologia_via}
                                             onChange={handleChange}
                                         />
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style={styles.td}>
+                                <td style={styles.td}>
                                         <TextField
-                                            name="hora"
+                                            name="farmacologia_hora1"
                                             variant="outlined"
                                             fullWidth
-                                            value={formData.hora}
-                                            onChange={handleChange}
+                                            type="time" // Use time input type
+                                            value={formData.farmacologia_hora1 || ''} // Set default value
+                                            onChange={handleTimeChange} // Use custom handler
                                         />
                                     </td>
                                     <td style={{ ...styles.td, width: '50%' }}> {/* Double-sized cell */}
                                         <TextField
-                                            name="farmaco"
+                                            name="farmacologia_farmaco1"
                                             variant="outlined"
                                             fullWidth
-                                            value={formData.farmaco}
+                                            value={formData.farmacologia_farmaco1}
                                             onChange={handleChange}
                                         />
                                     </td>
                                     <td style={styles.td}>
                                         <TextField
-                                            name="dose"
+                                            name="farmacologia_dose1"
                                             variant="outlined"
                                             fullWidth
-                                            value={formData.dose}
+                                            value={formData.farmacologia_dose1}
                                             onChange={handleChange}
                                         />
                                     </td>
                                     <td style={styles.td}>
                                         <TextField
-                                            name="via"
+                                            name="farmacologia_via1"
                                             variant="outlined"
                                             fullWidth
-                                            value={formData.via}
+                                            value={formData.farmacologia_via1}
                                             onChange={handleChange}
                                         />
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style={styles.td}>
+                                <td style={styles.td}>
                                         <TextField
-                                            name="hora"
+                                            name="farmacologia_hora2"
                                             variant="outlined"
                                             fullWidth
-                                            value={formData.hora}
-                                            onChange={handleChange}
+                                            type="time" // Use time input type
+                                            value={formData.farmacologia_hora2 || ''} // Set default value
+                                            onChange={handleTimeChange} // Use custom handler
                                         />
                                     </td>
                                     <td style={{ ...styles.td, width: '50%' }}> {/* Double-sized cell */}
                                         <TextField
-                                            name="farmaco"
+                                            name="farmacologia_farmaco2"
                                             variant="outlined"
                                             fullWidth
-                                            value={formData.farmaco}
+                                            value={formData.farmacologia_farmaco2}
                                             onChange={handleChange}
                                         />
                                     </td>
                                     <td style={styles.td}>
                                         <TextField
-                                            name="dose"
+                                            name="farmacologia_dose2"
                                             variant="outlined"
                                             fullWidth
-                                            value={formData.dose}
+                                            value={formData.farmacologia_dose2}
                                             onChange={handleChange}
                                         />
                                     </td>
                                     <td style={styles.td}>
                                         <TextField
-                                            name="via"
+                                            name="farmacologia_via2"
                                             variant="outlined"
                                             fullWidth
-                                            value={formData.via}
+                                            value={formData.farmacologia_via2}
                                             onChange={handleChange}
                                         />
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style={styles.td}>
+                                <td style={styles.td}>
                                         <TextField
-                                            name="hora"
+                                            name="farmacologia_hora3"
                                             variant="outlined"
                                             fullWidth
-                                            value={formData.hora}
-                                            onChange={handleChange}
+                                            type="time" // Use time input type
+                                            value={formData.farmacologia_hora3 || ''} // Set default value
+                                            onChange={handleTimeChange} // Use custom handler
                                         />
                                     </td>
                                     <td style={{ ...styles.td, width: '50%' }}> {/* Double-sized cell */}
                                         <TextField
-                                            name="farmaco"
+                                            name="farmacologia_farmaco3"
                                             variant="outlined"
                                             fullWidth
-                                            value={formData.farmaco}
+                                            value={formData.farmacologia_farmaco3}
                                             onChange={handleChange}
                                         />
                                     </td>
                                     <td style={styles.td}>
                                         <TextField
-                                            name="dose"
+                                            name="farmacologia_dose3"
                                             variant="outlined"
                                             fullWidth
-                                            value={formData.dose}
+                                            value={formData.farmacologia_dose3}
                                             onChange={handleChange}
                                         />
                                     </td>
                                     <td style={styles.td}>
                                         <TextField
-                                            name="via"
+                                            name="farmacologia_via3"
                                             variant="outlined"
                                             fullWidth
-                                            value={formData.via}
+                                            value={formData.farmacologia_via3}
                                             onChange={handleChange}
                                         />
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style={styles.td}>
+                                <td style={styles.td}>
                                         <TextField
-                                            name="hora"
+                                            name="farmacologia_hora4"
                                             variant="outlined"
                                             fullWidth
-                                            value={formData.hora}
-                                            onChange={handleChange}
+                                            type="time" // Use time input type
+                                            value={formData.farmacologia_hora4 || ''} // Set default value
+                                            onChange={handleTimeChange} // Use custom handler
                                         />
                                     </td>
                                     <td style={{ ...styles.td, width: '50%' }}> {/* Double-sized cell */}
                                         <TextField
-                                            name="farmaco"
+                                            name="farmacologia_farmaco4"
                                             variant="outlined"
                                             fullWidth
-                                            value={formData.farmaco}
+                                            value={formData.farmacologia_farmaco4}
                                             onChange={handleChange}
                                         />
                                     </td>
                                     <td style={styles.td}>
                                         <TextField
-                                            name="dose"
+                                            name="farmacologia_dose4"
                                             variant="outlined"
                                             fullWidth
-                                            value={formData.dose}
+                                            value={formData.farmacologia_dose4}
                                             onChange={handleChange}
                                         />
                                     </td>
                                     <td style={styles.td}>
                                         <TextField
-                                            name="via"
+                                            name="farmacologia_via4"
                                             variant="outlined"
                                             fullWidth
-                                            value={formData.via}
+                                            value={formData.farmacologia_via4}
                                             onChange={handleChange}
                                         />
                                     </td>
