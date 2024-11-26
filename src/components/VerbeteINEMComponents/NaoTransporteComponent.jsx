@@ -28,29 +28,61 @@ const NaoTransporteComponent = ({ formData, handleChange }) => {
                                     <td style={styles.td}>
                                         <Checkbox
                                             name="n_transporte_abandonou"
-                                            value={formData.n_transporte_abandonou}
-                                            onChange={handleChange}
+                                            checked={formData.n_transporte_abandonou === 'X'}
+                                            onChange={(e) => {
+                                                const isChecked = e.target.checked;
+                                                handleChange({
+                                                    target: {
+                                                        name: 'n_transporte_abandonou',
+                                                        value: isChecked ? 'X' : '',
+                                                    },
+                                                });
+                                            }}
                                         />
                                     </td>
                                     <td style={styles.td}>
                                         <Checkbox
                                             name="n_transporte_medica"
-                                            value={formData.n_transporte_medica}
-                                            onChange={handleChange}
+                                            checked={formData.n_transporte_medica === 'X'}
+                                            onChange={(e) => {
+                                                const isChecked = e.target.checked;
+                                                handleChange({
+                                                    target: {
+                                                        name: 'n_transporte_medica',
+                                                        value: isChecked ? 'X' : '',
+                                                    },
+                                                });
+                                            }}
                                         />
                                     </td>
                                     <td style={styles.td}>
-                                        <Checkbox
+                                         <Checkbox
                                             name="n_transporte_morte"
-                                            value={formData.n_transporte_morte}
-                                            onChange={handleChange}
+                                            checked={formData.n_transporte_morte === 'X'}
+                                            onChange={(e) => {
+                                                const isChecked = e.target.checked;
+                                                handleChange({
+                                                    target: {
+                                                        name: 'n_transporte_morte',
+                                                        value: isChecked ? 'X' : '',
+                                                    },
+                                                });
+                                            }}
                                         />
                                     </td>
                                     <td style={styles.td}>
                                         <Checkbox
                                             name="n_transporte_desativacao"
-                                            value={formData.n_transporte_desativacao}
-                                            onChange={handleChange}
+                                            checked={formData.n_transporte_desativacao === 'X'}
+                                            onChange={(e) => {
+                                                const isChecked = e.target.checked;
+                                                handleChange({
+                                                    target: {
+                                                        name: 'n_transporte_desativacao',
+                                                        value: isChecked ? 'X' : '',
+                                                    },
+                                                });
+                                            }}
                                         />
                                     </td>
                                 </tr>
@@ -79,29 +111,61 @@ const NaoTransporteComponent = ({ formData, handleChange }) => {
                                     <td style={styles.td}>
                                         <Checkbox
                                             name="recusa_proprio"
-                                            value={formData.recusa_proprio}
-                                            onChange={handleChange}
+                                            checked={formData.recusa_proprio === 'X'}
+                                            onChange={(e) => {
+                                                const isChecked = e.target.checked;
+                                                handleChange({
+                                                    target: {
+                                                        name: 'recusa_proprio',
+                                                        value: isChecked ? 'X' : '',
+                                                    },
+                                                });
+                                            }}
                                         />
                                     </td>
                                     <td style={styles.td}>
                                         <Checkbox
                                             name="recusa_representante"
-                                            value={formData.recusa_representante}
-                                            onChange={handleChange}
+                                            checked={formData.recusa_representante === 'X'}
+                                            onChange={(e) => {
+                                                const isChecked = e.target.checked;
+                                                handleChange({
+                                                    target: {
+                                                        name: 'recusa_representante',
+                                                        value: isChecked ? 'X' : '',
+                                                    },
+                                                });
+                                            }}
                                         />
                                     </td>
                                     <td style={styles.td}>
                                         <Checkbox
                                             name="recusa_avaliacao"
-                                            value={formData.recusa_avaliacao}
-                                            onChange={handleChange}
+                                            checked={formData.recusa_avaliacao === 'X'}
+                                            onChange={(e) => {
+                                                const isChecked = e.target.checked;
+                                                handleChange({
+                                                    target: {
+                                                        name: 'recusa_avaliacao',
+                                                        value: isChecked ? 'X' : '',
+                                                    },
+                                                });
+                                            }}
                                         />
                                     </td>
                                     <td style={styles.td}>
                                         <Checkbox
                                             name="recusa_tratamento"
-                                            value={formData.recusa_tratamento}
-                                            onChange={handleChange}
+                                            checked={formData.recusa_tratamento === 'X'}
+                                            onChange={(e) => {
+                                                const isChecked = e.target.checked;
+                                                handleChange({
+                                                    target: {
+                                                        name: 'recusa_tratamento',
+                                                        value: isChecked ? 'X' : '',
+                                                    },
+                                                });
+                                            }}
                                         />
                                     </td>
                                 </tr>

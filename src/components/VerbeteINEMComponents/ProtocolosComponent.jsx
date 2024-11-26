@@ -27,55 +27,91 @@ const ProtocolosComponent = ({ formData, handleChange }) => {
                                 <td style={styles.td}>
                                     <Checkbox
                                         name="protocolos_imo"
-                                        variant="outlined"
-                                        fullWidth
-                                        value={formData.protocolos_imo}
-                                        onChange={handleChange}
+                                        checked={formData.protocolos_imo === 'X'}
+                                        onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            handleChange({
+                                                target: {
+                                                    name: 'protocolos_imo',
+                                                    value: isChecked ? 'X' : '',
+                                                },
+                                            });
+                                        }}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
                                         name="protocolos_avc"
-                                        variant="outlined"
-                                        fullWidth
-                                        value={formData.protocolos_avc}
-                                        onChange={handleChange}
+                                        checked={formData.protocolos_avc === 'X'}
+                                        onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            handleChange({
+                                                target: {
+                                                    name: 'protocolos_avc',
+                                                    value: isChecked ? 'X' : '',
+                                                },
+                                            });
+                                        }}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
                                         name="protocolos_coronaria"
-                                        variant="outlined"
-                                        fullWidth
-                                        value={formData.protocolos_coronaria}
-                                        onChange={handleChange}
+                                        checked={formData.protocolos_coronaria === 'X'}
+                                        onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            handleChange({
+                                                target: {
+                                                    name: 'protocolos_coronaria',
+                                                    value: isChecked ? 'X' : '',
+                                                },
+                                            });
+                                        }}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
                                         name="protocolos_sepsis"
-                                        variant="outlined"
-                                        fullWidth
-                                        value={formData.protocolos_sepsis}
-                                        onChange={handleChange}
+                                        checked={formData.protocolos_sepsis === 'X'}
+                                        onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            handleChange({
+                                                target: {
+                                                    name: 'protocolos_sepsis',
+                                                    value: isChecked ? 'X' : '',
+                                                },
+                                            });
+                                        }}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
                                         name="protocolos_trauma"
-                                        variant="outlined"
-                                        fullWidth
-                                        value={formData.protocolos_trauma}
-                                        onChange={handleChange}
+                                        checked={formData.protocolos_trauma === 'X'}
+                                        onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            handleChange({
+                                                target: {
+                                                    name: 'protocolos_trauma',
+                                                    value: isChecked ? 'X' : '',
+                                                },
+                                            });
+                                        }}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
                                         name="protocolos_pcr"
-                                        variant="outlined"
-                                        fullWidth
-                                        value={formData.protocolos_pcr}
-                                        onChange={handleChange}
+                                        checked={formData.protocolos_pcr === 'X'}
+                                        onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            handleChange({
+                                                target: {
+                                                    name: 'protocolos_pcr',
+                                                    value: isChecked ? 'X' : '',
+                                                },
+                                            });
+                                        }}
                                     />
                                 </td>
                             </tr>

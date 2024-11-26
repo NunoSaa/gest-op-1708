@@ -150,6 +150,9 @@ function VerbeteINEM() {
         //Observacoes
         observacoes: '',
 
+        //RCP
+        rcp_presenciada: '',
+
         //VA / Ventilacao
         ventilacao_desobstrucao: '',
         ventilacao_orofaringeo: '',

@@ -28,64 +28,106 @@ const VentilacaoComponent = ({ formData, handleChange }) => {
                                 <td style={styles.td}>
                                     <Checkbox
                                         name="ventilacao_desobstrucao"
-                                        variant="outlined"
-                                        fullWidth
-                                        value={formData.ventilacao_desobstrucao}
-                                        onChange={handleChange}
+                                        checked={formData.ventilacao_desobstrucao === 'X'}
+                                        onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            handleChange({
+                                                target: {
+                                                    name: 'ventilacao_desobstrucao',
+                                                    value: isChecked ? 'X' : '',
+                                                },
+                                            });
+                                        }}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
                                         name="ventilacao_orofaringeo"
-                                        variant="outlined"
-                                        fullWidth
-                                        value={formData.ventilacao_orofaringeo}
-                                        onChange={handleChange}
+                                        checked={formData.ventilacao_orofaringeo === 'X'}
+                                        onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            handleChange({
+                                                target: {
+                                                    name: 'ventilacao_orofaringeo',
+                                                    value: isChecked ? 'X' : '',
+                                                },
+                                            });
+                                        }}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
                                         name="ventilacao_laringeo"
-                                        variant="outlined"
-                                        fullWidth
-                                        value={formData.ventilacao_laringeo}
-                                        onChange={handleChange}
+                                        checked={formData.ventilacao_laringeo === 'X'}
+                                        onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            handleChange({
+                                                target: {
+                                                    name: 'ventilacao_laringeo',
+                                                    value: isChecked ? 'X' : '',
+                                                },
+                                            });
+                                        }}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
                                         name="ventilacao_masc_laringea"
-                                        variant="outlined"
-                                        fullWidth
-                                        value={formData.ventilacao_masc_laringea}
-                                        onChange={handleChange}
+                                        checked={formData.ventilacao_masc_laringea === 'X'}
+                                        onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            handleChange({
+                                                target: {
+                                                    name: 'ventilacao_masc_laringea',
+                                                    value: isChecked ? 'X' : '',
+                                                },
+                                            });
+                                        }}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
                                         name="ventilacao_t_endotraqueal"
-                                        variant="outlined"
-                                        fullWidth
-                                        value={formData.ventilacao_t_endotraqueal}
-                                        onChange={handleChange}
+                                        checked={formData.ventilacao_t_endotraqueal === 'X'}
+                                        onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            handleChange({
+                                                target: {
+                                                    name: 'ventilacao_t_endotraqueal',
+                                                    value: isChecked ? 'X' : '',
+                                                },
+                                            });
+                                        }}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
                                         name="ventilacao_mecanica"
-                                        variant="outlined"
-                                        fullWidth
-                                        value={formData.ventilacao_mecanica}
-                                        onChange={handleChange}
+                                        checked={formData.ventilacao_mecanica === 'X'}
+                                        onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            handleChange({
+                                                target: {
+                                                    name: 'ventilacao_mecanica',
+                                                    value: isChecked ? 'X' : '',
+                                                },
+                                            });
+                                        }}
                                     />
                                 </td>
                                 <td style={styles.td}>
                                     <Checkbox
-                                         name="ventilacao_cpap"
-                                         variant="outlined"
-                                         fullWidth
-                                         value={formData.ventilacao_cpap}
-                                         onChange={handleChange}
+                                        name="ventilacao_cpap"
+                                        checked={formData.ventilacao_cpap === 'X'}
+                                        onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            handleChange({
+                                                target: {
+                                                    name: 'ventilacao_cpap',
+                                                    value: isChecked ? 'X' : '',
+                                                },
+                                            });
+                                        }}
                                     />
                                 </td>
                             </tr>
