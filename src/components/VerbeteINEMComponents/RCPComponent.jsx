@@ -2,7 +2,22 @@ import React from 'react';
 import { TextField, FormGroup, FormControlLabel, Checkbox, Card, CardContent, formControlClasses } from '@mui/material';
 import '../../css/RCPComponent.css'
 
-const RCPComponent = () => {
+const RCPComponent = ({ formData, handleChange }) => {
+
+    const handleTimeChange = (e) => {
+        const { name, value } = e.target;
+
+        // Format the time to hh:mm
+        const formattedTime = value.slice(0, 5); // Extract first 5 characters (hh:mm)
+
+        handleChange({
+            target: {
+                name,
+                value: formattedTime, // Set the formatted time
+            },
+        });
+    };
+
     return (
         <table style={{ ...styles.table, marginTop: '10px' }}>
             <thead>
@@ -25,38 +40,99 @@ const RCPComponent = () => {
                 <tr>
                     <td style={styles.td}>
                         <Checkbox
-                            name="presenciada"
-                            className="custom-checkbox"
+                            name="rcp_presenciada"
+                            checked={formData.rcp_presenciada === 'X'}
+                            onChange={(e) => {
+                                const isChecked = e.target.checked;
+                                handleChange({
+                                    target: {
+                                        name: 'rcp_presenciada',
+                                        value: isChecked ? 'X' : '',
+                                    },
+                                });
+                            }}
+                        />
+                    </td>
+                    <td style={styles.td}>
+                        <TextField
+                            name="rcp_sbv_dae"
+                            variant="outlined"
+                            fullWidth
+                            type="time" // Use time input type
+                            value={formData.rcp_sbv_dae || ''} // Set default value
+                            onChange={handleTimeChange} // Use custom handler
+                        />
+                    </td>
+                    <td style={styles.td}>
+                        <TextField
+                            name="rcp_siv_sav"
+                            variant="outlined"
+                            fullWidth
+                            type="time" // Use time input type
+                            value={formData.rcp_siv_sav || ''} // Set default value
+                            onChange={handleTimeChange} // Use custom handler
                         />
                     </td>
                     <td style={styles.td}>
                         <TextField variant="outlined" fullWidth />
                     </td>
                     <td style={styles.td}>
-                        <TextField variant="outlined" fullWidth />
+                        <TextField
+                            name='rcp_nr_choques'
+                            variant="outlined"
+                            fullWidth
+                            value={formData.rcp_nr_choques}
+                            onChange={handleChange}
+                        />
                     </td>
                     <td style={styles.td}>
-                        <TextField variant="outlined" fullWidth />
+                        <TextField
+                            name="rcp_recup"
+                            variant="outlined"
+                            fullWidth
+                            type="time" // Use time input type
+                            value={formData.rcp_recup || ''} // Set default value
+                            onChange={handleTimeChange} // Use custom handler
+                        />
                     </td>
                     <td style={styles.td}>
-                        <TextField variant="outlined" fullWidth />
-                    </td>
-                    <td style={styles.td}>
-                        <TextField variant="outlined" fullWidth />
-                    </td>
-                    <td style={styles.td}>
-                        <TextField variant="outlined" fullWidth />
-                    </td>
-                    <td style={styles.td}>
-                        <Checkbox
-                            name="cMecanicas"
-                            className="custom-checkbox"
+                        <TextField
+                            name="rcp_susp"
+                            variant="outlined"
+                            fullWidth
+                            type="time" // Use time input type
+                            value={formData.rcp_susp || ''} // Set default value
+                            onChange={handleTimeChange} // Use custom handler
                         />
                     </td>
                     <td style={styles.td}>
                         <Checkbox
-                            name="naoRealizado"
-                            className="custom-checkbox"
+                            name="rcp_n_realizado"
+                            checked={formData.rcp_n_realizado === 'X'}
+                            onChange={(e) => {
+                                const isChecked = e.target.checked;
+                                handleChange({
+                                    target: {
+                                        name: 'rcp_n_realizado',
+                                        value: isChecked ? 'X' : '',
+                                    },
+                                });
+                            }}
+                        />
+                    </td>
+                    <td style={styles.td}>
+                    <Checkbox
+                            name="rcp_c_mecanicas"
+                            checked={formData.rcp_c_mecanicas === 'X'}
+                            onChange={(e) => {
+                                const isChecked = e.target.checked;
+                                handleChange({
+                                    target: {
+                                        name: 'rcp_c_mecanicas',
+                                        value: isChecked ? 'X' : '',
+                                    },
+                                });
+                            }}
                         />
                     </td>
                 </tr>

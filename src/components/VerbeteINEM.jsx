@@ -114,6 +114,23 @@ function VerbeteINEM() {
         avaliacao_glicemia: '',
         avaliacao_news: '',
 
+        avaliacao_hora_1: '',
+        avaliacao_avds_1: '',
+        avaliacao_vent_1: '',
+        avaliacao_spo2_1: '',
+        avaliacao_o2_1: '',
+        avaliacao_co2_1: '',
+        avaliacao_pulso_1: '',
+        avaliacao_ecg_1: '',
+        avaliacao_p_arterial_s_1: '',
+        avaliacao_p_arterial_d_1: '',
+        avaliacao_pele_1: '',
+        avaliacao_temp_1: '',
+        avaliacao_pupilas_1: '',
+        avaliacao_dor_1: '',
+        avaliacao_glicemia_1: '',
+        avaliacao_news_1: '',
+
         //Historial Clinico
         circunstancias: '',
         historico: '',
@@ -152,6 +169,13 @@ function VerbeteINEM() {
 
         //RCP
         rcp_presenciada: '',
+        rcp_sbv_dae: '',
+        rcp_siv_sav: '',
+        rcp_nr_choques: '',
+        rcp_recup: '',
+        rcp_susp: '',
+        rcp_n_realizado: '',
+        rcp_c_mecanicas: '',
 
         //VA / Ventilacao
         ventilacao_desobstrucao: '',
@@ -594,7 +618,7 @@ function VerbeteINEM() {
                         <div className="event-form" style={{ flexGrow: 1 }}>
 
                             {/* RCP */}
-                            <RCPComponent />
+                            <RCPComponent formData={formData} handleChange={handleChange}/>
 
                             {/* VA / Ventilação */}
                             <VentilacaoComponent formData={formData} handleChange={handleChange} />
