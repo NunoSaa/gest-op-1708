@@ -71,9 +71,6 @@ function VerbeteINEM() {
     //Buld the FileName
     let fileName = item.numero + '_VERBETE_INEM_' + currentDate + '_' + currentHour + '.pdf';
 
-    let transporte_unidade_destino_tmp = '';
-    let [transporte_unidade_origem_tmp, setTransporteUnidadeOrigemTmp] = React.useState('na'); // Default to 'na'
-
     // State to hold form data
     const [formData, updateFormData] = useState({
         //ocorrencia
@@ -81,6 +78,7 @@ function VerbeteINEM() {
         motivo: '',
         local: '',
         freguesia: '',
+        concelho: '',
         hora_local: '',
         hora_vitima: '',
         hora_caminho: '',
@@ -101,6 +99,20 @@ function VerbeteINEM() {
         //Avaliacao
         avaliacao_hora: '',
         avaliacao_avds: '',
+        avaliacao_vent: '',
+        avaliacao_spo2: '',
+        avaliacao_o2: '',
+        avaliacao_co2: '',
+        avaliacao_pulso: '',
+        avaliacao_ecg: '',
+        avaliacao_p_arterial_s: '',
+        avaliacao_p_arterial_d: '',
+        avaliacao_pele: '',
+        avaliacao_temp: '',
+        avaliacao_pupilas: '',
+        avaliacao_dor: '',
+        avaliacao_glicemia: '',
+        avaliacao_news: '',
 
         //Historial Clinico
         circunstancias: '',
@@ -198,13 +210,13 @@ function VerbeteINEM() {
         if (savedData) {
             updateFormData(JSON.parse(savedData)); // Load saved data
         }
-    }, []); // Empty dependency array ensures this runs only once on mount
+    }, 30000); // Empty dependency array ensures this runs only once on mount
 
     // Save formData to localStorage every minute
     useEffect(() => {
         const saveInterval = setInterval(() => {
             localStorage.setItem('VerbeteData', JSON.stringify(formData));
-        }, 60000); // 60000ms = 1 minute
+        }, 10000); // 60000ms = 1 minute
 
         return () => clearInterval(saveInterval); // Clear interval on component unmount
     }, [formData]); // Dependency ensures it tracks the latest `formData`
@@ -229,6 +241,7 @@ function VerbeteINEM() {
         updateFormData(prevFormData => ({
             ...prevFormData,
             freguesia: emergency[0].localidade || '',
+            concelho: emergency[0].localidade_morada || '',
             local: local,
             nr_evento: emergency[0].requestList[0].numero_codu || '',
             //nr_vitimas: '1',
@@ -244,11 +257,7 @@ function VerbeteINEM() {
     }, [item]);
 
     const handleChange = (e) => {
-        const { name, value, type, checked } = e.target; // Destructure event
-        const isNascimento = name === 'nascimento';
-        const isSexo = name === 'sexoM' || name === 'sexoF';
-        const isTransporteUnidadeOrigem = name === 'transporte_unidade_origem';
-        const isTransporteUnidadeDestino = name === 'transporte_unidade_destino';
+        const { name, value, type, checked } = e.target;
 
         const transporteMapping = {
             ch_vila_real: 'C.H. Vila Real',
@@ -256,53 +265,50 @@ function VerbeteINEM() {
             na: 'N/A',
         };
 
-        updateFormData((prevFormData) => {
-            let updatedData = { ...prevFormData, 
-                transporte_unidade_origem: transporteMapping[transporte_unidade_origem_tmp] || transporte_unidade_origem_tmp};
-            
 
-            if (isNascimento) {
-                // Handle 'nascimento' field
-                if (value) {
-                    const birthDate = new Date(value);
-                    if (!isNaN(birthDate)) {
-                        updatedData.dia_1 = birthDate.getDate().toString().padStart(2, '0');
-                        updatedData.mes_1 = (birthDate.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed
-                        updatedData.ano_1 = birthDate.getFullYear().toString();
-                        updatedData.idade = Utils.calculateAge(birthDate).toString();
-                    }
+        updateFormData((prevFormData) => {
+            const updatedData = { ...prevFormData };
+
+            // Handle specific cases for "nascimento"
+            if (name === 'nascimento' && value) {
+                const birthDate = new Date(value);
+                if (!isNaN(birthDate)) {
+                    updatedData.dia_1 = birthDate.getDate().toString().padStart(2, '0');
+                    updatedData.mes_1 = (birthDate.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed
+                    updatedData.ano_1 = birthDate.getFullYear().toString();
+                    updatedData.idade = Utils.calculateAge(birthDate).toString();
                 }
-            } else if (isSexo) {
-                // Handle 'sexoM' or 'sexoF'
+            }
+            // Handle "sexoM" and "sexoF" as mutually exclusive checkboxes
+            else if (name === 'sexoM' || name === 'sexoF') {
                 updatedData.sexoM = name === 'sexoM' ? (checked ? 'X' : '') : '';
                 updatedData.sexoF = name === 'sexoF' ? (checked ? 'X' : '') : '';
             }
-            else if (isTransporteUnidadeOrigem) {
-                // Update the local state for the raw value
-                setTransporteUnidadeOrigemTmp(value); // Raw value
-                console.log("Raw value:", value);
-            
-                // Update the mapped value in formData
-                updatedData.transporte_unidade_origem = transporteMapping[value] || value; // Mapped value
-                console.log("Mapped value:", updatedData.transporte_unidade_origem);
+            else if (name.startsWith('transporte_unidade')) {
+                // Ensure the value matches the keys of transporteMapping
+                updatedData[name] = transporteMapping[value] || value;
             }
-            else if (isTransporteUnidadeDestino) {
-                transporte_unidade_destino_tmp = value; // Raw value
-                console.log(transporte_unidade_destino_tmp)
-                updatedData.transporte_unidade_destino = transporteMapping[value] || value; // Mapped value
-                console.log(updatedData.transporte_unidade_destino)
-            }
-            else if(name == 'circulacao_controlo_temp'){
-                updatedData.circulacao_controlo_temp = name === 'circulacao_controlo_temp' ? (checked ? 'X' : '') : '';
-            }
+            // General case for Select or TextField inputs
             else {
-                // General field update
                 updatedData[name] = type === 'checkbox' ? (checked ? 'X' : '') : value;
             }
+
+            // Calculate NEWS scale if related fields are updated
+            updatedData.avaliacao_news = Utils.calculateNewsScale(
+                updatedData.avaliacao_vent,
+                updatedData.avaliacao_avds,
+                updatedData.avaliacao_spo2,
+                updatedData.avaliacao_o2,
+                updatedData.avaliacao_temp,
+                updatedData.avaliacao_p_arterial_s,
+                updatedData.avaliacao_pulso
+            );
+            console.log(updatedData.avaliacao_news)
 
             return updatedData;
         });
     };
+
 
     const saveToDevice = async (e) => {
         e.preventDefault(); // Prevent default form submission
@@ -504,7 +510,7 @@ function VerbeteINEM() {
                             Avaliação
                         </div>
 
-                        <AvaliacaoComponent formData={formData} handleChange={handleChange}/>
+                        <AvaliacaoComponent formData={formData} handleChange={handleChange} />
                     </div>
 
                     {/* Historial Clinico */}
@@ -559,7 +565,7 @@ function VerbeteINEM() {
                             {/* Farmacologia */}
                             <FarmacologiaComponent formData={formData} handleChange={handleChange} />
 
-                            <ObservacoesComponent formData={formData} handleChange={handleChange}/>
+                            <ObservacoesComponent formData={formData} handleChange={handleChange} />
 
                         </div>
                     </div>

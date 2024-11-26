@@ -27,13 +27,13 @@ const CirculacaoComponent = ({ formData, handleChange }) => {
                                 <td style={styles.td}>
                                     <Checkbox
                                         name="circulacao_controlo_temp"
-                                        checked={formData.circulacao_controlo_temp === 'X'} // Check if the value is 'X'
+                                        checked={formData.circulacao_controlo_temp === 'X'} 
                                         onChange={(e) => {
-                                            const isChecked = e.target.checked; // Get the checked state
+                                            const isChecked = e.target.checked;
                                             handleChange({
                                                 target: {
                                                     name: 'circulacao_controlo_temp',
-                                                    value: isChecked ? 'X' : '', // Set 'X' if checked, otherwise empty
+                                                    value: isChecked ? 'X' : '',
                                                 },
                                             });
                                         }}
@@ -42,13 +42,13 @@ const CirculacaoComponent = ({ formData, handleChange }) => {
                                 <td style={styles.td}>
                                     <Checkbox
                                         name="circulacao_controlo_hemo"
-                                        checked={formData.circulacao_controlo_hemo === 'X'} // Check if the value is 'X'
+                                        checked={formData.circulacao_controlo_hemo === 'X'} 
                                         onChange={(e) => {
-                                            const isChecked = e.target.checked; // Get the checked state
+                                            const isChecked = e.target.checked;
                                             handleChange({
                                                 target: {
                                                     name: 'circulacao_controlo_hemo',
-                                                    value: isChecked ? 'X' : '', // Set 'X' if checked, otherwise empty
+                                                    value: isChecked ? 'X' : '',
                                                 },
                                             });
                                         }}
@@ -57,13 +57,13 @@ const CirculacaoComponent = ({ formData, handleChange }) => {
                                 <td style={styles.td}>
                                     <Checkbox
                                         name="circulacao_penso"
-                                        checked={formData.circulacao_penso === 'X'} // Check if the value is 'X'
+                                        checked={formData.circulacao_penso === 'X'}
                                         onChange={(e) => {
-                                            const isChecked = e.target.checked; // Get the checked state
+                                            const isChecked = e.target.checked;
                                             handleChange({
                                                 target: {
                                                     name: 'circulacao_penso',
-                                                    value: isChecked ? 'X' : '', // Set 'X' if checked, otherwise empty
+                                                    value: isChecked ? 'X' : '',
                                                 },
                                             });
                                         }}
@@ -72,13 +72,13 @@ const CirculacaoComponent = ({ formData, handleChange }) => {
                                 <td style={styles.td}>
                                     <Checkbox
                                         name="circulacao_torniquete"
-                                        checked={formData.circulacao_torniquete === 'X'} // Check if the value is 'X'
+                                        checked={formData.circulacao_torniquete === 'X'}
                                         onChange={(e) => {
-                                            const isChecked = e.target.checked; // Get the checked state
+                                            const isChecked = e.target.checked;
                                             handleChange({
                                                 target: {
                                                     name: 'circulacao_torniquete',
-                                                    value: isChecked ? 'X' : '', // Set 'X' if checked, otherwise empty
+                                                    value: isChecked ? 'X' : '',
                                                 },
                                             });
                                         }}
@@ -87,13 +87,13 @@ const CirculacaoComponent = ({ formData, handleChange }) => {
                                 <td style={styles.td}>
                                     <Checkbox
                                         name="ciculacao_cinto"
-                                        checked={formData.ciculacao_cinto === 'X'} // Check if the value is 'X'
+                                        checked={formData.ciculacao_cinto === 'X'}
                                         onChange={(e) => {
-                                            const isChecked = e.target.checked; // Get the checked state
+                                            const isChecked = e.target.checked;
                                             handleChange({
                                                 target: {
                                                     name: 'ciculacao_cinto',
-                                                    value: isChecked ? 'X' : '', // Set 'X' if checked, otherwise empty
+                                                    value: isChecked ? 'X' : '',
                                                 },
                                             });
                                         }}
@@ -102,13 +102,13 @@ const CirculacaoComponent = ({ formData, handleChange }) => {
                                 <td style={styles.td}>
                                 <Checkbox
                                         name="ciculacao_acesso"
-                                        checked={formData.ciculacao_acesso === 'X'} // Check if the value is 'X'
+                                        checked={formData.ciculacao_acesso === 'X'}
                                         onChange={(e) => {
-                                            const isChecked = e.target.checked; // Get the checked state
+                                            const isChecked = e.target.checked;
                                             handleChange({
                                                 target: {
                                                     name: 'ciculacao_acesso',
-                                                    value: isChecked ? 'X' : '', // Set 'X' if checked, otherwise empty
+                                                    value: isChecked ? 'X' : '',
                                                 },
                                             });
                                         }}

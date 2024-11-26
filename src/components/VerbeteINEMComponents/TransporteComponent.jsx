@@ -1,7 +1,14 @@
 import React from 'react';
-import { TextField, Checkbox, Select, MenuItem } from '@mui/material';
+import { TextField, Checkbox, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
-const TransporteComponent = ({ formData, transporte_unidade_origem_tmp, transporte_unidade_destino_tmp, handleChange }) => {
+const TransporteComponent = ({ formData, handleChange }) => {
+
+    const inverseTransporteMapping = {
+        'C.H.VilaReal': 'ch_vila_real',
+        'C.H.Chaves': 'ch_chaves',
+        'N/A': 'na',
+    };
+
     return (
         <table style={{ ...styles.table, marginTop: '10px' }}>
             <thead>
@@ -53,20 +60,19 @@ const TransporteComponent = ({ formData, transporte_unidade_origem_tmp, transpor
 
                 <table style={{ ...styles.table, marginTop: '10px' }}>
                     <div style={styles.rowInfo}>
-                    <div style={{ ...styles.inputGroup, flex: 5 }}>
-                                <label>Unidade de Saúde de Origem</label>
-                                <Select
-                                    name="transporte_unidade_origem"
-                                    variant="outlined"
-                                    fullWidth
-                                    value={transporte_unidade_origem_tmp || ''}
-                                    onChange={handleChange}
-                                >
-                                    <MenuItem value="na">N/A</MenuItem>
-                                    <MenuItem value="ch_vila_real">C.H. Vila Real</MenuItem>
-                                    <MenuItem value="ch_chaves">C.H. Chaves</MenuItem>
-                                </Select>
-                            </div>
+                        <div style={{ ...styles.inputGroup, flex: 5 }}>
+                            <label>Unidade de Saúde de Destino</label>
+                            <Select
+                                name="transporte_unidade_origem"
+                                value={inverseTransporteMapping[formData.transporte_unidade_origem]}
+                                onChange={handleChange}
+                                fullWidth
+                            >
+                                <MenuItem value="na">N/A</MenuItem>
+                                <MenuItem value="ch_vila_real">C.H. Vila Real</MenuItem>
+                                <MenuItem value="ch_chaves">C.H. Chaves</MenuItem>
+                            </Select>
+                        </div>
 
                         <div style={{ ...styles.inputGroup, flex: 2 }}>
                             <label style={{ paddingLeft: '15px' }}>Nrº de Processo</label>
@@ -83,20 +89,19 @@ const TransporteComponent = ({ formData, transporte_unidade_origem_tmp, transpor
 
                 <table style={{ ...styles.table, marginTop: '10px' }}>
                     <div style={styles.rowInfo}>
-                    <div style={{ ...styles.inputGroup, flex: 5 }}>
-                                <label>Unidade de Saúde de Destino</label>
-                                <Select
-                                    name="transporte_unidade_destino"
-                                    variant="outlined"
-                                    fullWidth
-                                    value={transporte_unidade_destino_tmp || 'na'}
-                                    onChange={handleChange}
-                                >
-                                    <MenuItem value="na">N/A</MenuItem>
-                                    <MenuItem value="ch_vila_real">C.H. Vila Real</MenuItem>
-                                    <MenuItem value="ch_chaves">C.H. Chaves</MenuItem>
-                                </Select>
-                            </div>
+                        <div style={{ ...styles.inputGroup, flex: 5 }}>
+                            <label>Unidade de Saúde de Destino</label>
+                            <Select
+                                name="transporte_unidade_destino"
+                                value={inverseTransporteMapping[formData.transporte_unidade_destino]}
+                                onChange={handleChange}
+                                fullWidth
+                            >
+                                <MenuItem value="na">N/A</MenuItem>
+                                <MenuItem value="ch_vila_real">C.H. Vila Real</MenuItem>
+                                <MenuItem value="ch_chaves">C.H. Chaves</MenuItem>
+                            </Select>
+                        </div>
 
                         <div style={{ ...styles.inputGroup, flex: 2 }}>
                             <label style={{ paddingLeft: '15px' }}>Nrº de Processo</label>

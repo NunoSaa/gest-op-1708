@@ -84,6 +84,105 @@ class Utils {
         }
     };
 
+    //Calculate the NEWS Scale
+    static calculateNewsScale = (vent, avds, spo2, o2, temp, p_sist, bpm) => {
+        let o2_value = 0;
+        let avds_value = 0;
+        let vent_value = 0;
+        let spo2_value = 0;
+        let temp_value = 0;
+        let p_sist_value = 0;
+        let bpm_value = 0;
+
+        // Calculate O2
+        if (!isNaN(o2)) {
+            if (o2 > 0) {
+                o2_value = 2;
+            }
+        }
+
+        // Calculate AVDS
+        if (avds !== "A") {
+            avds_value = 3;
+        }
+
+        // Calculate Vent
+        if (vent <= 8) {
+            vent_value = 3;
+        } else if (vent >= 9 && vent <= 11) {
+            vent_value = 1;
+        } else if (vent >= 21 && vent <= 24) {
+            vent_value = 2;
+        } else if (vent > 24) {
+            vent_value = 3;
+        } else {
+            vent_value = 0;
+        }
+
+        // Calculate SpO2
+        if (spo2 <= 91) {
+            spo2_value = 3;
+        } else if (spo2 === 92 || spo2 === 93) {
+            spo2_value = 2;
+        } else if (spo2 === 94 || spo2 === 95) {
+            spo2_value = 1;
+        } else {
+            spo2_value = 0;
+        }
+
+        // Calculate Temp
+        if (temp <= 35) {
+            temp_value = 3;
+        } else if (temp >= 35.1 && temp <= 36) {
+            temp_value = 1;
+        } else if (temp >= 38.1 && temp <= 39) {
+            temp_value = 1;
+        } else if (temp > 39) {
+            temp_value = 2;
+        } else {
+            temp_value = 0;
+        }
+
+        // Calculate P_sist
+        if (p_sist <= 90) {
+            p_sist_value = 3;
+        } else if (p_sist > 90 && p_sist <= 100) {
+            p_sist_value = 2;
+        } else if (p_sist >= 100 && p_sist <= 110) {
+            p_sist_value = 1;
+        } else if (p_sist >= 220) {
+            p_sist_value = 3;
+        } else {
+            p_sist_value = 0;
+        }
+
+        // Calculate BPM
+        if (bpm <= 40) {
+            bpm_value = 3;
+        } else if (bpm > 40 && bpm <= 50) {
+            bpm_value = 1;
+        } else if (bpm > 90 && bpm <= 110) {
+            bpm_value = 1;
+        } else if (bpm > 110 && bpm <= 130) {
+            bpm_value = 2;
+        } else if (bpm >= 131) {
+            bpm_value = 3;
+        } else {
+            bpm_value = 0;
+        }
+
+        // Calculate total NEWS score
+        console.log(vent_value , avds_value , spo2_value , o2_value , temp_value , p_sist_value , bpm_value)
+        let total = vent_value + avds_value + spo2_value + o2_value + temp_value + p_sist_value + bpm_value;
+
+        // Handle AVDS "-"
+        if (avds === "-") {
+            total = "--";
+        }
+
+        return total.toString();
+    };
+
 }
 
 export default Utils;

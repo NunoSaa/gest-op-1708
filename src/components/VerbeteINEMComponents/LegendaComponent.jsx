@@ -4,9 +4,9 @@ import '../../css/LegendaComponent.css'
 const LegendaComponent = () => {
     return (
         <div className="race-container">
-            <h3>RACE (Eventual necessidade de trombectomia se ≥5)</h3>
             <div className="table-container">
                 <div className="race-table-section">
+                <h3>RACE (Eventual necessidade de trombectomia se ≥5)</h3>
                     <table className="race-table">
                         <thead>
                             <tr>
@@ -103,6 +103,7 @@ const LegendaComponent = () => {
                                 <th>OLHOS</th>
                                 <th>VERBAL</th>
                                 <th>MOTOR</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>

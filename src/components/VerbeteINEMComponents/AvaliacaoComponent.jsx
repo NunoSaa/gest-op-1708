@@ -5,13 +5,12 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
+import Utils from '../../utils/utils';
 
 const AvaliacaoComponent = ({ formData, handleChange }) => {
 
-    const [age, setAge] = React.useState('');
     const [age1, setAge1] = React.useState('');
     const [age2, setAge2] = React.useState('');
-    const [open, setOpen] = React.useState(false);
     const [open1, setOpen1] = React.useState(false);
     const [open2, setOpen2] = React.useState(false);
 
@@ -27,18 +26,6 @@ const AvaliacaoComponent = ({ formData, handleChange }) => {
                 value: formattedTime, // Set the formatted time
             },
         });
-    };
-
-    const handleAgeChange = (event) => {
-        setAge(event.target.value);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const handleOpen = () => {
-        setOpen(true);
     };
 
     const handleChange1 = (event) => {
@@ -101,94 +88,143 @@ const AvaliacaoComponent = ({ formData, handleChange }) => {
                             />
                         </td>
                         <td style={styles.td}>
-                            <FormControl sx={{ s: 1, minWidth: 30 }}>
-                                <Select
-                                    labelId="demo-controlled-open-select-label"
-                                    id="demo-controlled-open-select"
-                                    open={open}
-                                    onClose={handleClose}
-                                    onOpen={handleOpen}
-                                    value={formData.avaliacao_avds}
-                                    onChange={handleAgeChange}
-                                    inputProps={{
-                                        style: { height: '26px', display: 'flex', alignItems: 'center' },
-                                    }}>
-                                    <MenuItem value={"A"}>A</MenuItem>
-                                    <MenuItem value={"V"}>V</MenuItem>
-                                    <MenuItem value={"D"}>D</MenuItem>
-                                    <MenuItem value={"S"}>S</MenuItem>
-                                </Select>
-                            </FormControl>
+                            <Select
+                                name="avaliacao_avds"
+                                value={formData.avaliacao_avds} // Fallback to 'na'
+                                onChange={handleChange}
+                                fullWidth
+                            >
+                                <MenuItem value="A">A</MenuItem>
+                                <MenuItem value="V">V</MenuItem>
+                                <MenuItem value="D">D</MenuItem>
+                                <MenuItem value="S">S</MenuItem>
+                            </Select>
                         </td>
                         <td style={styles.td}>
                             <TextField
                                 variant="outlined"
-                                fullWidth />
+                                name="avaliacao_vent"
+                                value={formData.avaliacao_vent}
+                                onChange={handleChange}
+                                fullWidth
+                            />
                         </td>
                         <td style={styles.td}>
                             <TextField
                                 variant="outlined"
-                                fullWidth />
+                                name="avaliacao_spo2"
+                                value={formData.avaliacao_spo2}
+                                onChange={handleChange}
+                                fullWidth
+                            />
                         </td>
                         <td style={styles.td}>
                             <TextField
                                 variant="outlined"
-                                fullWidth />
+                                value={formData.avaliacao_o2}
+                                name="avaliacao_o2"
+                                onChange={handleChange}
+                                fullWidth
+                            />
                         </td>
                         <td style={styles.td}>
                             <TextField
                                 variant="outlined"
-                                fullWidth />
+                                value={formData.avaliacao_co2}
+                                name="avaliacao_co2"
+                                onChange={handleChange}
+                                fullWidth
+                            />
                         </td>
                         <td style={styles.td}>
                             <TextField
                                 variant="outlined"
-                                fullWidth />
+                                value={formData.avaliacao_pulso}
+                                name="avaliacao_pulso"
+                                onChange={handleChange}
+                                fullWidth
+                            />
                         </td>
                         <td style={styles.td}>
                             <TextField
                                 variant="outlined"
-                                fullWidth />
+                                value={formData.avaliacao_ecg}
+                                name="avaliacao_ecg"
+                                onChange={handleChange}
+                                fullWidth
+                            />
                         </td>
                         <td style={styles.td}>
                             <TextField
                                 variant="outlined"
-                                fullWidth />
+                                value={formData.avaliacao_p_arterial_s}
+                                name="avaliacao_p_arterial_s"
+                                onChange={handleChange}
+                                fullWidth
+                            />
                         </td>
                         <td style={styles.td}>
                             <TextField
                                 variant="outlined"
-                                fullWidth />
+                                value={formData.avaliacao_p_arterial_d}
+                                name="avaliacao_p_arterial_d"
+                                onChange={handleChange}
+                                fullWidth
+                            />
                         </td>
                         <td style={styles.td}>
-                            <TextField
+                        <TextField
                                 variant="outlined"
-                                fullWidth />
+                                value={formData.avaliacao_pele}
+                                name="avaliacao_pele"
+                                onChange={handleChange}
+                                fullWidth
+                            />
                         </td>
                         <td style={styles.td}>
-                            <TextField
+                        <TextField
                                 variant="outlined"
-                                fullWidth />
+                                value={formData.avaliacao_temp}
+                                name="avaliacao_temp"
+                                onChange={handleChange}
+                                fullWidth
+                            />
                         </td>
                         <td style={styles.td}>
-                            <TextField
+                        <TextField
                                 variant="outlined"
-                                fullWidth />
+                                value={formData.avaliacao_pupilas}
+                                name="avaliacao_pupilas"
+                                onChange={handleChange}
+                                fullWidth
+                            />
                         </td>
                         <td style={styles.td}>
-                            <TextField
+                        <TextField
                                 variant="outlined"
-                                fullWidth />
+                                value={formData.avaliacao_dor}
+                                name="avaliacao_dor"
+                                onChange={handleChange}
+                                fullWidth
+                            />
                         </td>
                         <td style={styles.td}>
-                            <TextField
+                        <TextField
                                 variant="outlined"
-                                fullWidth />
+                                value={formData.avaliacao_glicemia}
+                                name="avaliacao_glicemia"
+                                onChange={handleChange}
+                                fullWidth
+                            />
                         </td>
                         <td style={styles.td}>
-                            <TextField
+                        <TextField
                                 variant="outlined"
-                                fullWidth />
+                                value={formData.avaliacao_news}
+                                name="avaliacao_news"
+                                onChange={handleChange}
+                                fullWidth
+                            />
                         </td>
                     </tr>
                     <tr>

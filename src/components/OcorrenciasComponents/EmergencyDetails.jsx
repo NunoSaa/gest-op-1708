@@ -202,7 +202,7 @@ const EmergencyDetails = ({
                     </Button>
                 </div>
 
-                {!['ABSC01', 'ABSC02', 'ABSC03', 'ABSC04', 'VOPE06', 'USER_ADMIN'].includes(descricao) && (
+                {!['ABSC01', 'ABSC02', 'ABSC03', 'ABSC04', 'ABSC09', 'VOPE06', 'USER_ADMIN'].includes(descricao) && (
                     <>
                         <div style={styles.row}>
 
@@ -216,7 +216,7 @@ const EmergencyDetails = ({
                     </>
                 )}
 
-                {['ABSC01', 'ABSC02', 'ABSC03', 'ABSC04', 'VOPE06', 'USER_ADMIN'].includes(descricao) && (
+                {['ABSC01', 'ABSC02', 'ABSC03', 'ABSC04','ABSC09', 'VOPE06', 'USER_ADMIN'].includes(descricao) && (
                     <>
                         <div style={styles.row}>
                             <Button style={styles.button_ChegadaUnidadeHosp} onClick={handleSetTimeChegadaUnidadeHosp} disabled={isChegadaUnidadeHospSet}>
