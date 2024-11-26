@@ -47,8 +47,9 @@ function VerbeteINEM() {
     const CLIENT_ID = '214123389323-3c7npk6e2hasbi2jt3pnrg1jqvjtm92m.apps.googleusercontent.com';  // Replace with your OAuth Client ID
     const API_KEY = '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';  // Replace with your Google Cloud API Key
     const SCOPES = 'https://www.googleapis.com/auth/drive.file'; // Scope to upload file
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-
+    // Initialize Google API client on component mount
     useEffect(() => {
         function start() {
             gapi.client.init({
@@ -56,10 +57,17 @@ function VerbeteINEM() {
                 clientId: CLIENT_ID,
                 discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
                 scope: SCOPES,
+            }).then(() => {
+                // Check if the user is already signed in
+                const authInstance = gapi.auth2.getAuthInstance();
+                if (authInstance.isSignedIn.get()) {
+                    setIsAuthenticated(true);
+                } else {
+                    authInstance.isSignedIn.listen(setIsAuthenticated);
+                }
             });
         }
         gapi.load('client:auth2', start);
-
     }, []);
 
     const [selectedLabelLocalOcorrencia, setSelectedLabelLocalOcorrencia] = useState('Domícilio'); // Default to the label of the first option
@@ -75,7 +83,9 @@ function VerbeteINEM() {
     const [formData, updateFormData] = useState({
         //ocorrencia
         entidade: 'B. V. Vila Pouca de Aguiar',
+        meio: 'Reserva',
         motivo: '',
+        local_ocorrencia: '',
         local: '',
         freguesia: '',
         concelho: '',
@@ -130,6 +140,40 @@ function VerbeteINEM() {
         avaliacao_dor_1: '',
         avaliacao_glicemia_1: '',
         avaliacao_news_1: '',
+
+        avaliacao_hora_2: '',
+        avaliacao_avds_2: '',
+        avaliacao_vent_2: '',
+        avaliacao_spo2_2: '',
+        avaliacao_o2_2: '',
+        avaliacao_co2_2: '',
+        avaliacao_pulso_2: '',
+        avaliacao_ecg_2: '',
+        avaliacao_p_arterial_s_2: '',
+        avaliacao_p_arterial_d_2: '',
+        avaliacao_pele_2: '',
+        avaliacao_temp_2: '',
+        avaliacao_pupilas_2: '',
+        avaliacao_dor_2: '',
+        avaliacao_glicemia_2: '',
+        avaliacao_news_2: '',
+
+        avaliacao_hora_3: '',
+        avaliacao_avds_3: '',
+        avaliacao_vent_3: '',
+        avaliacao_spo2_3: '',
+        avaliacao_o2_3: '',
+        avaliacao_co2_3: '',
+        avaliacao_pulso_3: '',
+        avaliacao_ecg_3: '',
+        avaliacao_p_arterial_s_3: '',
+        avaliacao_p_arterial_d_3: '',
+        avaliacao_pele_3: '',
+        avaliacao_temp_3: '',
+        avaliacao_pupilas_3: '',
+        avaliacao_dor_3: '',
+        avaliacao_glicemia_3: '',
+        avaliacao_news_3: '',
 
         //Historial Clinico
         circunstancias: '',
@@ -330,7 +374,36 @@ function VerbeteINEM() {
                 updatedData.avaliacao_p_arterial_s,
                 updatedData.avaliacao_pulso
             );
-            console.log(updatedData.avaliacao_news)
+            // Calculate NEWS scale if related fields are updated
+            updatedData.avaliacao_news_1 = Utils.calculateNewsScale(
+                updatedData.avaliacao_vent_1,
+                updatedData.avaliacao_avds_1,
+                updatedData.avaliacao_spo2_1,
+                updatedData.avaliacao_o2_1,
+                updatedData.avaliacao_temp_1,
+                updatedData.avaliacao_p_arterial_s_1,
+                updatedData.avaliacao_pulso_1
+            );
+            // Calculate NEWS scale if related fields are updated
+            updatedData.avaliacao_news_2 = Utils.calculateNewsScale(
+                updatedData.avaliacao_vent_2,
+                updatedData.avaliacao_avds_2,
+                updatedData.avaliacao_spo2_2,
+                updatedData.avaliacao_o2_2,
+                updatedData.avaliacao_temp_2,
+                updatedData.avaliacao_p_arterial_s_2,
+                updatedData.avaliacao_pulso_2
+            );
+            // Calculate NEWS scale if related fields are updated
+            updatedData.avaliacao_news_3 = Utils.calculateNewsScale(
+                updatedData.avaliacao_vent_3,
+                updatedData.avaliacao_avds_3,
+                updatedData.avaliacao_spo2_3,
+                updatedData.avaliacao_o2_3,
+                updatedData.avaliacao_temp_3,
+                updatedData.avaliacao_p_arterial_s_3,
+                updatedData.avaliacao_pulso_3
+            );
 
             return updatedData;
         });

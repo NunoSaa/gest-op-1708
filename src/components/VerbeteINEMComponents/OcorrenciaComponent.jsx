@@ -1,5 +1,7 @@
 import React from 'react';
 import { TextField, FormGroup, FormControlLabel, Checkbox, Card, CardContent, formControlClasses } from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 const OcorrenciaComponent = ({ formData, handleChange }) => {
     const today = new Date().toLocaleDateString("pt-PT"); // Format as "DD/MM/YYYY"
@@ -36,11 +38,11 @@ const OcorrenciaComponent = ({ formData, handleChange }) => {
                     <div style={styles.inputGroup}>
                         <label style={{ paddingLeft: '15px' }}>Meio</label>
                         <TextField
+                            name="meio"
                             variant="outlined"
-                            value={formData.meio}
-                            defaultValue="Reserva"
-                            onChange={handleChange}
                             fullWidth
+                            value={formData.meio}
+                            onChange={handleChange}
                         />
                     </div>
 
@@ -66,7 +68,7 @@ const OcorrenciaComponent = ({ formData, handleChange }) => {
                 </div>
 
                 <div style={styles.rowInfo}>
-                    <div style={{ ...styles.inputGroup, flex: 4 }}>
+                    <div style={{ ...styles.inputGroup, flex: 8 }}>
                         <label>Motivo</label>
                         <TextField
                             name="motivo"
@@ -77,14 +79,76 @@ const OcorrenciaComponent = ({ formData, handleChange }) => {
                         />
                     </div>
 
-                    <div style={{ ...styles.inputGroup, flex: 8 }}>
-                        <label style={{ paddingLeft: '15px' }}>Local</label>
+                    <div style={{ ...styles.inputGroup, flex: 6 }}>
+                        <label style={{ paddingLeft: '15px' }}>Local da Ocorrência</label>
+                        <FormGroup row>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        name="local_residencia"
+                                        checked={formData.local_residencia === 'X'}
+                                        onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            handleChange({
+                                                target: {
+                                                    name: 'local_residencia',
+                                                    value: isChecked ? 'X' : '',
+                                                },
+                                            });
+                                        }}
+                                    />
+                                }
+                                label="Residência"
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        name="local_trabalho"
+                                        checked={formData.local_trabalho === 'X'}
+                                        onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            handleChange({
+                                                target: {
+                                                    name: 'local_trabalho',
+                                                    value: isChecked ? 'X' : '',
+                                                },
+                                            });
+                                        }}
+                                    />
+                                }
+                                label="Trabalho"
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        name="local_via"
+                                        checked={formData.local_via === 'X'}
+                                        onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            handleChange({
+                                                target: {
+                                                    name: 'local_via',
+                                                    value: isChecked ? 'X' : '',
+                                                },
+                                            });
+                                        }}
+                                    />
+                                }
+                                label="Via Pública"
+                            />
+                        </FormGroup>
+                    </div>
+                </div>
+
+                <div style={styles.rowInfo}>
+                    <div style={{ ...styles.inputGroup, flex: 1 }}>
+                        <label>Local</label>
                         <TextField
                             name="local"
                             variant="outlined"
                             fullWidth
-                            value={formData.local}
-                            onChange={handleChange}
+                            value={formData.local} // Controlled component
+                            onChange={handleChange} // Handle change from parent
                         />
                     </div>
                 </div>
