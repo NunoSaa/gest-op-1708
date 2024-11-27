@@ -434,6 +434,25 @@ function VerbeteINEM() {
         }));
     };
 
+    useEffect(() => {
+        const storedData = localStorage.getItem('VerbeteData');
+        if (storedData) {
+            const parsedData = JSON.parse(storedData);
+            updateFormData(parsedData);
+    
+            const messageSinaisSintomas =
+                `${reportData.descricao}\nNr. CODU: ${nr_codu} - ${parsedData.sinais_sintomas || ''}`;
+            const messageObservacoes =
+                `${reportData.trabalho_desenvolvido}\nNr. CODU: ${nr_codu} - ${parsedData.observacoes || ''}`;
+    
+            setReportData((prevReportData) => ({
+                ...prevReportData,
+                descricao: messageSinaisSintomas,
+                trabalho_desenvolvido: messageObservacoes,
+            }));
+        }
+    }, []); // Empty dependency array ensures this runs only once
+
 
     const saveToDevice = async (e) => {
 
