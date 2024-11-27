@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextField, FormGroup, FormControlLabel, Checkbox, Card, CardContent, formControlClasses } from '@mui/material';
 
-const SinaisSintomasComponent = ({ formData, handleChange }) => {
+const SinaisSintomasComponent = ({ formData, handleChange, handleBlur }) => {
     return (
         <table style={{ ...styles.table, marginTop: '10px' }}>
             <thead>
@@ -20,6 +20,7 @@ const SinaisSintomasComponent = ({ formData, handleChange }) => {
                             rows={5}
                             value={formData.sinais_sintomas}
                             onChange={handleChange}
+                            onBlur={handleBlur} 
                         />
                     </td>
                 </tr>

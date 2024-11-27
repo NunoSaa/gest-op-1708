@@ -216,14 +216,25 @@ const EmergencyDetails = ({
                     </>
                 )}
 
-                {['ABSC01', 'ABSC02', 'ABSC03', 'ABSC04','ABSC09', 'VOPE06', 'USER_ADMIN'].includes(descricao) && (
+                {['ABSC01', 'ABSC02', 'ABSC03', 'ABSC04', 'ABSC09', 'VOPE06', 'USER_ADMIN'].includes(descricao) && (
                     <>
                         <div style={styles.row}>
                             <Button style={styles.button_ChegadaUnidadeHosp} onClick={handleSetTimeChegadaUnidadeHosp} disabled={isChegadaUnidadeHospSet}>
                                 <p style={{ ...styles.buttonText, marginRight: '5px' }}>Chegada à Unidade Hospitalar</p>
                             </Button>
 
-                            <Button style={styles.button_VerbeteInem} onClick={() => navigate('/verbeteINEM', { state: item })}>
+                            <Button
+                                style={styles.button_VerbeteInem}
+                                onClick={() => {
+                                    if (!emergencies[0]?.requestList?.[0]) {
+                                        alert('Não é possível aceder ao Verbete INEM (Ocorrência criada sem Pedido)');
+                                        return;
+                                    }
+                                    else {
+                                        navigate('/verbeteINEM', { state: item });
+                                    }
+                                }}
+                            >
                                 <p style={styles.buttonText}>Verbete INEM</p>
                                 <p style={styles.buttonTextOther}>.</p>
                             </Button>

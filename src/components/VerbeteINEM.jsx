@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, createContext } from 'react';
 import { PDFDocument } from 'pdf-lib';
 import { saveAs } from 'file-saver';
+import axios from 'axios';
 import { useNavigate, useLocation } from "react-router-dom";
 import pdfFile from '../assets/Verbete-INEM.pdf';
 import '../css/Login.css';
@@ -48,6 +49,10 @@ function VerbeteINEM() {
     const API_KEY = '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';  // Replace with your Google Cloud API Key
     const SCOPES = 'https://www.googleapis.com/auth/drive.file'; // Scope to upload file
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    //send the info to report
+    let emergency = JSON.parse(localStorage.getItem('EmergencyData')) || {}; // Safely parse in case it's null
+    let nr_codu = emergency[0].requestList[0].numero_codu || '';
 
     // Initialize Google API client on component mount
     useEffect(() => {
@@ -329,6 +334,9 @@ function VerbeteINEM() {
 
     }, [item]);
 
+    let message_sinais_sintomas = '';
+    let message_observacoes = '';
+
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
 
@@ -409,6 +417,21 @@ function VerbeteINEM() {
 
             return updatedData;
         });
+
+    };
+
+    const handleBlur = () => {
+        const updatedMessageSinaisSintomas =
+            `${reportData.descricao}\nNr. CODU:  ${nr_codu} - ${formData.sinais_sintomas}`;
+        
+        const updatedMessageObservacoes =
+            `${reportData.trabalho_desenvolvido}\nNr. CODU:  ${nr_codu} - ${formData.observacoes}`;
+    
+        setReportData((prevReportData) => ({
+            ...prevReportData,
+            descricao: updatedMessageSinaisSintomas || '',
+            trabalho_desenvolvido: updatedMessageObservacoes || '',
+        }));
     };
 
 
@@ -451,6 +474,14 @@ function VerbeteINEM() {
                 document.body.appendChild(link); // Append the link to the body
                 link.click(); // Trigger the download
                 document.body.removeChild(link); // Clean up the DOM
+
+                try {
+                    console.log('updates: ', reportData)
+                    updateIncidentsReport();
+                }
+                catch {
+
+                }
 
                 console.log("PDF saved successfully.");
                 alert("PDF saved successfully.");
@@ -546,6 +577,139 @@ function VerbeteINEM() {
             });
         } else {
             alert("Dados não preenchidos (Hora Chegada à Vitima, Caminho U. Saúde, Chegada U. Saúde ). Por favor, preencha antes de finalizar.");
+        }
+    };
+
+    const [reportData, setReportData] = useState({
+        id: '',
+        id_relatorio: '',
+        descricao: '',
+        trabalhoDesenvolvido: '',
+        danos_causados: '',
+        desalojados_num: '',
+        desalojados_descricao: '',
+        csrepc: '',
+        vitimas_bombeiros_assistidas: '',
+        vitimas_bombeiros_feridos: '',
+        vitimas_bombeiros_graves: '',
+        vitimas_bombeiros_mortos: '',
+        vitimas_civis_assistidas: '',
+        vitimas_civis_feridos: '',
+        vitimas_civis_graves: '',
+        vitimas_civis_mortos: '',
+        vitimas_apc_assistidas: '',
+        vitimas_apc_feridos: '',
+        vitimas_apc_graves: '',
+        vitimas_apc_mortos: '',
+        aa_outra1: '',
+        aa_outra2: '',
+        aa_outra3: '',
+        aa_outra4: '',
+        aa_outra5: '',
+        aa_valor1: '',
+        aa_valor2: '',
+        aa_valor3: '',
+        aa_valor4: '',
+        aa_valor5: ''
+    });
+
+    const typologyMap = {
+        mato: 'Mato',
+        pinhal: 'Pinhal',
+        eucalipto: 'Eucalipto',
+        carvalho: 'Carvalho',
+        agricola: 'Comb. Agricola'
+    };
+
+    const fetchIncidentReport = async () => {
+        try {
+            const response = await axios.get('https://preventech-proxy-service.onrender.com/api/finalreport/getFinalReport?id_ocorrencia=' + item.id);
+            if (response.data) {
+                console.log('Fetched Report:', response.data);
+
+                // Decode the aa_outra1 to match the dropdown option
+                const fetchedTypology = response.data[0].aa_outra1;
+                const selectedOption = Object.keys(typologyMap).find(key => typologyMap[key] === fetchedTypology);
+                const fetchedTypology1 = response.data[0].aa_outra2;
+                const selectedOption1 = Object.keys(typologyMap).find(key => typologyMap[key] === fetchedTypology1);
+                const fetchedTypology2 = response.data[0].aa_outra3;
+                const selectedOption2 = Object.keys(typologyMap).find(key => typologyMap[key] === fetchedTypology2);
+                const fetchedTypology3 = response.data[0].aa_outra4;
+                const selectedOption3 = Object.keys(typologyMap).find(key => typologyMap[key] === fetchedTypology3);
+                const fetchedTypology4 = response.data[0].aa_outra5;
+                const selectedOption4 = Object.keys(typologyMap).find(key => typologyMap[key] === fetchedTypology4);
+
+
+                // Set fetched data into state
+                setReportData({
+                    id: response.data[0].id || '',
+                    id_relatorio: response.data[0].id_relatorio || '',
+                    descricao: response.data[0].descricao || '',
+                    trabalho_desenvolvido: response.data[0].trabalho_desenvolvido || '',
+                    danos_causados: response.data[0].danos_causados || '',
+                    desalojados_num: response.data[0].desalojados_num || '',
+                    desalojados_descricao: response.data[0].desalojados_descricao || '',
+                    csrepc: response.data[0].csrepc || '',
+                    vitimas_bombeiros_assistidas: response.data[0].vitimas_bombeiros_assistidas || '',
+                    vitimas_bombeiros_feridos: response.data[0].vitimas_bombeiros_feridos || '',
+                    vitimas_bombeiros_graves: response.data[0].vitimas_bombeiros_graves || '',
+                    vitimas_bombeiros_mortos: response.data[0].vitimas_bombeiros_mortos || '',
+                    vitimas_civis_assistidas: response.data[0].vitimas_civis_assistidas || '',
+                    vitimas_civis_feridos: response.data[0].vitimas_civis_feridos || '',
+                    vitimas_civis_graves: response.data[0].vitimas_civis_graves || '',
+                    vitimas_civis_mortos: response.data[0].vitimas_civis_mortos || '',
+                    vitimas_apc_assistidas: response.data[0].vitimas_apc_assistidas || '',
+                    vitimas_apc_feridos: response.data[0].vitimas_apc_feridos || '',
+                    vitimas_apc_graves: response.data[0].vitimas_apc_graves || '',
+                    vitimas_apc_mortos: response.data[0].vitimas_apc_mortos || '',
+                    aa_outra1: fetchedTypology, // Store decoded value
+                    aa_outra2: fetchedTypology1,
+                    aa_outra3: fetchedTypology2,
+                    aa_outra4: fetchedTypology3,
+                    aa_outra5: fetchedTypology4,
+                    aa_valor1: response.data[0].aa_valor1 || '',
+                    aa_valor2: response.data[0].aa_valor2 || '',
+                    aa_valor3: response.data[0].aa_valor3 || '',
+                    aa_valor4: response.data[0].aa_valor4 || '',
+                    aa_valor5: response.data[0].aa_valor5 || ''
+                });
+            } else {
+                console.log('No report data');
+            }
+        } catch (error) {
+            console.error('Error fetching report:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchIncidentReport(); // Fetch the report data initially
+    }, [item.id]);
+
+    console.log('report data: ', reportData)
+
+    const updateIncidentsReport = async () => {
+        try {
+            const response = await axios.post('https://preventech-proxy-service.onrender.com/api/finalreport/updateIncidentsReport', {
+                id_ocorrencia: item.id,
+                ...reportData
+            });
+
+            if (response.data && response.data.status === 'success') {
+                localStorage.setItem('IncidentReport', JSON.stringify(reportData));
+                alert('Dados Guardados com Sucesso');
+                setTimeout(() => window.history.back(), 0); // Go back after alert
+            }
+            else if (response.status === 200) {
+                console.log('Report updated successfully');
+                alert('Dados Guardados com Sucesso');
+                setTimeout(() => window.history.back(), 0); // Go back after alert
+            } else {
+                // Handle any other cases (like errors in the response)
+                console.error('Unexpected response:', response.data);
+                setTimeout(() => window.history.back(), 0); // Go back after alert
+            }
+        } catch (error) {
+            console.error('Error updating report:', error);
         }
     };
 
@@ -679,12 +843,12 @@ function VerbeteINEM() {
                         <div className="event-form" style={{ flexGrow: 1 }}>
 
                             {/* Sinais e Sintomas */}
-                            <SinaisSintomasComponent formData={formData} handleChange={handleChange} />
+                            <SinaisSintomasComponent formData={formData} handleChange={handleChange} handleBlur={handleBlur}  />
 
                             {/* Farmacologia */}
                             <FarmacologiaComponent formData={formData} handleChange={handleChange} />
 
-                            <ObservacoesComponent formData={formData} handleChange={handleChange} />
+                            <ObservacoesComponent formData={formData} handleChange={handleChange} handleBlur={handleBlur}/>
 
                         </div>
                     </div>
