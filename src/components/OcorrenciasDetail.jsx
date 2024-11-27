@@ -103,8 +103,8 @@ function OcorrenciasDetail() {
                     (vehicle) => vehicle.descricao === descricao
                 );
 
-                 // Set `kmFim` if available in filtered vehicles
-                 if (filteredVehicles.length > 0) {
+                // Set `kmFim` if available in filtered vehicles
+                if (filteredVehicles.length > 0) {
                     setKmFim(filteredVehicles[0].km_fim);
                 }
 
@@ -240,7 +240,7 @@ function OcorrenciasDetail() {
             if (response.data && response.data.status === 'success') {
 
                 if (descricao === 'ABSC01' || descricao === 'ABSC02'
-                    || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06') {
+                    || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'ABSC09' || descricao === 'VOPE06') {
                     await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
                         id_ocorrencia: emergencies[0].id,
                         id_estado: '5'
@@ -274,7 +274,7 @@ function OcorrenciasDetail() {
             let response = null;
 
             if (descricao === 'ABSC01' || descricao === 'ABSC02'
-                || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06') {
+                || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'ABSC09' || descricao === 'VOPE06') {
 
 
                 response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
@@ -299,10 +299,17 @@ function OcorrenciasDetail() {
     const handleDisponivel = async () => {
         try {
             let response = null;
+            const now = new Date();
+            // Get the current date in the format "YYYY-MM-DD"
+            const currentDate = formatDateDDMMYYYY(now);
+
+            // Get the current time in the format "HH:MM"
+            const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
 
             if (descricao === 'ABSC01' || descricao === 'ABSC02'
-                || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06') {
+                || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'ABSC09' || descricao === 'VOPE06') {
 
+                localStorage.setItem('hora_disponivel', currentHour);
 
                 response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
                     id_ocorrencia: emergencies[0].id,
@@ -356,7 +363,7 @@ function OcorrenciasDetail() {
                 alert('Chegada à Unidade Enviada com Sucesso');
 
                 if (descricao === 'ABSC01' || descricao === 'ABSC02'
-                    || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06') {
+                    || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'ABSC09' || descricao === 'VOPE06') {
                     await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
                         id_ocorrencia: emergencies[0].id,
                         //id_estado: '10'

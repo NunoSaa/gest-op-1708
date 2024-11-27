@@ -195,7 +195,7 @@ const OcorrenciaComponent = ({ formData, handleChange }) => {
                     <div style={{ ...styles.inputGroup, flex: 2 }}>
                         <label style={{ paddingLeft: '15px' }}>Chegada à vitima</label>
                         <TextField
-                            name="hora_local"
+                            name="hora_vitima"
                             variant="outlined"
                             fullWidth
                             type="time" // Use time input type
@@ -204,35 +204,35 @@ const OcorrenciaComponent = ({ formData, handleChange }) => {
                         />
                     </div>
                     <div style={{ ...styles.inputGroup, flex: 2 }}>
-                        <label style={{ paddingLeft: '15px' }}>Caminho U.Saúde</label>
+                        <label style={{ paddingLeft: '15px' }}>Chegada SIV / SAV</label>
                         <TextField
-                            name="hora_local"
+                            name="hora_siv_sav"
                             variant="outlined"
                             fullWidth
                             type="time" // Use time input type
-                            value={formData.hora_caminho || ''} // Set default value
+                            value={formData.hora_siv_sav || ''} // Set default value
                             onChange={handleTimeChange} // Use custom handler
                         />
                     </div>
                     <div style={{ ...styles.inputGroup, flex: 2 }}>
-                        <label style={{ paddingLeft: '15px' }}>Chegada U.Saúde</label>
+                        <label style={{ paddingLeft: '15px' }}>Caminho U. Saúde</label>
                         <TextField
-                            name="hora_local"
+                            name="hora_caminho_hospital"
                             variant="outlined"
                             fullWidth
                             type="time" // Use time input type
-                            value={formData.hora_hospital || ''} // Set default value
+                            value={formData.hora_caminho_hospital || ''} // Set default value
                             onChange={handleTimeChange} // Use custom handler
                         />
                     </div>
                     <div style={{ ...styles.inputGroup, flex: 2 }}>
-                        <label style={{ paddingLeft: '15px' }}>Disponível</label>
+                        <label style={{ paddingLeft: '15px' }}>Chegada U. Saúde</label>
                         <TextField
-                            name="hora_local"
+                            name="hora_chegada_unidade_hospitalar"
                             variant="outlined"
                             fullWidth
                             type="time" // Use time input type
-                            value={formData.hora_disponivel || ''} // Set default value
+                            value={formData.hora_chegada_unidade_hospitalar || ''} // Set default value
                             onChange={handleTimeChange} // Use custom handler
                         />
                     </div>

@@ -93,9 +93,9 @@ function VerbeteINEM() {
         concelho: '',
         hora_local: '',
         hora_vitima: '',
-        hora_caminho: '',
-        hora_hospital: '',
-        hora_disponivel: '',
+        hora_siv_sav: '',
+        hora_caminho_hospital: '',
+        hora_chegada_unidade_hospitalar: '',
 
         //identificacao
         nome: '',
@@ -298,6 +298,7 @@ function VerbeteINEM() {
     useEffect(() => {
         const descricao = localStorage.getItem('username');
         const emergency = JSON.parse(localStorage.getItem('EmergencyData')) || {}; // Safely parse in case it's null
+        const hora_chegada_unidade_hospitalar = localStorage.getItem('hora_chegada_unidade_hospitalar');
 
         // Extract and filter viaturas by descricao
         const vehicles = emergency[0].viaturas || [];
@@ -320,9 +321,8 @@ function VerbeteINEM() {
             //nr_vitimas: '1',
             hora_local: filteredVehicles[0].hora_saida !== null ? filteredVehicles[0].hora_saida : '',
             hora_vitima: filteredVehicles[0].hora_chegada_to || '',
-            hora_caminho: filteredVehicles[0].hora_saida_to || '',
-            hora_hospital: '',
-            hora_disponivel: filteredVehicles[0].hora_chegada || '',
+            hora_caminho_hospital: filteredVehicles[0].hora_saida_to || '',
+            hora_chegada_unidade_hospitalar: hora_chegada_unidade_hospitalar !== null ? hora_chegada_unidade_hospitalar : '',
         }));
 
         console.log(filteredVehicles)
@@ -413,46 +413,53 @@ function VerbeteINEM() {
 
 
     const saveToDevice = async (e) => {
-        e.preventDefault(); // Prevent default form submission
 
-        try {
-            console.log("formData before submission:", formData); // Debugging
-            if (!pdfFile) {
-                throw new Error("PDF template path is missing.");
+        if (
+            formData.hora_vitima !== '' && formData.hora_vitima !== null &&
+            formData.hora_caminho_hospital !== '' && formData.hora_caminho_hospital !== null &&
+            formData.hora_chegada_unidade_hospitalar !== '' && formData.hora_chegada_unidade_hospitalar !== null
+        ) {
+            try {
+                console.log("formData before submission:", formData); // Debugging
+                if (!pdfFile) {
+                    throw new Error("PDF template path is missing.");
+                }
+
+                const templateUrl = pdfFile; // Path to your PDF template
+
+                // Ensure formData has necessary fields
+                if (!formData || Object.keys(formData).length === 0) {
+                    throw new Error("formData is empty or invalid.");
+                }
+
+                // Call the function to generate the filled PDF
+                const generatedPdf = await Utils.fillPdfTemplate(templateUrl, formData);
+
+                // Check if the generatedPdf is valid
+                if (!generatedPdf) {
+                    throw new Error("PDF generation failed.");
+                }
+
+                // Create a Blob from the generated PDF
+                const pdfBlob = new Blob([generatedPdf], { type: "application/pdf" });
+
+                // Create a download link
+                const downloadUrl = URL.createObjectURL(pdfBlob);
+                const link = document.createElement("a");
+                link.href = downloadUrl;
+                link.download = fileName; // Name for the downloaded file
+                document.body.appendChild(link); // Append the link to the body
+                link.click(); // Trigger the download
+                document.body.removeChild(link); // Clean up the DOM
+
+                console.log("PDF saved successfully.");
+                alert("PDF saved successfully.");
+            } catch (error) {
+                console.error("Error during PDF generation or save:", error);
+                alert("An error occurred while saving the PDF. Please try again.");
             }
-
-            const templateUrl = pdfFile; // Path to your PDF template
-
-            // Ensure formData has necessary fields
-            if (!formData || Object.keys(formData).length === 0) {
-                throw new Error("formData is empty or invalid.");
-            }
-
-            // Call the function to generate the filled PDF
-            const generatedPdf = await Utils.fillPdfTemplate(templateUrl, formData);
-
-            // Check if the generatedPdf is valid
-            if (!generatedPdf) {
-                throw new Error("PDF generation failed.");
-            }
-
-            // Create a Blob from the generated PDF
-            const pdfBlob = new Blob([generatedPdf], { type: "application/pdf" });
-
-            // Create a download link
-            const downloadUrl = URL.createObjectURL(pdfBlob);
-            const link = document.createElement("a");
-            link.href = downloadUrl;
-            link.download = fileName; // Name for the downloaded file
-            document.body.appendChild(link); // Append the link to the body
-            link.click(); // Trigger the download
-            document.body.removeChild(link); // Clean up the DOM
-
-            console.log("PDF saved successfully.");
-            alert("PDF saved successfully.");
-        } catch (error) {
-            console.error("Error during PDF generation or save:", error);
-            alert("An error occurred while saving the PDF. Please try again.");
+        } else {
+            alert("Dados não preenchidos (Hora Chegada à Vitima, Caminho U. Saúde, Chegada U. Saúde ). Por favor, preencha antes de finalizar.");
         }
     };
 
@@ -463,73 +470,83 @@ function VerbeteINEM() {
     // Upload the filled PDF to Google Drive
     const sendToDrive = async (pdfBytes) => {
 
-        const templateUrl = pdfFile; // Path to your PDF template
-        let file = new Blob([pdfBlob], { type: 'application/pdf' });
+        if (
+            formData.hora_vitima !== '' && formData.hora_vitima !== null &&
+            formData.hora_caminho_hospital !== '' && formData.hora_caminho_hospital !== null &&
+            formData.hora_chegada_unidade_hospitalar !== '' && formData.hora_chegada_unidade_hospitalar !== null
+        ) {
 
-        // Fill the PDF template with formData and get the filled PDF blob
-        file = await Utils.fillPdfTemplate(templateUrl, formData);
-        console.log("formData before submission:", formData); // Log formData to check its state
+            const templateUrl = pdfFile; // Path to your PDF template
+            let file = new Blob([pdfBlob], { type: 'application/pdf' });
 
-        gapi.auth2.getAuthInstance().signIn().then(async () => {
-            const metadata = {
-                name: fileName,
-                mimeType: 'application/pdf',
-            };
+            // Fill the PDF template with formData and get the filled PDF blob
+            file = await Utils.fillPdfTemplate(templateUrl, formData);
+            console.log("formData before submission:", formData); // Log formData to check its state
 
-            // Step 1: Find or create the 'Ocorrencias' folder in Google Drive shared from centralVPA
-            const ocorrenciasFolderId = await Utils.createOrFindFolder('1yE6cG3Kwakq1V0ZcI8liMfqF4tLc2E4h');
+            gapi.auth2.getAuthInstance().signIn().then(async () => {
+                const metadata = {
+                    name: fileName,
+                    mimeType: 'application/pdf',
+                };
 
-            // Step 2: Inside 'Ocorrencias', find or create the 'num_ocorrencia' folder
-            const ocorrenciaFolderId = await Utils.createOrFindFolder(num_ocorrencia, '1yE6cG3Kwakq1V0ZcI8liMfqF4tLc2E4h');
+                // Step 1: Find or create the 'Ocorrencias' folder in Google Drive shared from centralVPA
+                const ocorrenciasFolderId = await Utils.createOrFindFolder('1yE6cG3Kwakq1V0ZcI8liMfqF4tLc2E4h');
 
-            if (!ocorrenciaFolderId) {
-                alert('Erro ao criar a estrutura de pastas no Google Drive');
-                return;
-            }
+                // Step 2: Inside 'Ocorrencias', find or create the 'num_ocorrencia' folder
+                const ocorrenciaFolderId = await Utils.createOrFindFolder(num_ocorrencia, '1yE6cG3Kwakq1V0ZcI8liMfqF4tLc2E4h');
 
-            console.log(ocorrenciaFolderId);
-
-            if (!ocorrenciaFolderId) {
-                alert('Error creating the folder structure in Google Drive.');
-                return;
-            }
-
-            const form = new FormData();
-            metadata.parents = [ocorrenciaFolderId];
-            form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-            form.append('file', new Blob([file], { type: 'application/pdf' }));
-
-            const xhr = new XMLHttpRequest();
-            setIsUploading(true);
-            xhr.open('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', true);
-            xhr.setRequestHeader('Authorization', `Bearer ${gapi.auth.getToken().access_token}`);
-
-            xhr.upload.onprogress = (event) => {
-                if (event.lengthComputable) {
-                    const percentComplete = Math.round((event.loaded / event.total) * 100);
-                    setUploadProgress(percentComplete);
+                if (!ocorrenciaFolderId) {
+                    alert('Erro ao criar a estrutura de pastas no Google Drive');
+                    return;
                 }
-            };
 
-            xhr.onload = () => {
-                if (xhr.status === 200) {
-                    alert('Ficheiro enviado com sucesso para o Google Drive!');
-                    localStorage.removeItem("VerbeteData");
-                    setIsUploading(false); // Stop spinner
-                    setUploadProgress(0); // Reset progress
-                } else {
-                    console.error('Erro no upload do ficheiro para o Google Drive: ', xhr.responseText);
-                    setIsUploading(false); // Stop spinner
+                console.log(ocorrenciaFolderId);
+
+                if (!ocorrenciaFolderId) {
+                    alert('Error creating the folder structure in Google Drive.');
+                    return;
                 }
-            };
 
-            xhr.onerror = () => {
-                console.error('Erro no upload do ficheiro para o Google Drive.');
-                setIsUploading(false); // Stop spinner
-            };
+                const form = new FormData();
+                metadata.parents = [ocorrenciaFolderId];
+                form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+                form.append('file', new Blob([file], { type: 'application/pdf' }));
 
-            xhr.send(form); // Send the form data
-        });
+                const xhr = new XMLHttpRequest();
+                setIsUploading(true);
+                xhr.open('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', true);
+                xhr.setRequestHeader('Authorization', `Bearer ${gapi.auth.getToken().access_token}`);
+
+                xhr.upload.onprogress = (event) => {
+                    if (event.lengthComputable) {
+                        const percentComplete = Math.round((event.loaded / event.total) * 100);
+                        setUploadProgress(percentComplete);
+                    }
+                };
+
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        alert('Ficheiro enviado com sucesso para o Google Drive!');
+                        localStorage.removeItem("VerbeteData");
+                        localStorage.removeItem("hora_chegada_unidade_hospitalar");
+                        setIsUploading(false); // Stop spinner
+                        setUploadProgress(0); // Reset progress
+                    } else {
+                        console.error('Erro no upload do ficheiro para o Google Drive: ', xhr.responseText);
+                        setIsUploading(false); // Stop spinner
+                    }
+                };
+
+                xhr.onerror = () => {
+                    console.error('Erro no upload do ficheiro para o Google Drive.');
+                    setIsUploading(false); // Stop spinner
+                };
+
+                xhr.send(form); // Send the form data
+            });
+        } else {
+            alert("Dados não preenchidos (Hora Chegada à Vitima, Caminho U. Saúde, Chegada U. Saúde ). Por favor, preencha antes de finalizar.");
+        }
     };
 
     return (
@@ -693,7 +710,7 @@ function VerbeteINEM() {
                         <div className="event-form" style={{ flexGrow: 1 }}>
 
                             {/* RCP */}
-                            <RCPComponent formData={formData} handleChange={handleChange}/>
+                            <RCPComponent formData={formData} handleChange={handleChange} />
 
                             {/* VA / Ventilação */}
                             <VentilacaoComponent formData={formData} handleChange={handleChange} />
