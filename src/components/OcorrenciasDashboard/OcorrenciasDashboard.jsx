@@ -31,13 +31,14 @@ const EmergencyCard = ({ data }) => {
                             variant="h4"
                             sx={{ marginRight: 1, fontWeight: "bold" }}
                         >
-                            {data.time}
+                            {data.dataHoraAlerta}
                         </Typography>
                         <Typography variant="h6" sx={{ color: "gray" }}>
-                            {data.status}
+                            {data.descClassificacao}
                         </Typography>
                     </Box>
                     <Box sx={{ display: "flex", gap: 1 }}>
+                        {/* 
                         {data.tags.map((tag, index) => (
                             <Typography
                                 key={index}
@@ -53,15 +54,19 @@ const EmergencyCard = ({ data }) => {
                                 {tag.label}
                             </Typography>
                         ))}
+                            */}
                     </Box>
                 </Box>
 
                 {/* Location and Description */}
                 <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: 1 }}>
-                    {data.location.street}, {data.location.city}
+                    {data.morada}
+                </Typography>
+                <Typography variant="h6" sx={{marginBottom: 1 }}>
+                    {data.localidadeMorada}
                 </Typography>
                 <Typography variant="subtitle1" sx={{ marginBottom: 2 }}>
-                    {data.description}
+                    {data.estado}
                 </Typography>
 
                 {/* Map Section */}
@@ -74,9 +79,9 @@ const EmergencyCard = ({ data }) => {
                     }}
                 >
                     <img
-                        src={data.mapImage}
+                        src={`https://maps.googleapis.com/maps/api/staticmap?center=Berkeley,CA&zoom=14&size=400x400&key=${GOOGLE_MAPS_API_KEY}`}
                         alt="Location map"
-                        style={{ width: "100%", height: "175px", objectFit: "cover" }}
+                        style={{ width: "100%", height: "150px", objectFit: "cover" }}
                     />
                 </Box>
 
@@ -95,10 +100,10 @@ const EmergencyCard = ({ data }) => {
                     POSIT
                 </Typography>
                 <Typography variant="caption" sx={{ display: "block", marginTop: 1 }}>
-                    Coordenadas: {data.coordinates}
+                    Coordenadas: "coordenadas"
                 </Typography>
                 <Typography variant="caption" sx={{ display: "block" }}>
-                    {data.details}
+                    Detalhes
                 </Typography>
             </Card>
         </Grid>
@@ -240,11 +245,20 @@ const OcorrenciasDashboad = () => {
 
     return (
         <Box sx={{ padding: 2 }}>
-            <Grid container spacing={2}>
-                {emergencyData.slice(0, 6).map((emergency, index) => (
-                    <EmergencyCard key={index} data={emergency} />
-                ))}
-            </Grid>
+            {emergencies.length === 0 ? (
+                <Typography
+                    variant="h4"
+                    sx={{ textAlign: "center", color: "gray", marginTop: 6 }}
+                >
+                    Não foram encontradas ocorrências.
+                </Typography>
+            ) : (
+                <Grid container spacing={2}>
+                    {emergencies.slice(0, 6).map((emergency, index) => (
+                        <EmergencyCard key={index} data={emergency} />
+                    ))}
+                </Grid>
+            )}
         </Box>
     );
 };
