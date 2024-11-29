@@ -1,39 +1,37 @@
 import React, { useState, useEffect, useContext, createContext } from 'react';
-import { PDFDocument } from 'pdf-lib';
-import { saveAs } from 'file-saver';
-import axios from 'axios';
 import { useNavigate, useLocation } from "react-router-dom";
+import axios from 'axios';
+import { gapi } from 'gapi-script';
 import pdfFile from '../assets/Verbete-INEM.pdf';
-import '../css/Login.css';
+import Utils from '../utils/utils.js';
+import IncidentReportService from '../services/IncidentReportService.js';
+import { Box, CircularProgress, Card, Grid } from '@mui/material';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import '../css/EmergencyForm.css';
-import '../css/VerbeteINEM.css'
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import DownloadIcon from '@mui/icons-material/Download';
+import UploadIcon from '@mui/icons-material/Upload';
 import LegendaComponent from '../components/VerbeteINEMComponents/LegendaComponent';
 import RCPComponent from './VerbeteINEMComponents/RCPComponent';
 import VentilacaoComponent from './VerbeteINEMComponents/VentilacaoComponent';
 import CirculacaoComponent from './VerbeteINEMComponents/CirculacaoComponent';
 import ProtocolosComponent from './VerbeteINEMComponents/ProtocolosComponent';
-import { Box, CircularProgress, Card, Grid, Checkbox, FormControlLabel } from '@mui/material';
 import EscalasComponent from './VerbeteINEMComponents/EscalasComponent';
 import HistorialClinicoComponent from './VerbeteINEMComponents/HistorialClinicoComponent.jsx';
 import SinaisSintomasComponent from './VerbeteINEMComponents/SinaisSintomasComponent.jsx';
 import OcorrenciaComponent from './VerbeteINEMComponents/OcorrenciaComponent.jsx';
 import IdentificacaoComponent from './VerbeteINEMComponents/IdentificacaoComponent.jsx';
 import AvaliacaoComponent from './VerbeteINEMComponents/AvaliacaoComponent.jsx';
-import DownloadIcon from '@mui/icons-material/Download'; // Download icon for saving
-import UploadIcon from '@mui/icons-material/Upload';
-import { gapi } from 'gapi-script';
-import Utils from '../utils/utils.js';
 import FarmacologiaComponent from './VerbeteINEMComponents/FarmacologiaComponent.jsx';
 import NaoTransporteComponent from './VerbeteINEMComponents/NaoTransporteComponent.jsx';
 import TransporteComponent from './VerbeteINEMComponents/TransporteComponent.jsx';
 import ObservacoesComponent from './VerbeteINEMComponents/ObservacoesComponent.jsx';
+import '../css/Login.css';
+import '../css/EmergencyForm.css';
+import '../css/VerbeteINEM.css'
 
 
 function VerbeteINEM() {
@@ -304,6 +302,7 @@ function VerbeteINEM() {
         const descricao = localStorage.getItem('username');
         const emergency = JSON.parse(localStorage.getItem('EmergencyData')) || {}; // Safely parse in case it's null
         const hora_chegada_unidade_hospitalar = localStorage.getItem('hora_chegada_unidade_hospitalar');
+        console.log(hora_chegada_unidade_hospitalar)
 
         // Extract and filter viaturas by descricao
         const vehicles = emergency[0].viaturas || [];
@@ -329,8 +328,6 @@ function VerbeteINEM() {
             hora_caminho_hospital: filteredVehicles[0].hora_saida_to || '',
             hora_chegada_unidade_hospitalar: hora_chegada_unidade_hospitalar !== null ? hora_chegada_unidade_hospitalar : '',
         }));
-
-        console.log(filteredVehicles)
 
     }, [item]);
 
@@ -423,10 +420,10 @@ function VerbeteINEM() {
     const handleBlur = () => {
         const updatedMessageSinaisSintomas =
             `${reportData.descricao}\nNr. CODU:  ${nr_codu} - ${formData.sinais_sintomas}`;
-        
+
         const updatedMessageObservacoes =
             `${reportData.trabalho_desenvolvido}\nNr. CODU:  ${nr_codu} - ${formData.observacoes}`;
-    
+
         setReportData((prevReportData) => ({
             ...prevReportData,
             descricao: updatedMessageSinaisSintomas || '',
@@ -439,12 +436,12 @@ function VerbeteINEM() {
         if (storedData) {
             const parsedData = JSON.parse(storedData);
             updateFormData(parsedData);
-    
+
             const messageSinaisSintomas =
                 `${reportData.descricao}\nNr. CODU: ${nr_codu} - ${parsedData.sinais_sintomas || ''}`;
             const messageObservacoes =
                 `${reportData.trabalho_desenvolvido}\nNr. CODU: ${nr_codu} - ${parsedData.observacoes || ''}`;
-    
+
             setReportData((prevReportData) => ({
                 ...prevReportData,
                 descricao: messageSinaisSintomas,
@@ -496,7 +493,7 @@ function VerbeteINEM() {
 
                 try {
                     console.log('updates: ', reportData)
-                    updateIncidentsReport();
+                    IncidentReportService.updateIncidentsReport(item, reportData);
                 }
                 catch {
 
@@ -581,6 +578,15 @@ function VerbeteINEM() {
                         localStorage.removeItem("hora_chegada_unidade_hospitalar");
                         setIsUploading(false); // Stop spinner
                         setUploadProgress(0); // Reset progress
+
+                        // Update incident report after successful upload
+                        try {
+                            console.log('updates: ', reportData);
+                            IncidentReportService.updateIncidentsReport(item, reportData);
+                        } catch (error) {
+                            console.error('Error updating incident report: ', error);
+                        }
+
                     } else {
                         console.error('Erro no upload do ficheiro para o Google Drive: ', xhr.responseText);
                         setIsUploading(false); // Stop spinner
@@ -701,36 +707,12 @@ function VerbeteINEM() {
     };
 
     useEffect(() => {
+
         fetchIncidentReport(); // Fetch the report data initially
+
     }, [item.id]);
 
     console.log('report data: ', reportData)
-
-    const updateIncidentsReport = async () => {
-        try {
-            const response = await axios.post('https://preventech-proxy-service.onrender.com/api/finalreport/updateIncidentsReport', {
-                id_ocorrencia: item.id,
-                ...reportData
-            });
-
-            if (response.data && response.data.status === 'success') {
-                localStorage.setItem('IncidentReport', JSON.stringify(reportData));
-                alert('Dados Guardados com Sucesso');
-                setTimeout(() => window.history.back(), 0); // Go back after alert
-            }
-            else if (response.status === 200) {
-                console.log('Report updated successfully');
-                alert('Dados Guardados com Sucesso');
-                setTimeout(() => window.history.back(), 0); // Go back after alert
-            } else {
-                // Handle any other cases (like errors in the response)
-                console.error('Unexpected response:', response.data);
-                setTimeout(() => window.history.back(), 0); // Go back after alert
-            }
-        } catch (error) {
-            console.error('Error updating report:', error);
-        }
-    };
 
     return (
         <div>
@@ -862,12 +844,12 @@ function VerbeteINEM() {
                         <div className="event-form" style={{ flexGrow: 1 }}>
 
                             {/* Sinais e Sintomas */}
-                            <SinaisSintomasComponent formData={formData} handleChange={handleChange} handleBlur={handleBlur}  />
+                            <SinaisSintomasComponent formData={formData} handleChange={handleChange} handleBlur={handleBlur} />
 
                             {/* Farmacologia */}
                             <FarmacologiaComponent formData={formData} handleChange={handleChange} />
 
-                            <ObservacoesComponent formData={formData} handleChange={handleChange} handleBlur={handleBlur}/>
+                            <ObservacoesComponent formData={formData} handleChange={handleChange} handleBlur={handleBlur} />
 
                         </div>
                     </div>

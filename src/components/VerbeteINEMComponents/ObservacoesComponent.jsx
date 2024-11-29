@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextField, FormGroup, FormControlLabel, Checkbox, Card, CardContent, formControlClasses } from '@mui/material';
 
-const ObservacoesComponent = ({ formData, handleChange }) => {
+const ObservacoesComponent = ({ formData, handleChange, handleBlur }) => {
     return (
         <table style={styles.table}>
         <thead>
@@ -20,6 +20,7 @@ const ObservacoesComponent = ({ formData, handleChange }) => {
                         rows={5}
                         value={formData.observacoes}
                         onChange={handleChange}
+                        onBlur={handleBlur} 
                     />
                 </td>
             </tr>

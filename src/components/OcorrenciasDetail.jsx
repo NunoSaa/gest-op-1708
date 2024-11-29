@@ -316,7 +316,7 @@ function OcorrenciasDetail() {
             if (descricao === 'ABSC01' || descricao === 'ABSC02'
                 || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'ABSC09' || descricao === 'VOPE06') {
 
-                localStorage.setItem('hora_disponivel', currentHour);
+                localStorage.setItem('hora_chegada_unidade_hospitalar', currentHour);
 
                 response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
                     id_ocorrencia: emergencies[0].id,
