@@ -221,6 +221,8 @@ function VerbeteINEM() {
         rcp_presenciada: '',
         rcp_sbv_dae: '',
         rcp_siv_sav: '',
+        rcp_choque: '',
+        rcp_n_choque: '',
         rcp_nr_choques: '',
         rcp_recup: '',
         rcp_susp: '',
