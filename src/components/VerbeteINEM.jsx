@@ -32,6 +32,7 @@ import ObservacoesComponent from './VerbeteINEMComponents/ObservacoesComponent.j
 import '../css/Login.css';
 import '../css/EmergencyForm.css';
 import '../css/VerbeteINEM.css'
+import GravidadeVitimaComponent from './VerbeteINEMComponents/GravidadeVitimaComponent.jsx';
 
 
 function VerbeteINEM() {
@@ -842,6 +843,9 @@ function VerbeteINEM() {
                             Exame da Vítima, Terapêutica e Observações
                         </div>
                         <div className="event-form" style={{ flexGrow: 1 }}>
+
+                            {/* Gravidade Vitima */}
+                            <GravidadeVitimaComponent/>
 
                             {/* Sinais e Sintomas */}
                             <SinaisSintomasComponent formData={formData} handleChange={handleChange} handleBlur={handleBlur} />

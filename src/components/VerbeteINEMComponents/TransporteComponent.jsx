@@ -3,12 +3,6 @@ import { TextField, Checkbox, Select, MenuItem, FormControl, InputLabel } from '
 
 const TransporteComponent = ({ formData, handleChange }) => {
 
-    const inverseTransporteMapping = {
-        'C.H.VilaReal': 'ch_vila_real',
-        'C.H.Chaves': 'ch_chaves',
-        'N/A': 'na',
-    };
-
     return (
         <table style={{ ...styles.table, marginTop: '10px' }}>
             <thead>
@@ -85,21 +79,18 @@ const TransporteComponent = ({ formData, handleChange }) => {
                 <table style={{ ...styles.table, marginTop: '10px' }}>
                     <div style={styles.rowInfo}>
                         <div style={{ ...styles.inputGroup, flex: 5 }}>
-                            <label>Unidade de Saúde de Destino</label>
-                            <Select
+                            <label>Unidade de Saúde de Origem</label>
+                            <TextField
                                 name="transporte_unidade_origem"
-                                value={inverseTransporteMapping[formData.transporte_unidade_origem]}
-                                onChange={handleChange}
+                                variant="outlined"
                                 fullWidth
-                            >
-                                <MenuItem value="na">N/A</MenuItem>
-                                <MenuItem value="ch_vila_real">C.H. Vila Real</MenuItem>
-                                <MenuItem value="ch_chaves">C.H. Chaves</MenuItem>
-                            </Select>
+                                value={formData.transporte_unidade_origem}
+                                onChange={handleChange}
+                            />
                         </div>
 
                         <div style={{ ...styles.inputGroup, flex: 2 }}>
-                            <label style={{ paddingLeft: '15px' }}>Nrº de Processo</label>
+                            <label style={{ paddingLeft: '15px' }}>Nrº de Episódio</label>
                             <TextField
                                 name="transporte_nr_processo_origem"
                                 variant="outlined"
@@ -115,20 +106,17 @@ const TransporteComponent = ({ formData, handleChange }) => {
                     <div style={styles.rowInfo}>
                         <div style={{ ...styles.inputGroup, flex: 5 }}>
                             <label>Unidade de Saúde de Destino</label>
-                            <Select
+                            <TextField
                                 name="transporte_unidade_destino"
-                                value={inverseTransporteMapping[formData.transporte_unidade_destino]}
-                                onChange={handleChange}
+                                variant="outlined"
                                 fullWidth
-                            >
-                                <MenuItem value="na">N/A</MenuItem>
-                                <MenuItem value="ch_vila_real">C.H. Vila Real</MenuItem>
-                                <MenuItem value="ch_chaves">C.H. Chaves</MenuItem>
-                            </Select>
+                                value={formData.transporte_unidade_destino}
+                                onChange={handleChange}
+                            />
                         </div>
 
                         <div style={{ ...styles.inputGroup, flex: 2 }}>
-                            <label style={{ paddingLeft: '15px' }}>Nrº de Processo</label>
+                            <label style={{ paddingLeft: '15px' }}>Nrº de Episódio</label>
                             <TextField
                                 name="transporte_nr_processo_destino"
                                 variant="outlined"
@@ -153,7 +141,7 @@ const TransporteComponent = ({ formData, handleChange }) => {
                             />
                         </div>
 
-                        <div style={{ ...styles.inputGroup, flex: 3 }}>
+                        <div style={{ ...styles.inputGroup, flex: 2 }}>
                             <label style={{ paddingLeft: '15px' }}>Nrº Profissional</label>
                             <TextField
                                 name="transporte_nr_profissional"
