@@ -29,8 +29,7 @@ function HomePage() {
 
     const handleLogout = () => {
         // Clear the local storage
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
+        localStorage.clear();
 
         // Optionally navigate to the login page or another page
         // Redirect to user homepage and refresh
