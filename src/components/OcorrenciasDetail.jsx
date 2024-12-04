@@ -181,7 +181,7 @@ function OcorrenciasDetail() {
                 alert('Chegada ao Local Enviada com Sucesso');
 
                 if (descricao === 'ABSC01' || descricao === 'ABSC02'
-                    || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'VOPE06') {
+                    || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'ABSC09' || descricao === 'VOPE06') {
                     await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
                         id_ocorrencia: emergencies[0].id,
                         id_estado: '5'
