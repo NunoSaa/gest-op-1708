@@ -15,6 +15,7 @@ const ObservacoesComponent = ({ formData, handleChange, handleBlur }) => {
                     <TextField
                         name='observacoes'
                         variant="outlined"
+                        placeholder="Registe tudo o que for avaliado e realizado pela equipa de forma legível."
                         fullWidth
                         multiline
                         rows={5}

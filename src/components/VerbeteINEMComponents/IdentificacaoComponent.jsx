@@ -16,6 +16,7 @@ const IdentificacaoComponent = ({ formData, handleChange }) => {
                     <TextField
                         name="nome"
                         variant="outlined"
+                        placeholder="Nome completo da vítima"
                         fullWidth
                         value={formData.nome} // Controlled component
                         onChange={handleChange} // Handle change from parent
@@ -89,6 +90,7 @@ const IdentificacaoComponent = ({ formData, handleChange }) => {
                     <TextField
                         name="residencia"
                         variant="outlined"
+                        placeholder="Morada de residência completa (incluindo país, caso seja estrangeira)"
                         fullWidth
                         value={formData.residencia}
                         onChange={handleChange}

@@ -10,6 +10,7 @@ const HistorialClinicoComponent = ({ formData, handleChange }) => {
                     <TextField
                         name = "circunstancias"
                         variant="outlined"
+                        placeholder="Descreva cinemática, fator(es) desencadeante(s), envolvente, ..."
                         fullWidth
                         value={formData.circunstancias}
                         onChange={handleChange}
@@ -23,6 +24,7 @@ const HistorialClinicoComponent = ({ formData, handleChange }) => {
                     <TextField
                         name = "historico"
                         variant="outlined"
+                        placeholder="Indique doenças conhecidas mais relevantes"
                         fullWidth
                         value={formData.historico}
                         onChange={handleChange}
@@ -36,6 +38,7 @@ const HistorialClinicoComponent = ({ formData, handleChange }) => {
                     <TextField
                         name = "alergias"
                         variant="outlined"
+                        placeholder="Indique alergias/epsisódios conhecidos ou indicar se “Desconhece”"
                         fullWidth
                         value={formData.alergias}
                         onChange={handleChange}
@@ -49,6 +52,7 @@ const HistorialClinicoComponent = ({ formData, handleChange }) => {
                     <TextField
                         name = "medicacao_1"
                         variant="outlined"
+                        placeholder="Enumere a terapêutica habitual"
                         fullWidth
                         value={formData.medicacao_1}
                         onChange={handleChange}
@@ -62,6 +66,7 @@ const HistorialClinicoComponent = ({ formData, handleChange }) => {
                     <TextField
                         name="ultima_refeicao"
                         variant="outlined"
+                        placeholder="Indique, se adequado, hora e refeição consumida"
                         fullWidth
                         value={formData.ultima_refeicao}
                         onChange={handleChange}
@@ -75,6 +80,7 @@ const HistorialClinicoComponent = ({ formData, handleChange }) => {
                     <TextField
                         name="situacao_risco"
                         variant="outlined"
+                        placeholder="Maus tratos, condição social, …"
                         fullWidth
                         value={formData.situacao_risco}
                         onChange={handleChange}

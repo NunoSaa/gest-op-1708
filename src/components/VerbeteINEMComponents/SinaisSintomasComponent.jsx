@@ -15,6 +15,7 @@ const SinaisSintomasComponent = ({ formData, handleChange, handleBlur }) => {
                         <TextField
                             name="sinais_sintomas"
                             variant="outlined"
+                            placeholder="Descreva aqui os sinais e sintomas identificados na avaliação."
                             fullWidth
                             multiline
                             rows={5}

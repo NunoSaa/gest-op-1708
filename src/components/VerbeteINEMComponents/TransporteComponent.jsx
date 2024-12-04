@@ -83,6 +83,7 @@ const TransporteComponent = ({ formData, handleChange }) => {
                             <TextField
                                 name="transporte_unidade_origem"
                                 variant="outlined"
+                                placeholder="Preencha se Transporte Secundário (entre unidades de saúde)"
                                 fullWidth
                                 value={formData.transporte_unidade_origem}
                                 onChange={handleChange}
@@ -109,6 +110,7 @@ const TransporteComponent = ({ formData, handleChange }) => {
                             <TextField
                                 name="transporte_unidade_destino"
                                 variant="outlined"
+                                placeholder="Não tem de ser assinado e/ou carimbado na Unid. Saúde"
                                 fullWidth
                                 value={formData.transporte_unidade_destino}
                                 onChange={handleChange}
@@ -135,6 +137,7 @@ const TransporteComponent = ({ formData, handleChange }) => {
                             <TextField
                                 name="transporte_responsavel_meio"
                                 variant="outlined"
+                                placeholder="Nome do profissional de saúde"
                                 fullWidth
                                 value={formData.transporte_responsavel_meio}
                                 onChange={handleChange}
@@ -146,6 +149,7 @@ const TransporteComponent = ({ formData, handleChange }) => {
                             <TextField
                                 name="transporte_nr_profissional"
                                 variant="outlined"
+                                placeholder="Nº Ordem / TEPH / TAS"
                                 fullWidth
                                 value={formData.transporte_nr_profissional}
                                 onChange={handleChange}
