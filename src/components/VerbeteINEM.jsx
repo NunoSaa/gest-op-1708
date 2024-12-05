@@ -53,7 +53,7 @@ function VerbeteINEM() {
     //send the info to report
     let emergency = JSON.parse(localStorage.getItem('EmergencyData')) || {}; // Safely parse in case it's null
     let nr_codu = emergency[0].requestList[0].numero_codu || '';
-    const data_nascimento = new Date(JSON.parse(localStorage.getItem('DataNascimento')) || '');
+    let data_nascimento = new Date(JSON.parse(localStorage.getItem('DataNascimento')) || '');
 
     // Initialize Google API client on component mount
     useEffect(() => {
@@ -301,7 +301,7 @@ function VerbeteINEM() {
     useEffect(() => {
         const saveInterval = setInterval(() => {
             localStorage.setItem('VerbeteData', JSON.stringify(formData));
-        }, 10000); // 60000ms = 1 minute
+        }, 1000); // 60000ms = 1 minute
 
         return () => clearInterval(saveInterval); // Clear interval on component unmount
     }, [formData]); // Dependency ensures it tracks the latest `formData`
@@ -794,7 +794,7 @@ function VerbeteINEM() {
                             Identificação
                         </div>
 
-                        <IdentificacaoComponent formData={formData} handleChange={handleChange} data_nascimento />
+                        <IdentificacaoComponent formData={formData} handleChange={handleChange} data_nascimento={data_nascimento} />
 
                     </div>
 
@@ -934,7 +934,7 @@ function VerbeteINEM() {
                                     sx={{ height: 60 }}
                                     onClick={saveToDevice}>
                                     Guardar no dispositivo
-                                    <DownloadIcon sx={{ marginRight: 1 }} /> {/* Download icon */}
+                                    <DownloadIcon sx={{ marginRight: 1 }} /> 
                                 </Button>
                             </Grid>
                             <Grid item xs={12} sm={5}>
@@ -945,80 +945,82 @@ function VerbeteINEM() {
                                     sx={{ height: 60 }}
                                     onClick={sendToDrive}>
                                     Enviar para Gescorp
-                                    <UploadIcon sx={{ marginRight: 1 }} /> {/* Upload icon */}
+                                    <UploadIcon sx={{ marginRight: 1 }} /> 
                                 </Button>
                             </Grid>
                         </Grid>
-                    </Grid>
+                    </Grid >
 
-                    {isUploading && (
-                        <Box
-                            sx={{
-                                position: "fixed",
-                                top: 0,
-                                left: 0,
-                                width: "100%",
-                                height: "100%",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                backgroundColor: "rgba(0, 0, 0, 0.7)", // Dark overlay
-                                zIndex: 1300, // Ensure it's above other elements
-                            }}
-                        >
-                            <Card
+                    {
+                        isUploading && (
+                            <Box
                                 sx={{
-                                    padding: 4,
+                                    position: "fixed",
+                                    top: 0,
+                                    left: 0,
+                                    width: "100%",
+                                    height: "100%",
                                     display: "flex",
-                                    flexDirection: "column",
                                     alignItems: "center",
                                     justifyContent: "center",
-                                    backgroundColor: "white",
-                                    borderRadius: "16px",
-                                    boxShadow: 5,
+                                    backgroundColor: "rgba(0, 0, 0, 0.7)", // Dark overlay
+                                    zIndex: 1300, // Ensure it's above other elements
                                 }}
                             >
-                                <Box
+                                <Card
                                     sx={{
-                                        position: "relative",
-                                        display: "inline-flex",
-                                        width: "150px",
-                                        height: "150px",
+                                        padding: 4,
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        backgroundColor: "white",
+                                        borderRadius: "16px",
+                                        boxShadow: 5,
                                     }}
                                 >
-                                    <CircularProgress
-                                        variant="determinate"
-                                        value={uploadProgress}
-                                        size={150}
-                                        thickness={5}
-                                    />
                                     <Box
                                         sx={{
-                                            top: 0,
-                                            left: 0,
-                                            bottom: 0,
-                                            right: 0,
-                                            position: "absolute",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            justifyContent: "center",
+                                            position: "relative",
+                                            display: "inline-flex",
+                                            width: "150px",
+                                            height: "150px",
                                         }}
                                     >
-                                        <Typography variant="h6" component="div" color="text.secondary">
-                                            {`${uploadProgress}%`}
-                                        </Typography>
+                                        <CircularProgress
+                                            variant="determinate"
+                                            value={uploadProgress}
+                                            size={150}
+                                            thickness={5}
+                                        />
+                                        <Box
+                                            sx={{
+                                                top: 0,
+                                                left: 0,
+                                                bottom: 0,
+                                                right: 0,
+                                                position: "absolute",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                            }}
+                                        >
+                                            <Typography variant="h6" component="div" color="text.secondary">
+                                                {`${uploadProgress}%`}
+                                            </Typography>
+                                        </Box>
                                     </Box>
-                                </Box>
-                                <Typography variant="body1" sx={{ marginTop: 2 }}>
-                                    A enviar para Google Drive, por favor aguarde...
-                                </Typography>
-                            </Card>
-                        </Box>
-                    )}
+                                    <Typography variant="body1" sx={{ marginTop: 2 }}>
+                                        A enviar para Google Drive, por favor aguarde...
+                                    </Typography>
+                                </Card>
+                            </Box>
+                        )
+                    }
 
 
-                </form>
-            </div>
+                </form >
+            </div >
 
             <div
                 style={{
