@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Button from '@mui/material/Button';
-import { gapi } from 'gapi-script';
 import { useNavigate, useLocation } from "react-router-dom";
 import { ClipLoader } from 'react-spinners';
 import AppBar from '@mui/material/AppBar';
@@ -10,7 +9,6 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EmergencyDetails from '../components/OcorrenciasComponents/EmergencyDetails';
-import SendToGoogleDrive from '../utils/SendToGoogleDrive';
 function OcorrenciasDetail() {
 
     const navigate = useNavigate();
@@ -36,91 +34,7 @@ function OcorrenciasDetail() {
     const descricao = localStorage.getItem('username');
     const incidentReport = JSON.parse(localStorage.getItem('IncidentReport'));
     // State for kmFim, initially set to null or false
-    const [kmFim, setKmFim] = useState(() => {
-        const savedKmFim = localStorage.getItem('kmFim');
-        return savedKmFim ? JSON.parse(savedKmFim) : null;
-    });
-
-    const [pdfBlob, setPdfBlob] = useState(null);
-    const [uploadProgress, setUploadProgress] = useState(0); // Upload progress
-    const [isUploading, setIsUploading] = useState(false); // Uploading state
-    const num_ocorrencia = item.numero;
-
-    const now = new Date();
-    // Get the current date in the format "YYYY-MM-DD"
-    const currentDate = now.toISOString().split('T')[0];
-    // Get the current time in the format "HH:MM"
-    const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
-    //Buld the FileName
-    let fileName = item.numero + '_VERBETE_INEM_' + currentDate + '_' + currentHour + '.pdf';
-
-    const formData = JSON.parse(localStorage.getItem("VerbeteData")) || {};
-
-    const [reportData, setReportData] = useState(() => {
-        const storedData = localStorage.getItem("IncidentReport");
-        return storedData ? JSON.parse(storedData) : {
-            id: '',
-            id_relatorio: '',
-            descricao: '',
-            trabalhoDesenvolvido: '',
-            danos_causados: '',
-            desalojados_num: '',
-            desalojados_descricao: '',
-            csrepc: '',
-            vitimas_bombeiros_assistidas: '',
-            vitimas_bombeiros_feridos: '',
-            vitimas_bombeiros_graves: '',
-            vitimas_bombeiros_mortos: '',
-            vitimas_civis_assistidas: '',
-            vitimas_civis_feridos: '',
-            vitimas_civis_graves: '',
-            vitimas_civis_mortos: '',
-            vitimas_apc_assistidas: '',
-            vitimas_apc_feridos: '',
-            vitimas_apc_graves: '',
-            vitimas_apc_mortos: '',
-            aa_outra1: '',
-            aa_outra2: '',
-            aa_outra3: '',
-            aa_outra4: '',
-            aa_outra5: '',
-            aa_valor1: '',
-            aa_valor2: '',
-            aa_valor3: '',
-            aa_valor4: '',
-            aa_valor5: ''
-        };
-    });
-
-    let emergency = JSON.parse(localStorage.getItem('EmergencyData')) || {}; // Safely parse in case it's null
-    let nr_codu = emergency[0].requestList[0].numero_codu || '';
-
-    const CLIENT_ID = '214123389323-3c7npk6e2hasbi2jt3pnrg1jqvjtm92m.apps.googleusercontent.com';  // Replace with your OAuth Client ID
-    const API_KEY = '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';  // Replace with your Google Cloud API Key
-    const SCOPES = 'https://www.googleapis.com/auth/drive.file'; // Scope to upload file
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-    // Initialize Google API client on component mount
-    useEffect(() => {
-        function start() {
-            gapi.client.init({
-                apiKey: API_KEY,
-                clientId: CLIENT_ID,
-                discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
-                scope: SCOPES,
-            }).then(() => {
-                // Check if the user is already signed in
-                const authInstance = gapi.auth2.getAuthInstance();
-                if (authInstance.isSignedIn.get()) {
-                    setIsAuthenticated(true);
-                } else {
-                    authInstance.isSignedIn.listen(setIsAuthenticated);
-                }
-            });
-        }
-        gapi.load('client:auth2', start);
-    }, []);
-
+    const [kmFim, setKmFim] = useState(null);
 
     // Load EmergencyData from localStorage if available on component mount
     useEffect(() => {
@@ -135,7 +49,8 @@ function OcorrenciasDetail() {
         }
 
         const hora_chegada_unidade_hospitalar = localStorage.getItem('hora_chegada_unidade_hospitalar');
-        if (hora_chegada_unidade_hospitalar) {
+        if(hora_chegada_unidade_hospitalar)
+        {
             setChegadaUnidadeHospTime(hora_chegada_unidade_hospitalar);
             setIsChegadaUnidadeHospSet(true);
         }
@@ -152,9 +67,6 @@ function OcorrenciasDetail() {
         return () => clearInterval(intervalId);
     }, [isTimerRunning]);
 
-    let updatedMessageSinaisSintomas = '';
-    let updatedMessageObservacoes = '';
-
     useEffect(() => {
         if (!state) return;
 
@@ -166,23 +78,7 @@ function OcorrenciasDetail() {
 
         refreshItemData();
 
-        updatedMessageSinaisSintomas =
-            `${reportData.descricao} \n Nr. CODU:  ${nr_codu} - ${formData.sinais_sintomas}`;
-
-        updatedMessageObservacoes =
-            `${reportData.trabalho_desenvolvido} \n Nr. CODU:  ${nr_codu} - ${formData.observacoes}`;
-
-        setReportData((prevReportData) => {
-            const updatedReportData = {
-                ...prevReportData,
-                descricao: updatedMessageSinaisSintomas || '',
-                trabalho_desenvolvido: updatedMessageObservacoes || '',
-            };
-            console.log('Updated Report Data (inside setState):', updatedReportData);
-            return updatedReportData;
-        });
-
-        const intervalId = setInterval(refreshItemData, 5000);
+        const intervalId = setInterval(refreshItemData, 60000);
 
         return () => clearInterval(intervalId);
     }, [state]);
@@ -519,20 +415,11 @@ function OcorrenciasDetail() {
 
     const handleFinalizarOcorrencia = async () => {
 
-        if (incidentReport &&
-            incidentReport.descricao.length > 0 &&
-            (kmFim !== 0 && kmFim !== null && kmFim !== undefined)) {
+        if (incidentReport && incidentReport.descricao.length > 0 && kmFim != 0) {
 
             try {
                 let response = null;
 
-                console.log(reportData)
-                console.log(updatedMessageSinaisSintomas)
-                console.log(updatedMessageObservacoes)
-
-                SendToGoogleDrive.sendToDrive(pdfBlob, fileName, formData, num_ocorrencia, setIsUploading, setUploadProgress, reportData, item);
-
-                /*
                 response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
                     id_ocorrencia: emergencies[0].id,
                     id_estado: '10'
@@ -551,7 +438,6 @@ function OcorrenciasDetail() {
                     localStorage.removeItem("leve");
                     navigate('/homepage');
                 }
-                    */
 
             } catch (error) {
                 console.error('Error updating chegada time:', error);
