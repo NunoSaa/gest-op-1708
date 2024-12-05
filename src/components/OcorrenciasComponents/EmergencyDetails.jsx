@@ -24,6 +24,7 @@ const EmergencyDetails = ({
     viaturas,
     isChegadaUnidadeHospSet,
     handleSetTimeChegadaUnidadeHosp,
+    chegadaUnidadeHospTime,
     isChegadaHospSet,
     handleFinalizarOcorrencia,
     emergencies
@@ -33,7 +34,7 @@ const EmergencyDetails = ({
     const incidentReport = JSON.parse(localStorage.getItem('IncidentReport'));
     const emergency = JSON.parse(localStorage.getItem('EmergencyData'));
 
-    console.log("emergencies = ", emergencies)
+    //console.log("emergencies = ", emergencies)
 
     const vehicles = emergency[0].viaturas || [];
     const filteredVehicles = vehicles.filter(
@@ -51,7 +52,7 @@ const EmergencyDetails = ({
         // Check if the descricao matches any value in the viaturas array
         const isMatch = viaturasArray.some(viatura => viatura === descricao);
 
-        console.log(viaturasArray);
+        //console.log(viaturasArray);
 
         if (!isMatch) {
 
@@ -221,6 +222,8 @@ const EmergencyDetails = ({
                         <div style={styles.row}>
                             <Button style={styles.button_ChegadaUnidadeHosp} onClick={handleSetTimeChegadaUnidadeHosp} disabled={isChegadaUnidadeHospSet}>
                                 <p style={{ ...styles.buttonText, marginRight: '5px' }}>Chegada à Unidade Hospitalar</p>
+                                <p style={styles.buttonText}>{isChegadaUnidadeHospSet ? chegadaUnidadeHospTime : currentTime}</p>
+
                             </Button>
 
                             <Button

@@ -47,6 +47,14 @@ function OcorrenciasDetail() {
             // Fetch if not available in localStorage
             fetchEmergencies();
         }
+
+        const hora_chegada_unidade_hospitalar = localStorage.getItem('hora_chegada_unidade_hospitalar');
+        if(hora_chegada_unidade_hospitalar)
+        {
+            setChegadaUnidadeHospTime(hora_chegada_unidade_hospitalar);
+            setIsChegadaUnidadeHospSet(true);
+        }
+
     }, []);
 
     useEffect(() => {
@@ -65,7 +73,7 @@ function OcorrenciasDetail() {
         const refreshItemData = () => {
             const refreshedItem = { ...state, timestamp: new Date().toISOString() };
             setItem(refreshedItem);
-            console.log('Item refreshed:', refreshedItem);
+            //console.log('Item refreshed:', refreshedItem);
         };
 
         refreshItemData();
@@ -80,16 +88,16 @@ function OcorrenciasDetail() {
             const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getIncidentByID?id_ocorrencia=' + item.id);
             if (response.data) {
                 setEmergencies(response.data);
-                console.log('Fetched Emergencies:', response.data);
+                //console.log('Fetched Emergencies:', response.data);
 
                 //Set fetched Data into local storage
                 if (response.data.length > 0) {
                     // Set data to localStorage
                     try {
                         localStorage.setItem('EmergencyData', JSON.stringify(response.data));
-                        console.log('Emergency data saved to localStorage successfully');
+                        //console.log('Emergency data saved to localStorage successfully');
                     } catch (e) {
-                        console.error('Error saving data to localStorage:', e);
+                        //console.error('Error saving data to localStorage:', e);
                     }
                 } else {
                     console.log('No emergencies data to save.');
@@ -270,6 +278,9 @@ function OcorrenciasDetail() {
 
     const handleSetTimeChegadaUnidadeHosp = async () => {
 
+        const chegadaTime = new Date().toLocaleTimeString();
+        setChegadaUnidadeHospTime(chegadaTime);
+
         try {
             let response = null;
             const now = new Date();
@@ -289,13 +300,17 @@ function OcorrenciasDetail() {
                     id_estado: '7'
                 });
 
+                setIsChegadaUnidadeHospSet(true);
+
                 if (response.data && response.data.status === 'success') {
                     alert('Chegada à Unidade Hospitalar Enviada com Sucesso');
                 }
             }
 
-            setIsChegadaUnidadeHospSet(true);
             await fetchEmergencies();
+
+            console.log(chegadaUnidadeHospTime)
+            console.log(isChegadaHospSet)
 
         } catch (error) {
             console.error('Error updating chegada time:', error);
@@ -322,6 +337,8 @@ function OcorrenciasDetail() {
                     id_ocorrencia: emergencies[0].id,
                     id_estado: '8'
                 });
+
+                setIsChegadaUnidadeHospSet(true);
 
                 if (response.data && response.data.status === 'success') {
                     alert(descricao + ' Disponível com Sucesso');
@@ -516,7 +533,7 @@ function OcorrenciasDetail() {
                             viaturas={viaturas}
                             isChegadaUnidadeHospSet={isChegadaUnidadeHospSet}
                             handleSetTimeChegadaUnidadeHosp={handleSetTimeChegadaUnidadeHosp}
-                            isChegadaHospSet={isChegadaHospSet}
+                            chegadaUnidadeHospTime={chegadaUnidadeHospTime}
                             handleFinalizarOcorrencia={handleFinalizarOcorrencia}
                             emergencies={emergencies}
                         />
