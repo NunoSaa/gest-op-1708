@@ -413,6 +413,8 @@ function OcorrenciasDetail() {
 
                     localStorage.removeItem("IncidentReport");
                     localStorage.removeItem("EmergencyData");
+                    localStorage.removeItem("DataNascimento");
+                    localStorage.removeItem("hora_chegada_unidade_hospitalar");
                     navigate('/homepage');
                 }
 

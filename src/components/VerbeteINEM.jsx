@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 import { gapi } from 'gapi-script';
 import pdfFile from '../assets/Verbete-INEM.pdf';
+import legendaImage from '../assets/LegendaVerbete.png';
 import Utils from '../utils/utils.js';
 import IncidentReportService from '../services/IncidentReportService.js';
 import { Box, CircularProgress, Card, Grid } from '@mui/material';
@@ -52,6 +53,7 @@ function VerbeteINEM() {
     //send the info to report
     let emergency = JSON.parse(localStorage.getItem('EmergencyData')) || {}; // Safely parse in case it's null
     let nr_codu = emergency[0].requestList[0].numero_codu || '';
+    const data_nascimento = new Date(JSON.parse(localStorage.getItem('DataNascimento')) || '');
 
     // Initialize Google API client on component mount
     useEffect(() => {
@@ -285,11 +287,15 @@ function VerbeteINEM() {
 
     // Load data from localStorage when the component mounts
     useEffect(() => {
-        const savedData = localStorage.getItem('VerbeteData');
-        if (savedData) {
-            updateFormData(JSON.parse(savedData)); // Load saved data
-        }
-    }, 30000); // Empty dependency array ensures this runs only once on mount
+        const intervalId = setInterval(() => {
+            const savedData = localStorage.getItem('VerbeteData');
+            if (savedData) {
+                updateFormData(JSON.parse(savedData)); // Load saved data periodically
+            }
+        }, 30000); // Runs every 30 seconds
+
+        return () => clearInterval(intervalId); // Cleanup interval on component unmount
+    }, []);
 
     // Save formData to localStorage every minute
     useEffect(() => {
@@ -304,8 +310,9 @@ function VerbeteINEM() {
     useEffect(() => {
         const descricao = localStorage.getItem('username');
         const emergency = JSON.parse(localStorage.getItem('EmergencyData')) || {}; // Safely parse in case it's null
+        const verbeteData = JSON.parse(localStorage.getItem("VerbeteData")) || {};
+
         const hora_chegada_unidade_hospitalar = localStorage.getItem('hora_chegada_unidade_hospitalar');
-        console.log(hora_chegada_unidade_hospitalar)
 
         // Extract and filter viaturas by descricao
         const vehicles = emergency[0].viaturas || [];
@@ -331,6 +338,8 @@ function VerbeteINEM() {
             hora_caminho_hospital: filteredVehicles[0].hora_saida_to || '',
             hora_chegada_unidade_hospitalar: hora_chegada_unidade_hospitalar !== null ? hora_chegada_unidade_hospitalar : '',
         }));
+
+        console.log('formData', formData)
 
     }, [item]);
 
@@ -358,12 +367,25 @@ function VerbeteINEM() {
                     updatedData.mes_1 = (birthDate.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed
                     updatedData.ano_1 = birthDate.getFullYear().toString();
                     updatedData.idade = Utils.calculateAge(birthDate).toString();
+                    localStorage.setItem('DataNascimento', JSON.stringify(birthDate));
                 }
             }
             // Handle "sexoM" and "sexoF" as mutually exclusive checkboxes
             else if (name === 'sexoM' || name === 'sexoF') {
-                updatedData.sexoM = name === 'sexoM' ? (checked ? 'X' : '') : '';
-                updatedData.sexoF = name === 'sexoF' ? (checked ? 'X' : '') : '';
+                if (checked) {
+                    // If one is checked, ensure the other is unchecked
+                    updatedData.sexoM = name === 'sexoM' ? 'X' : '';
+                    updatedData.sexoF = name === 'sexoF' ? 'X' : '';
+                } else {
+                    // If both are unchecked, enforce at least one to be selected
+                    if (!prevFormData.sexoM && !prevFormData.sexoF) {
+                        // Add logic to enforce one checkbox, e.g., default to 'M'
+                        updatedData[name] = 'X'; // Keep the current box checked
+                        alert("At least one option must be selected (M or F).");
+                    } else {
+                        updatedData[name] = ''; // Allow unchecked state
+                    }
+                }
             }
             else if (name.startsWith('transporte_unidade')) {
                 // Ensure the value matches the keys of transporteMapping
@@ -653,7 +675,7 @@ function VerbeteINEM() {
         try {
             const response = await axios.get('https://preventech-proxy-service.onrender.com/api/finalreport/getFinalReport?id_ocorrencia=' + item.id);
             if (response.data) {
-                console.log('Fetched Report:', response.data);
+                //console.log('Fetched Report:', response.data);
 
                 // Decode the aa_outra1 to match the dropdown option
                 const fetchedTypology = response.data[0].aa_outra1;
@@ -715,8 +737,6 @@ function VerbeteINEM() {
 
     }, [item.id]);
 
-    console.log('report data: ', reportData)
-
     return (
         <div>
             <AppBar position="static">
@@ -774,7 +794,7 @@ function VerbeteINEM() {
                             Identificação
                         </div>
 
-                        <IdentificacaoComponent formData={formData} handleChange={handleChange} />
+                        <IdentificacaoComponent formData={formData} handleChange={handleChange} data_nascimento />
 
                     </div>
 
@@ -847,7 +867,7 @@ function VerbeteINEM() {
                         <div className="event-form" style={{ flexGrow: 1 }}>
 
                             {/* Gravidade Vitima */}
-                            <GravidadeVitimaComponent/>
+                            <GravidadeVitimaComponent />
 
                             {/* Sinais e Sintomas */}
                             <SinaisSintomasComponent formData={formData} handleChange={handleChange} handleBlur={handleBlur} />
@@ -1000,9 +1020,27 @@ function VerbeteINEM() {
                 </form>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'stretch' }}>
-                {/* Legenda */}
-                <LegendaComponent />
+            <div
+                style={{
+                    display: 'flex',
+                    alignItems: 'center', // Vertically centers the image
+                    justifyContent: 'center', // Horizontally centers the image
+                    width: '100%',
+                    height: '100vh', // Full viewport height
+                    overflow: 'hidden', // Ensures no overflow issues
+                }}
+            >
+                <img
+                    src={legendaImage}
+                    alt="Legenda"
+                    style={{
+                        width: '100%', // Ensures the image scales to the div's width
+                        height: 'auto', // Maintains aspect ratio
+                        maxWidth: '70%', // Limits the width to 70% of the container
+                        maxHeight: '100%', // Ensures it doesn't overflow vertically
+                        objectFit: 'contain', // Scales the image properly while centering
+                    }}
+                />
             </div>
 
         </div >

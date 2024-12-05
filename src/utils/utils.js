@@ -172,7 +172,7 @@ class Utils {
         }
 
         // Calculate total NEWS score
-        console.log(vent_value , avds_value , spo2_value , o2_value , temp_value , p_sist_value , bpm_value)
+        //console.log(vent_value , avds_value , spo2_value , o2_value , temp_value , p_sist_value , bpm_value)
         let total = vent_value + avds_value + spo2_value + o2_value + temp_value + p_sist_value + bpm_value;
 
         // Handle AVDS "-"

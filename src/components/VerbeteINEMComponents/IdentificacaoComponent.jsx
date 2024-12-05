@@ -5,99 +5,99 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 
-const IdentificacaoComponent = ({ formData, handleChange }) => {
+const IdentificacaoComponent = ({ formData, handleChange, data_nascimento }) => {
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <div className="event-form" style={{ flexGrow: 1 }}>
-            {/* Victim Details Section */}
-            <div style={styles.rowInfo}>
-                <div style={{ ...styles.inputGroup, flex: 1 }}>
-                    <label>Nome</label>
-                    <TextField
-                        name="nome"
-                        variant="outlined"
-                        placeholder="Nome completo da vítima"
-                        fullWidth
-                        value={formData.nome} // Controlled component
-                        onChange={handleChange} // Handle change from parent
-                    />
-                </div>
-            </div>
-
-            <div style={styles.rowInfo}>
-                <div style={{ ...styles.inputGroup, flex: 0.3 }}>
-                    <label>Nascimento</label>
-                    <DatePicker
-                        value={formData.nascimento}
-                        onChange={(date) => {
-                            handleChange({
-                                target: { name: 'nascimento', value: date }
-                            });
-                        }}
-                        renderInput={(params) => <TextField {...params} fullWidth variant="outlined" />}
-                    />
-                </div>
-                <div style={{ ...styles.inputGroup, flex: 0.2 }}>
-                    <label style={{ paddingLeft: '15px' }}>Idade</label>
-                    <TextField
-                        name="idade"
-                        variant="outlined"
-                        fullWidth
-                        value={formData.idade}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div style={{ ...styles.inputGroup, flex: 0.2 }}>
-                    <label style={{ paddingLeft: '15px', marginRight: '10px' }}>Sexo</label>
-                    <FormGroup row>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    name="sexoM"
-                                    checked={formData.sexoM} // Controlled component
-                                    onChange={handleChange} // Handle change from parent
-                                />
-                            }
-                            label="M"
+            <div className="event-form" style={{ flexGrow: 1 }}>
+                {/* Victim Details Section */}
+                <div style={styles.rowInfo}>
+                    <div style={{ ...styles.inputGroup, flex: 1 }}>
+                        <label>Nome</label>
+                        <TextField
+                            name="nome"
+                            variant="outlined"
+                            placeholder="Nome completo da vítima"
+                            fullWidth
+                            value={formData.nome} // Controlled component
+                            onChange={handleChange} // Handle change from parent
                         />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    name="sexoF"
-                                    checked={formData.sexoF} // Controlled component
-                                    onChange={handleChange} // Handle change from parent
-                                />
-                            }
-                            label="F"
-                        />
-                    </FormGroup>
+                    </div>
                 </div>
-                <div style={{ ...styles.inputGroup, flex: 0.5 }}>
-                    <label style={{ paddingLeft: '15px' }}>Nº SNS</label>
-                    <TextField
-                        name="nr_sns"
-                        variant="outlined"
-                        fullWidth
-                        value={formData.nr_sns}
-                        onChange={handleChange}
-                    />
-                </div>
-            </div>
 
-            <div style={styles.rowInfo}>
-                <div style={{ ...styles.inputGroup, flex: 1 }}>
-                    <label>Residência</label>
-                    <TextField
-                        name="residencia"
-                        variant="outlined"
-                        placeholder="Morada de residência completa (incluindo país, caso seja estrangeira)"
-                        fullWidth
-                        value={formData.residencia}
-                        onChange={handleChange}
-                    />
+                <div style={styles.rowInfo}>
+                    <div style={{ ...styles.inputGroup, flex: 0.3 }}>
+                        <label>Nascimento</label>
+                        <DatePicker
+                            value={formData.nascimento ? new Date(formData.nascimento) : new Date(data_nascimento)}
+                            onChange={(date) => {
+                                handleChange({
+                                    target: { name: 'nascimento', value: date }
+                                });
+                            }}
+                            renderInput={(params) => <TextField {...params} fullWidth variant="outlined" />}
+                        />
+                    </div>
+                    <div style={{ ...styles.inputGroup, flex: 0.2 }}>
+                        <label style={{ paddingLeft: '15px' }}>Idade</label>
+                        <TextField
+                            name="idade"
+                            variant="outlined"
+                            fullWidth
+                            value={formData.idade}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div style={{ ...styles.inputGroup, flex: 0.2 }}>
+                        <label style={{ paddingLeft: '15px', marginRight: '10px' }}>Sexo</label>
+                        <FormGroup row>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        name="sexoM"
+                                        checked={formData.sexoM === 'X'}
+                                        onChange={handleChange}
+                                    />
+                                }
+                                label="M"
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        name="sexoF"
+                                        checked={formData.sexoF === 'X'}
+                                        onChange={handleChange}
+                                    />
+                                }
+                                label="F"
+                            />
+                        </FormGroup>
+                    </div>
+                    <div style={{ ...styles.inputGroup, flex: 0.5 }}>
+                        <label style={{ paddingLeft: '15px' }}>Nº SNS</label>
+                        <TextField
+                            name="nr_sns"
+                            variant="outlined"
+                            fullWidth
+                            value={formData.nr_sns}
+                            onChange={handleChange}
+                        />
+                    </div>
+                </div>
+
+                <div style={styles.rowInfo}>
+                    <div style={{ ...styles.inputGroup, flex: 1 }}>
+                        <label>Residência</label>
+                        <TextField
+                            name="residencia"
+                            variant="outlined"
+                            placeholder="Morada de residência completa (incluindo país, caso seja estrangeira)"
+                            fullWidth
+                            value={formData.residencia}
+                            onChange={handleChange}
+                        />
+                    </div>
                 </div>
             </div>
-        </div>
         </LocalizationProvider>
     );
 };
