@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 import { gapi } from 'gapi-script';
 import pdfFile from '../assets/Verbete-INEM.pdf';
-import legendaImage from '../assets/LegendaVerbete.png';
+import legendaImage from '../assets/LegendaVerbete.jpg';
 import Utils from '../utils/utils.js';
 import IncidentReportService from '../services/IncidentReportService.js';
 import { Box, CircularProgress, Card, Grid } from '@mui/material';
@@ -1036,7 +1036,7 @@ function VerbeteINEM() {
                     style={{
                         width: '100%', // Ensures the image scales to the div's width
                         height: 'auto', // Maintains aspect ratio
-                        maxWidth: '70%', // Limits the width to 70% of the container
+                        maxWidth: '85%', // Limits the width to 70% of the container
                         maxHeight: '100%', // Ensures it doesn't overflow vertically
                         objectFit: 'contain', // Scales the image properly while centering
                     }}
