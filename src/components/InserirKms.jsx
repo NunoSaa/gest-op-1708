@@ -87,6 +87,8 @@ function InserirKms() {
                 km_fim: kmFim
             });
 
+            localStorage.setItem('kmFim', JSON.stringify(kmFim));
+
             if (response.data && response.data.status === 'success') {
                 console.log('Chegada time updated:', response.data);
                 alert("Km's Finais inseridos com sucesso!");

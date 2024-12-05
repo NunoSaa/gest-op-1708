@@ -311,8 +311,6 @@ function VerbeteINEM() {
     useEffect(() => {
         const descricao = localStorage.getItem('username');
         const emergency = JSON.parse(localStorage.getItem('EmergencyData')) || {}; // Safely parse in case it's null
-        const verbeteData = JSON.parse(localStorage.getItem("VerbeteData")) || {};
-
         const hora_chegada_unidade_hospitalar = localStorage.getItem('hora_chegada_unidade_hospitalar');
 
         // Extract and filter viaturas by descricao
@@ -479,61 +477,7 @@ function VerbeteINEM() {
 
     const saveToDevice = async (e) => {
 
-        if (
-            formData.hora_vitima !== '' && formData.hora_vitima !== null &&
-            formData.hora_caminho_hospital !== '' && formData.hora_caminho_hospital !== null &&
-            formData.hora_chegada_unidade_hospitalar !== '' && formData.hora_chegada_unidade_hospitalar !== null
-        ) {
-            try {
-                console.log("formData before submission:", formData); // Debugging
-                if (!pdfFile) {
-                    throw new Error("PDF template path is missing.");
-                }
-
-                const templateUrl = pdfFile; // Path to your PDF template
-
-                // Ensure formData has necessary fields
-                if (!formData || Object.keys(formData).length === 0) {
-                    throw new Error("formData is empty or invalid.");
-                }
-
-                // Call the function to generate the filled PDF
-                const generatedPdf = await Utils.fillPdfTemplate(templateUrl, formData);
-
-                // Check if the generatedPdf is valid
-                if (!generatedPdf) {
-                    throw new Error("PDF generation failed.");
-                }
-
-                // Create a Blob from the generated PDF
-                const pdfBlob = new Blob([generatedPdf], { type: "application/pdf" });
-
-                // Create a download link
-                const downloadUrl = URL.createObjectURL(pdfBlob);
-                const link = document.createElement("a");
-                link.href = downloadUrl;
-                link.download = fileName; // Name for the downloaded file
-                document.body.appendChild(link); // Append the link to the body
-                link.click(); // Trigger the download
-                document.body.removeChild(link); // Clean up the DOM
-
-                try {
-                    console.log('updates: ', reportData)
-                    IncidentReportService.updateIncidentsReport(item, reportData);
-                }
-                catch {
-
-                }
-
-                console.log("PDF saved successfully.");
-                alert("PDF saved successfully.");
-            } catch (error) {
-                console.error("Error during PDF generation or save:", error);
-                alert("An error occurred while saving the PDF. Please try again.");
-            }
-        } else {
-            alert("Dados não preenchidos (Hora Chegada à Vitima, Caminho U. Saúde, Chegada U. Saúde ). Por favor, preencha antes de finalizar.");
-        }
+        SendToGoogleDrive.saveToDevice(pdfBlob, fileName, formData, num_ocorrencia, setIsUploading, setUploadProgress, reportData, item);
     };
 
     const handleBackClick = () => {
@@ -544,7 +488,7 @@ function VerbeteINEM() {
     const sendToDrive = async () => {
 
         SendToGoogleDrive.sendToDrive(pdfBlob, fileName, formData, num_ocorrencia, setIsUploading, setUploadProgress, reportData, item);
-        
+
     };
 
     const [reportData, setReportData] = useState({
@@ -668,7 +612,7 @@ function VerbeteINEM() {
             </AppBar>
 
             <div className="container">
-                <form onSubmit={saveToDevice}>
+                <form>
 
                     {/* Ocorrência */}
                     <div style={{ display: 'flex', alignItems: 'stretch' }}>
@@ -843,6 +787,7 @@ function VerbeteINEM() {
 
                     <Grid item xs={12} md={8}>
                         <Grid container spacing={2} justifyContent="center">
+                            {/*
                             <Grid item xs={12} sm={5}>
                                 <Button
                                     variant="contained"
@@ -865,6 +810,7 @@ function VerbeteINEM() {
                                     <UploadIcon sx={{ marginRight: 1 }} /> 
                                 </Button>
                             </Grid>
+                            */}
                         </Grid>
                     </Grid >
 
