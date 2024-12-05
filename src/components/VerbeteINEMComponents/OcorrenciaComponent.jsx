@@ -5,6 +5,8 @@ import Select from '@mui/material/Select';
 
 const OcorrenciaComponent = ({ formData, handleChange }) => {
     const today = new Date().toLocaleDateString("pt-PT"); // Format as "DD/MM/YYYY"
+    const isTablet = window.innerWidth <= 768;
+    const isMobile = window.innerWidth <= 480;
 
     const handleTimeChange = (e) => {
         const { name, value } = e.target;
@@ -179,63 +181,60 @@ const OcorrenciaComponent = ({ formData, handleChange }) => {
                 </div>
             </section>
 
-            <section className="local-section">
-                <div style={styles.rowInfo}>
-                    <div style={{ ...styles.inputGroup, flex: 2 }}>
-                        <label style={{ paddingLeft: '0px' }}>Caminho do Local</label>
-                        <TextField
-                            name="hora_local"
-                            variant="outlined"
-                            fullWidth
-                            type="time" // Use time input type
-                            value={formData.hora_local || ''} // Set default value
-                            onChange={handleTimeChange} // Use custom handler
-                        />
-                    </div>
-                    <div style={{ ...styles.inputGroup, flex: 2 }}>
-                        <label style={{ paddingLeft: '15px' }}>Chegada à vitima</label>
-                        <TextField
-                            name="hora_vitima"
-                            variant="outlined"
-                            fullWidth
-                            type="time" // Use time input type
-                            value={formData.hora_vitima || ''} // Set default value
-                            onChange={handleTimeChange} // Use custom handler
-                        />
-                    </div>
-                    <div style={{ ...styles.inputGroup, flex: 2 }}>
-                        <label style={{ paddingLeft: '15px' }}>Chegada SIV / SAV</label>
-                        <TextField
-                            name="hora_siv_sav"
-                            variant="outlined"
-                            fullWidth
-                            type="time" // Use time input type
-                            value={formData.hora_siv_sav || ''} // Set default value
-                            onChange={handleTimeChange} // Use custom handler
-                        />
-                    </div>
-                    <div style={{ ...styles.inputGroup, flex: 2 }}>
-                        <label style={{ paddingLeft: '15px' }}>Caminho U. Saúde</label>
-                        <TextField
-                            name="hora_caminho_hospital"
-                            variant="outlined"
-                            fullWidth
-                            type="time" // Use time input type
-                            value={formData.hora_caminho_hospital || ''} // Set default value
-                            onChange={handleTimeChange} // Use custom handler
-                        />
-                    </div>
-                    <div style={{ ...styles.inputGroup, flex: 2 }}>
-                        <label style={{ paddingLeft: '15px' }}>Chegada U. Saúde</label>
-                        <TextField
-                            name="hora_chegada_unidade_hospitalar"
-                            variant="outlined"
-                            fullWidth
-                            type="time" // Use time input type
-                            value={formData.hora_chegada_unidade_hospitalar || ''} // Set default value
-                            onChange={handleTimeChange} // Use custom handler
-                        />
-                    </div>
+            <section
+                style={{
+                    width: '100%',
+                    //padding: '20px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}
+            >
+                <div
+                    style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: '10px',
+                        width: '100%',
+                    }}
+                >
+                    {[
+                        { label: "Caminho do Local", name: "hora_local" },
+                        { label: "Chegada à vitima", name: "hora_vitima" },
+                        { label: "Chegada SIV / SAV", name: "hora_siv_sav" },
+                        { label: "Caminho U. Saúde", name: "hora_caminho_hospital" },
+                        { label: "Chegada U. Saúde", name: "hora_chegada_unidade_hospitalar" },
+                    ].map((item, index) => (
+                        <div
+                            key={index}
+                            style={{
+                                flex: isMobile
+                                    ? '1 1 100%' // Full width on mobile
+                                    : isTablet
+                                        ? '1 1 calc(50% - 10px)' // 50% width on tablets
+                                        : '1 1 calc(20% - 10px)', // 20% width on desktops
+                                display: 'flex',
+                                flexDirection: 'column',
+                            }}
+                        >
+                            <label
+                                style={{
+                                    marginBottom: '5px',
+                                    fontSize: '14px',
+                                    fontWeight: 'bold',
+                                }}
+                            >
+                                {item.label}
+                            </label>
+                            <TextField
+                                name={item.name}
+                                variant="outlined"
+                                fullWidth
+                                type="time"
+                                value={formData[item.name] || ''}
+                                onChange={handleTimeChange}
+                            />
+                        </div>
+                    ))}
                 </div>
             </section>
         </div>
