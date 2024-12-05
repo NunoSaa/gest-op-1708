@@ -34,6 +34,7 @@ import '../css/Login.css';
 import '../css/EmergencyForm.css';
 import '../css/VerbeteINEM.css'
 import GravidadeVitimaComponent from './VerbeteINEMComponents/GravidadeVitimaComponent.jsx';
+import SendToGoogleDrive from '../utils/SendToGoogleDrive.js';
 
 
 function VerbeteINEM() {
@@ -540,94 +541,10 @@ function VerbeteINEM() {
     };
 
     // Upload the filled PDF to Google Drive
-    const sendToDrive = async (pdfBytes) => {
+    const sendToDrive = async () => {
 
-        if (
-            formData.hora_vitima !== '' && formData.hora_vitima !== null &&
-            formData.hora_caminho_hospital !== '' && formData.hora_caminho_hospital !== null &&
-            formData.hora_chegada_unidade_hospitalar !== '' && formData.hora_chegada_unidade_hospitalar !== null
-        ) {
-
-            const templateUrl = pdfFile; // Path to your PDF template
-            let file = new Blob([pdfBlob], { type: 'application/pdf' });
-
-            // Fill the PDF template with formData and get the filled PDF blob
-            file = await Utils.fillPdfTemplate(templateUrl, formData);
-            console.log("formData before submission:", formData); // Log formData to check its state
-
-            gapi.auth2.getAuthInstance().signIn().then(async () => {
-                const metadata = {
-                    name: fileName,
-                    mimeType: 'application/pdf',
-                };
-
-                // Step 1: Find or create the 'Ocorrencias' folder in Google Drive shared from centralVPA
-                const ocorrenciasFolderId = await Utils.createOrFindFolder('1yE6cG3Kwakq1V0ZcI8liMfqF4tLc2E4h');
-
-                // Step 2: Inside 'Ocorrencias', find or create the 'num_ocorrencia' folder
-                const ocorrenciaFolderId = await Utils.createOrFindFolder(num_ocorrencia, '1yE6cG3Kwakq1V0ZcI8liMfqF4tLc2E4h');
-
-                if (!ocorrenciaFolderId) {
-                    alert('Erro ao criar a estrutura de pastas no Google Drive');
-                    return;
-                }
-
-                console.log(ocorrenciaFolderId);
-
-                if (!ocorrenciaFolderId) {
-                    alert('Error creating the folder structure in Google Drive.');
-                    return;
-                }
-
-                const form = new FormData();
-                metadata.parents = [ocorrenciaFolderId];
-                form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-                form.append('file', new Blob([file], { type: 'application/pdf' }));
-
-                const xhr = new XMLHttpRequest();
-                setIsUploading(true);
-                xhr.open('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', true);
-                xhr.setRequestHeader('Authorization', `Bearer ${gapi.auth.getToken().access_token}`);
-
-                xhr.upload.onprogress = (event) => {
-                    if (event.lengthComputable) {
-                        const percentComplete = Math.round((event.loaded / event.total) * 100);
-                        setUploadProgress(percentComplete);
-                    }
-                };
-
-                xhr.onload = () => {
-                    if (xhr.status === 200) {
-                        alert('Ficheiro enviado com sucesso para o Google Drive!');
-                        localStorage.removeItem("VerbeteData");
-                        localStorage.removeItem("hora_chegada_unidade_hospitalar");
-                        setIsUploading(false); // Stop spinner
-                        setUploadProgress(0); // Reset progress
-
-                        // Update incident report after successful upload
-                        try {
-                            console.log('updates: ', reportData);
-                            IncidentReportService.updateIncidentsReport(item, reportData);
-                        } catch (error) {
-                            console.error('Error updating incident report: ', error);
-                        }
-
-                    } else {
-                        console.error('Erro no upload do ficheiro para o Google Drive: ', xhr.responseText);
-                        setIsUploading(false); // Stop spinner
-                    }
-                };
-
-                xhr.onerror = () => {
-                    console.error('Erro no upload do ficheiro para o Google Drive.');
-                    setIsUploading(false); // Stop spinner
-                };
-
-                xhr.send(form); // Send the form data
-            });
-        } else {
-            alert("Dados não preenchidos (Hora Chegada à Vitima, Caminho U. Saúde, Chegada U. Saúde ). Por favor, preencha antes de finalizar.");
-        }
+        SendToGoogleDrive.sendToDrive(pdfBlob, fileName, formData, num_ocorrencia, setIsUploading, setUploadProgress, reportData, item);
+        
     };
 
     const [reportData, setReportData] = useState({
