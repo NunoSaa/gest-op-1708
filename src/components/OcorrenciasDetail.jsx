@@ -415,6 +415,10 @@ function OcorrenciasDetail() {
                     localStorage.removeItem("EmergencyData");
                     localStorage.removeItem("DataNascimento");
                     localStorage.removeItem("hora_chegada_unidade_hospitalar");
+                    localStorage.removeItem("assistido");
+                    localStorage.removeItem("morto");
+                    localStorage.removeItem("grave");
+                    localStorage.removeItem("leve");
                     navigate('/homepage');
                 }
 
