@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Chip, Stack, Checkbox } from '@mui/material';
 import EPH_RequestComponent from './EPH_RequestComponent';
 import AcidenteRequestComponent from './AcidenteRequestComponent';
+import IncendioRequestComponent from './IncendioRequestComponent';
 
 
 const EmergencyDetails = ({
@@ -163,14 +164,19 @@ const EmergencyDetails = ({
                     </div>
                 </div>
 
-                {/* Vitima */}
+                {/* Emergência Pre-Hospitalar */}
                 {emergencies?.[0]?.requestList?.[0]?.tipo_pedido === "emergenciaph" && (
                     <EPH_RequestComponent emergencies={emergencies} />
                 )}
 
-                {/* Vitima */}
+                {/* Acidente */}
                 {emergencies?.[0]?.requestList?.[0]?.tipo_pedido === "acidente" && (
                     <AcidenteRequestComponent emergencies={emergencies} />
+                )}
+
+                {/* Incêndio */}
+                {emergencies?.[0]?.requestList?.[0]?.tipo_pedido === "incendio" && (
+                    <IncendioRequestComponent emergencies={emergencies} />
                 )}
 
                 <div style={styles.row}>

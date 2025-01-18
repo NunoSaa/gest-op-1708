@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Chip, Stack, Checkbox } from '@mui/material';
-
-
+import React from 'react';
+import { Checkbox } from '@mui/material';
 
 const AcidenteRequestComponent = ({
     emergencies
@@ -9,7 +7,6 @@ const AcidenteRequestComponent = ({
     return (
         <div>
             <div style={{ display: 'flex', alignItems: 'stretch' }}>
-                {/* Vertical "Vítima" label */}
                 <div style={{
                     width: '25px',
                     display: 'flex',
@@ -30,9 +27,7 @@ const AcidenteRequestComponent = ({
                 {/* Main form section */}
                 <div className="event-form" style={{ flexGrow: 1 }}>
                     <section className="header-section">
-                        <div style={styles.rowInfoContainer}>
-
-                            {/* Estado Consciência with checkboxes */}
+                        <div style={styles.rowInfoContainer1}>
                             <div style={styles.rowInfo}>
                                 <div style={styles.info}>
                                     <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
@@ -44,61 +39,63 @@ const AcidenteRequestComponent = ({
                                         />
                                     </label>
                                     <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                        <span>Inconsciente</span>
+                                        <span>Despiste</span>
                                         <Checkbox
-                                            name="inconsciente"
+                                            name="despiste"
                                             className="custom-checkbox"
-                                            checked={emergencies[0].requestList[0].eph_ec_inconsciente === 1}
+                                            checked={emergencies[0].requestList[0].a_to_despiste === 1}
                                         />
                                     </label>
                                     <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                        <span>Não Respira</span>
+                                        <span>Atropelamento</span>
                                         <Checkbox
-                                            name="naoRespira"
+                                            name="atropelamento"
                                             className="custom-checkbox"
-                                            checked={emergencies[0].requestList[0].eph_ec_nrespira === 1}
+                                            checked={emergencies[0].requestList[0].a_to_atropelamento === 1}
                                         />
                                     </label>
                                     <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                        <span>Respira</span>
+                                        <span>Queda</span>
                                         <Checkbox
-                                            name="respira"
+                                            name="queda"
                                             className="custom-checkbox"
-                                            checked={emergencies[0].requestList[0].eph_ec_respira === 1}
+                                            checked={emergencies[0].requestList[0].a_to_queda === 1}
                                         />
                                     </label>
                                 </div>
+                            </div>
+                            <div style={styles.rowInfo}>
                                 <div style={styles.info}>
                                     <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                                         <span>Ligeiro</span>
                                         <Checkbox
-                                            name="colisão"
+                                            name="ligeiro"
                                             className="custom-checkbox"
                                             checked={emergencies[0].requestList[0].a_to_ligeiro === 1}
                                         />
                                     </label>
                                     <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                        <span>Inconsciente</span>
+                                        <span>Pesado</span>
                                         <Checkbox
-                                            name="inconsciente"
+                                            name="pesado"
                                             className="custom-checkbox"
-                                            checked={emergencies[0].requestList[0].eph_ec_inconsciente === 1}
+                                            checked={emergencies[0].requestList[0].a_to_pesado === 1}
                                         />
                                     </label>
                                     <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                        <span>Não Respira</span>
+                                        <span>Veículo 2 Rodas</span>
                                         <Checkbox
-                                            name="naoRespira"
+                                            name="veiculo2rodas"
                                             className="custom-checkbox"
-                                            checked={emergencies[0].requestList[0].eph_ec_nrespira === 1}
+                                            checked={emergencies[0].requestList[0].a_to_veiculo === 1}
                                         />
                                     </label>
                                     <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                        <span>Respira</span>
+                                        <span>Abalroamento Ferroviário</span>
                                         <Checkbox
-                                            name="respira"
+                                            name="abalroamentoFerroviario"
                                             className="custom-checkbox"
-                                            checked={emergencies[0].requestList[0].eph_ec_respira === 1}
+                                            checked={emergencies[0].requestList[0].a_to_abalroamento_ferroviario === 1}
                                         />
                                     </label>
                                 </div>
@@ -107,6 +104,280 @@ const AcidenteRequestComponent = ({
                     </section>
                 </div>
             </div>
+
+            <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                {/* Vertical "Vítima" label */}
+                <div style={{
+                    width: '25px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    writingMode: 'vertical-lr',
+                    textAlign: 'center',
+                    backgroundColor: '#99CCFF',
+                    padding: '10px',
+                    fontWeight: 'bold',
+                    flexShrink: 0,
+                    transform: 'rotate(180deg)',
+                    marginBottom: '25px'
+                }}>
+                    Complicações
+                </div>
+
+                {/* Main form section */}
+                <div className="event-form" style={{ flexGrow: 1 }}>
+                    <section className="header-section">
+                        <div style={styles.rowInfoContainer1}>
+                            <div style={styles.rowInfo}>
+                                <div style={styles.info}>
+                                    {/* Estado Consciência with checkboxes */}
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                            <span>Encarcerados</span>
+                                            <Checkbox
+                                                name="encarcerados"
+                                                className="custom-checkbox"
+                                                checked={emergencies[0].requestList[0].a_comp_encarcerados}
+                                            />
+                                        </label>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                            <span>Queda Ravina</span>
+                                            <Checkbox
+                                                name="quedaRavina"
+                                                className="custom-checkbox"
+                                                checked={emergencies[0].requestList[0].a_comp_incendio}
+                                            />
+                                        </label>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                            <span>Matérias Perigosas</span>
+                                            <Checkbox
+                                                name="materiasPerigosas"
+                                                className="custom-checkbox"
+                                                checked={emergencies[0].requestList[0].a_comp_materias_perigosas}
+                                            />
+                                        </label>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                            <span>Incêndio</span>
+                                            <Checkbox
+                                                name="incendio"
+                                                className="custom-checkbox"
+                                                checked={emergencies[0].requestList[0].a_comp_queda_ravina}
+                                            />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                {/* Vertical "Vítima" label */}
+                <div style={{
+                    width: '25px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    writingMode: 'vertical-lr',
+                    textAlign: 'center',
+                    backgroundColor: '#99CCFF',
+                    padding: '10px',
+                    fontWeight: 'bold',
+                    flexShrink: 0,
+                    transform: 'rotate(180deg)',
+                    marginBottom: '25px'
+                }}>
+                    Vitima
+                </div>
+
+                {/* Main form section */}
+                <div className="event-form" style={{ flexGrow: 1 }}>
+                    <section className="header-section">
+                        {/* Estado Consciência with checkboxes */}
+                        <div style={{ gap: '10px', alignItems: 'center' }}>
+
+                            <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                                {/* Vertical "Vítima" label */}
+                                <div style={{
+                                    width: '25px',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    writingMode: 'vertical-lr',
+                                    textAlign: 'center',
+                                    backgroundColor: '#99CCFF',
+                                    padding: '10px',
+                                    fontWeight: 'bold',
+                                    flexShrink: 0,
+                                    transform: 'rotate(180deg)',
+                                    marginBottom: '25px'
+                                }}>
+                                    Tipo Vítima
+                                </div>
+
+                                {/* Main form section */}
+                                <div className="event-form">
+                                    <section className="header-section">
+                                        <div style={styles.rowInfoContainer1}>
+                                            <div style={styles.rowInfo}>
+                                                <div style={styles.info}>
+                                                    {/* Estado Consciência with checkboxes */}
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+
+                                                        {/* Sexo and Idade */}
+                                                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                            <span style={styles.infoProp}>Sexo: </span>
+                                                            <span style={styles.info}>{emergencies[0].requestList[0].a_sexo}</span>
+                                                        </label>
+                                                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                            <span style={styles.infoProp}>Idade: </span>
+                                                            <span style={styles.info}>{emergencies[0].requestList[0].a_idade}</span>
+                                                            <span style={styles.info}>{emergencies[0].requestList[0].a_idade_tipo}</span>
+                                                        </label>
+                                                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                            <span>Nº Viaturas Envolvidas: </span>
+                                                            <span style={styles.info}>{emergencies[0].requestList[0].a_num_viaturas_envolvidas}</span>
+                                                        </label>
+                                                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                            <span>Nº Vitimas Envolvidas: </span>
+                                                            <span style={styles.info}>{emergencies[0].requestList[0].a_num_vitimas_envolvidas}</span>
+                                                        </label>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                            {/* Vertical "Vítima" label */}
+                            <div style={{
+                                width: '25px',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                writingMode: 'vertical-lr',
+                                textAlign: 'center',
+                                backgroundColor: '#99CCFF',
+                                padding: '10px',
+                                fontWeight: 'bold',
+                                flexShrink: 0,
+                                transform: 'rotate(180deg)',
+                                marginBottom: '25px'
+                            }}>
+                                Estado Consciência
+                            </div>
+
+                            {/* Main form section */}
+                            <div className="event-form" style={{ flexGrow: 1 }}>
+                                <section className="header-section">
+                                    <div style={styles.rowInfoContainer1}>
+
+
+                                        <div style={styles.rowInfo}>
+                                            <div style={styles.info}>
+                                                <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                    <span>Consciente</span>
+                                                    <Checkbox
+                                                        name="encarcerados"
+                                                        className="custom-checkbox"
+                                                        checked={emergencies[0].requestList[0].a_comp_encarcerados}
+                                                    />
+                                                </label>
+                                                <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                    <span>Inconsciente</span>
+                                                    <Checkbox
+                                                        name="quedaRavina"
+                                                        className="custom-checkbox"
+                                                        checked={emergencies[0].requestList[0].a_comp_incendio}
+                                                    />
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div style={styles.rowInfo}>
+                                            <div style={styles.info}>
+                                                <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                    <span>Respira</span>
+                                                    <Checkbox
+                                                        name="materiasPerigosas"
+                                                        className="custom-checkbox"
+                                                        checked={emergencies[0].requestList[0].a_comp_materias_perigosas}
+                                                    />
+                                                </label>
+                                                <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                    <span>Não Respira</span>
+                                                    <Checkbox
+                                                        name="incendio"
+                                                        className="custom-checkbox"
+                                                        checked={emergencies[0].requestList[0].a_comp_queda_ravina}
+                                                    />
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div style={styles.rowInfo}>
+                                            <div style={styles.info}>
+                                                <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                    <span>Hemorragia</span>
+                                                    <Checkbox
+                                                        name="quedaRavina"
+                                                        className="custom-checkbox"
+                                                        checked={emergencies[0].requestList[0].a_comp_incendio}
+                                                    />
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                            {/* Vertical "Vítima" label */}
+                            <div style={{
+                                width: '25px',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                writingMode: 'vertical-lr',
+                                textAlign: 'center',
+                                backgroundColor: '#99CCFF',
+                                padding: '10px',
+                                fontWeight: 'bold',
+                                flexShrink: 0,
+                                transform: 'rotate(180deg)',
+                                marginBottom: '25px'
+                            }}>
+                                Outros
+                            </div>
+
+                            {/* Main form section */}
+                            <div className="event-form" style={{ flexGrow: 1 }}>
+                                <section className="header-section">
+                                    <div style={styles.rowInfoContainer1}>
+                                        <div style={styles.rowInfo}>
+                                            <div style={styles.info}>
+                                                {/* Estado Consciência with checkboxes */}
+                                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
+                                                    <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                        <span>Outras Situações / Trauma: </span>
+                                                        <span>{emergencies[0].requestList[0].a_outra_situacao}</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </section >
+                </div >
+            </div >
 
             <div style={{ display: 'flex', alignItems: 'stretch' }}>
                 {/* Vertical "Vítima" label */}
@@ -130,55 +401,59 @@ const AcidenteRequestComponent = ({
                 {/* Main form section */}
                 <div className="event-form" style={{ flexGrow: 1 }}>
                     <section className="header-section">
-                        <div style={styles.rowInfoContainer}>
-                            {/* Estado Consciência with checkboxes */}
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                    <span>VMER</span>
-                                    <Checkbox
-                                        name="vmer"
-                                        className="custom-checkbox"
-                                        checked={emergencies[0].requestList[0].eph_apoio_vmer}
-                                    />
-                                </label>
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                    <span>PSP</span>
-                                    <Checkbox
-                                        name="psp"
-                                        className="custom-checkbox"
-                                        checked={emergencies[0].requestList[0].eph_apoio_psp}
-                                    />
-                                </label>
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                    <span>Mota Emergência Médica</span>
-                                    <Checkbox
-                                        name="naoRespira"
-                                        className="custom-checkbox"
-                                        checked={emergencies[0].requestList[0].eph_apoio_mem}
-                                    />
-                                </label>
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                    <span>GNR</span>
-                                    <Checkbox
-                                        name="respira"
-                                        className="custom-checkbox"
-                                        checked={emergencies[0].requestList[0].eph_apoio_gnr}
-                                    />
-                                </label>
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                    <span>Outro</span>
-                                    <Checkbox
-                                        name="respira"
-                                        className="custom-checkbox"
-                                        checked={emergencies[0].requestList[0].eph_apoio_outro}
-                                    />
-                                </label>
+                        <div style={styles.rowInfoContainer1}>
+                            <div style={styles.rowInfo}>
+                                <div style={styles.info}>
+                                    {/* Estado Consciência with checkboxes */}
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                            <span>VMER</span>
+                                            <Checkbox
+                                                name="vmer"
+                                                className="custom-checkbox"
+                                                checked={emergencies[0].requestList[0].a_apoio_vmer}
+                                            />
+                                        </label>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                            <span>PSP</span>
+                                            <Checkbox
+                                                name="psp"
+                                                className="custom-checkbox"
+                                                checked={emergencies[0].requestList[0].a_apoio_psp}
+                                            />
+                                        </label>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                            <span>Mota Emergência Médica</span>
+                                            <Checkbox
+                                                name="naoRespira"
+                                                className="custom-checkbox"
+                                                checked={emergencies[0].requestList[0].a_apoio_mem}
+                                            />
+                                        </label>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                            <span>GNR</span>
+                                            <Checkbox
+                                                name="respira"
+                                                className="custom-checkbox"
+                                                checked={emergencies[0].requestList[0].a_apoio_gnr}
+                                            />
+                                        </label>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                            <span>Outro</span>
+                                            <Checkbox
+                                                name="respira"
+                                                className="custom-checkbox"
+                                                checked={emergencies[0].requestList[0].a_apoio_outro}
+                                            />
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </section>
                 </div>
             </div>
-        </div>
+        </div >
 
     );
 };
@@ -231,6 +506,11 @@ const styles = {
         gridTemplateColumns: '1fr 1fr', // Two columns for desktop view
         gap: '10px', // Space between grid items
     },
+    rowInfoContainer1: {
+        display: 'grid',
+        gridTemplateColumns: '1fr', // Two columns for desktop view
+        gap: '10px', // Space between grid items
+    },
     row: {
         display: 'flex',
         justifyContent: 'space-between',
@@ -243,7 +523,8 @@ const styles = {
         marginBottom: 5,
         paddingLeft: 25,
         flexWrap: 'wrap',
-        alignItems: 'center'
+        alignItems: 'center',
+        gap: '10px'
     },
     rowKmsFinais: {
         flexDirection: 'row',
@@ -304,88 +585,6 @@ const styles = {
     buttonPlaceholder: {
         width: "48%",     // Matches button width to create equivalent left space
     },
-    button_VerbeteInem: {
-        width: "45%",
-        height: 75,
-        backgroundColor: '#0794cc',
-        borderRadius: 10,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 15
-    },
-    button_Fotos: {
-        width: "45%",
-        height: 75,
-        backgroundColor: '#A0A0A0',
-        borderRadius: 10,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 15
-    },
-    button_RelatorioFinal: {
-        width: "45%",
-        height: 75,
-        backgroundColor: '#0004ff',
-        borderRadius: 10,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 15
-    },
-    button_POSIT: {
-        width: "45%",
-        height: 75,
-        backgroundColor: '#FF6666',
-        borderRadius: 10,
-        flex: 1,
-        alignItems: 'center',
-        marginLeft: 15,
-    },
-    button_LocTrajeto: {
-        width: "100%",
-        height: "10%",
-        backgroundColor: '#3399FF',
-        padding: 20,
-        borderRadius: 10,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 25,
-        marginBottom: 20,
-    },
-    button_FimOcorrencia: {
-        width: "100%",
-        height: "10%",
-        backgroundColor: '#076812',
-        padding: 20,
-        borderRadius: 10,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 25,
-        marginBottom: 20,
-    },
-    button_Inserir: {
-        width: "30%",
-        height: 50,
-        backgroundColor: '#A0A0A0',
-        borderRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    button_InserirKms: {
-        width: "45%",
-        height: 75,
-        backgroundColor: '#4c33ff',
-        borderRadius: 10,
-        flex: 1,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 15 // Matches the marginLeft in button_VerbeteInem
-    },
     title: {
         fontSize: 24,
         paddingBottom: 10,
@@ -401,6 +600,9 @@ const styles = {
         marginRight: 5,
     },
     info: {
+        display: 'flex',
+        flexWrap: 'wrap', // Allow wrapping for smaller screens
+        gap: '15px',
         fontSize: 16,
         paddingBottom: 10,
         paddingLeft: 5,
