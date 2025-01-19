@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../css/Login.css';
-import { ClipLoader } from 'react-spinners';
 import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -14,14 +13,6 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import Divider from '@mui/material/Divider';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import IncendiosUrbanosComponent from './PositComponents/IncendiosUrbanosComponent';
 import IncendiosRodoviariosComponent from './PositComponents/IncendioRodoviarioComponent';
 
@@ -114,11 +105,16 @@ function NovoPosit() {
         finalizado: false,
     });
 
+    const handleCheckboxChange = (event, setState) => {
+        const { name, checked } = event.target;
+        setState(prevState => ({ ...prevState, [name]: checked }));
+    };
+
     const handlePontosSituacaoChange = (event) => {
         const { name, checked } = event.target;
         setPontosSituacao((prevState) => ({
-            ...prevState, // Keep the previous selections
-            [name]: checked, // Update the selected checkbox value
+            ...prevState,
+            [name]: checked,
         }));
     };
 
@@ -235,11 +231,26 @@ function NovoPosit() {
         vuciVECIQt: '',
         vttuVALE: false,
         vttuVALEQt: '',
+        veVP: false,
+        veVPQt: ''
     });
 
     const handleSolicitoChange = (name, value) => {
         setSolicito((prevSolicito) => ({
             ...prevSolicito,
+            [name]: value
+        }));
+    };
+
+    const [cos, setCOS] = useState({
+        categoriaNome: '',
+        designacaoCOS: '',
+        numMecanografico: ''
+    });
+
+    const handleCOSChange = (name, value) => {
+        setCOS((prevCOS) => ({
+            ...prevCOS,
             [name]: value
         }));
     };
@@ -281,11 +292,39 @@ function NovoPosit() {
     };
 
     // Function to dynamically update descricao string
+    const getDescriptionFromState = (state, descriptions) => {
+        return Object.keys(state)
+            .filter((key) => state[key])
+            .map((key) => descriptions[key])
+            .join(', ');
+    };
+
+    const buildDescricao = (item, geolocationGMS, descricaoSections, cos) => {
+        let descricao = `Estou em ${item.morada}, nº ${item.requestList[0].numero_morada}, freguesia de ${item.localidade}
+Latitude N: ${geolocationGMS.latitude}, Longitude W: ${geolocationGMS.longitude}`;
+
+        descricaoSections.forEach((section) => {
+            if (section.value !== '') {
+                descricao += `\n${section.label}: ${section.value}`;
+            }
+        });
+
+        // Add COS details to the description if they have values
+        if (cos && (cos.categoriaNome || cos.designacaoCOS || cos.numMecanografico)) {
+            descricao += `\nCOS:`;
+            if (cos.categoriaNome) descricao += ` ${cos.categoriaNome}`;
+            if (cos.numMecanografico) descricao += `, Nº Mecanográfico: ${cos.numMecanografico}`;
+            if (cos.designacaoCOS) descricao += `
+Designação COS: ${cos.designacaoCOS}`;
+        }
+
+        return descricao;
+    };
+
     useEffect(() => {
+        console.log(item);
 
-        if (item.classificacao === '2101' || item.classificacao === '2111' || item.classificacao === '2115'
-            || item.classificacao === '2127' || item.classificacao === '2129') {
-
+        if (['2101', '2111', '2115', '2127', '2129'].includes(item.classificacao)) {
             const pontosDescriptions = {
                 curso: "em curso",
                 resolucao: "em resolução",
@@ -293,20 +332,10 @@ function NovoPosit() {
                 finalizado: "finalizado"
             };
 
-            const pontos = Object.keys(pontosSituacao)
-                .filter((key) => pontosSituacao[key])
-                .map((key) => pontosDescriptions[key])
-                .join(', ');
-
             const fogoDescriptions = {
                 fogoVista: "com fogo à vista",
                 semFogo: "sem fogo à vista",
             };
-
-            const fogo = Object.keys(fogoVista)
-                .filter((key) => fogoVista[key])
-                .map((key) => fogoDescriptions[key])
-                .join(', ');
 
             const tipoDescriptions = {
                 habitacoes: "em Habitação",
@@ -315,11 +344,6 @@ function NovoPosit() {
                 outros: "em Outro tipo",
             };
 
-            const tipo = Object.keys(em)
-                .filter((key) => em[key])
-                .map((key) => tipoDescriptions[key])
-                .join(', ');
-
             const tipoEdificioDescriptions = {
                 unifamiliar: "Unifamiliar",
                 grandeAltura: "Edifício de Grande Altura",
@@ -327,34 +351,19 @@ function NovoPosit() {
                 hospitaLarEscola: "Hospital / Lar / Escola",
                 militarSeguranca: "Militar / Segurança",
                 outros: "Outros",
-            }
-
-            const edificio = Object.keys(tipoEdificio)
-                .filter((key) => tipoEdificio[key])
-                .map((key) => tipoEdificioDescriptions[key])
-                .join(', ');
+            };
 
             const pontosSensiveisDescriptions = {
                 habitacoes: "Habitação",
                 industria: "Indústria",
                 comercio: "Comércio",
                 outros: "Outro tipo",
-            }
-
-            const sensiveis = Object.keys(pontosSensiveis)
-                .filter((key) => pontosSensiveis[key])
-                .map((key) => pontosSensiveisDescriptions[key])
-                .join(', ');
+            };
 
             const propagacaoDescriptions = {
                 horizontal: "com Progapagção horizontal",
                 vertical: "com propagação vertical",
-            }
-
-            const propagacaofilter = Object.keys(propagacao)
-                .filter((key) => propagacao[key])
-                .map((key) => propagacaoDescriptions[key])
-                .join(', ');
+            };
 
             const facoDescriptions = {
                 reconhecimento: "Reconhecimento",
@@ -365,97 +374,68 @@ function NovoPosit() {
                 rescaldo: "Rescaldo",
                 vigilancia: "Vigilância",
                 protecaoExposicoes: "Proteção de exposições",
-            }
-
-            const facofilter = Object.keys(faco)
-                .filter((key) => faco[key])
-                .map((key) => facoDescriptions[key])
-                .join(', ');
-
+            };
 
             const solicitoDescriptions = {
                 vuciVECI: "VUCI / VECI",
                 vttuVALE: "VTTU / VALE",
                 veVP: "VE / VP",
                 absc: "ABSC",
-                vmer: "VMER"
+                vmer: "VMER",
+                outros: ""
             };
-
-            // Filter and map solicito dynamically with quantity, excluding the Qt keys
-            const solicitofilter = Object.keys(solicito)
-                .filter((key) => solicito[key] && !key.includes('Qt'))  // Exclude quantity keys from filtering
-                .map((key) => `${solicitoDescriptions[key]}: ${solicito[`${key}Qt`] || '0'}`) // Use the quantity associated with the key
-                .join(', ');
-
 
             const elementoComandoDescriptions = {
                 elementoComando: "Elemento de comando para o local",
-            }
+            };
 
-            const elementoComandofilter = Object.keys(elementoComando)
-                .filter((key) => elementoComando[key])
-                .map((key) => elementoComandoDescriptions[key])
-                .join(', ');
+            const descricaoSections = [
+                {
+                    label: "Ponto de situação actual",
+                    value: `Incêndio em ${item.desc_classificacao} ${getDescriptionFromState(pontosSituacao, pontosDescriptions)} ${getDescriptionFromState(fogoVista, fogoDescriptions)} ${getDescriptionFromState(propagacao, propagacaoDescriptions)} ${getDescriptionFromState(em, tipoDescriptions)} ${getDescriptionFromState(tipoEdificio, tipoEdificioDescriptions)}`
+                },
+                {
+                    label: "Pontos sensíveis",
+                    value: getDescriptionFromState(pontosSensiveis, pontosSensiveisDescriptions)
+                },
+                {
+                    label: "Faço",
+                    value: getDescriptionFromState(faco, facoDescriptions)
+                },
+                ...(Object.keys(solicito).some(key => solicito[key] && !key.includes('Qt')) ? [{
+                    label: "Solicito",
+                    value: getDescriptionFromState(solicito, solicitoDescriptions)
+                        .split(', ')
+                        .map((desc, index) => {
+                            const qtKey = `${Object.keys(solicito)[index]}Qt`;
+                            const quantity = solicito[qtKey];
+                
+                            // If quantity exists and is not undefined or empty, append it to the description
+                            if (quantity !== undefined && quantity !== '') {
+                                return `${desc}: ${quantity}`;
+                            }
+                            return desc; // If no quantity, just return the description itself
+                        })
+                        .filter((desc) => desc !== '') // Filter out empty entries
+                        .join(', ') // Join with a comma separating the descriptions
+                }] : []),
+                {
+                    label: "Solicito Elemento Comando",
+                    value: getDescriptionFromState(elementoComando, elementoComandoDescriptions)
+                }
+            ];
 
-            var updatedDescricao =
-                `Estou em ${item.morada}, freguesia de ${item.localidade}
-Latitude N: ${geolocationGMS.latitude}, Longitude W: ${geolocationGMS.longitude} `;
+            console.log(cos.categoriaNome)
 
-            if (pontosSituacao != '') {
-                updatedDescricao = updatedDescricao +
-                    `
-Ponto de situação actual: Incêndio em ${item.desc_classificacao} ${pontos} ${fogo} ${propagacaofilter} ${tipo} ${edificio}`;
-            }
-
-            //Add Pontos Sensiveis to Description
-            if (sensiveis != '') {
-                updatedDescricao = updatedDescricao +
-                    `
-Pontos sensíveis: ${sensiveis}`;
-            }
-
-            //Add Faço to Description
-            if (facofilter != '') {
-                updatedDescricao = updatedDescricao +
-                    `
-Faço: ${facofilter}`;
-            }
-
-            // Add Solicito to Description dynamically with quantities
-            if (solicitofilter != '') {
-                updatedDescricao = updatedDescricao +
-                    `
-Solicito: ${solicitofilter}`;
-            }
-
-            //Add Solicito Elemento Comando to Description
-            if (elementoComandofilter != '') {
-                updatedDescricao = updatedDescricao +
-                    `
-Solicito: ${elementoComandofilter}`;
-            }
+            const updatedDescricao = buildDescricao(item, geolocationGMS, descricaoSections, cos);
 
             setFormData((prevState) => ({
                 ...prevState,
-                descricao: updatedDescricao,
+                descricao: updatedDescricao
             }));
         }
 
-
         if (item.classificacao === '2301') {
-
-            const pontosDescriptions = {
-                curso: "em curso",
-                resolucao: "em resolução",
-                conclusao: "em conclusão",
-                finalizado: "finalizado"
-            };
-
-            const pontos = Object.keys(pontosSituacao)
-                .filter((key) => pontosSituacao[key])
-                .map((key) => pontosDescriptions[key])
-                .join(', ');
-
             const tipoVeiculoDescriptions = {
                 rodoviario_ligeiro: "em Veículo ligeiro",
                 rodoviarioLigeiroMercadorias: "em Veículo ligeiro de mercadorias",
@@ -464,75 +444,27 @@ Solicito: ${elementoComandofilter}`;
                 rodoviarioOutros: "em outro tipo de Veículos"
             };
 
-            const tipoVeiculo = Object.keys(emVeiculo)
-                .filter((key) => emVeiculo[key])
-                .map((key) => tipoVeiculoDescriptions[key])
-                .join(', ');
+            const descricaoSections = [
+                {
+                    label: "Ponto de situação actual",
+                    //value: `Incêndio em ${item.desc_classificacao} ${getDescriptionFromState(pontosSituacao, pontosDescriptions)} ${getDescriptionFromState(emVeiculo, tipoVeiculoDescriptions)}`
+                },
+                {
+                    label: "Tipo de Carga",
+                    value: tipoCarga.tipoCarga
+                }
+            ];
 
-            const facoDescriptions = {
-                reconhecimento: "Reconhecimento",
-                estrategiaDefensiva: "Estratégia Defensiva",
-                estrategiaOfensiva: "Estratégia Ofensiva",
-                estabelecimentoMeiosAcao: "Estabelecimento de meios de ação",
-                salvamentos: "Salvamentos",
-                rescaldo: "Rescaldo",
-                vigilancia: "Vigilância",
-                protecaoExposicoes: "Proteção de exposições",
-            }
-
-            const facofilter = Object.keys(faco)
-                .filter((key) => faco[key])
-                .map((key) => facoDescriptions[key])
-                .join(', ');
-
-
-            const solicitoDescriptions = {
-                vuciVECI: "VUCI / VECI",
-                vttuVALE: "VTTU / VALE",
-                veVP: "VE / VP",
-                absc: "ABSC",
-                vmer: "VMER"
-            };
-
-            // Filter and map solicito dynamically with quantity, excluding the Qt keys
-            const solicitofilter = Object.keys(solicito)
-                .filter((key) => solicito[key] && !key.includes('Qt'))  // Exclude quantity keys from filtering
-                .map((key) => `${solicitoDescriptions[key]}: ${solicito[`${key}Qt`] || '0'}`) // Use the quantity associated with the key
-                .join(', ');
-
-
-            const elementoComandoDescriptions = {
-                elementoComando: "Elemento de comando para o local",
-            }
-
-            const elementoComandofilter = Object.keys(elementoComando)
-                .filter((key) => elementoComando[key])
-                .map((key) => elementoComandoDescriptions[key])
-                .join(', ');
-
-            var updatedDescricao =
-                `Estou em ${item.morada}, freguesia de ${item.localidade}
-Latitude N: ${geolocationGMS.latitude}, Longitude W: ${geolocationGMS.longitude} `;
-
-            if (pontosSituacao != '') {
-                updatedDescricao = updatedDescricao +
-                    `
-Ponto de situação actual: Incêndio em ${item.desc_classificacao} ${pontos} ${tipoVeiculo}`;
-            }
-            if (tipoCarga.tipoCarga != '') {
-                updatedDescricao = updatedDescricao +
-                    `
-Tipo de Carga: ${tipoCarga.tipoCarga}`;
-            }
+            const updatedDescricao = buildDescricao(item, geolocationGMS, descricaoSections);
 
             setFormData((prevState) => ({
                 ...prevState,
-                descricao: updatedDescricao,
+                descricao: updatedDescricao
             }));
         }
 
+    }, [estouEm, pontosSituacao, fogoVista, geolocationGMS, em, emVeiculo, tipoEdificio, pontosSensiveis, propagacao, faco, solicito, elementoComando, tipoCarga, cos]);
 
-    }, [estouEm, pontosSituacao, fogoVista, geolocationGMS, em, emVeiculo, tipoEdificio, pontosSensiveis, propagacao, faco, solicito, elementoComando, tipoCarga]);
 
     // Handle form submission
     const handleSubmit = async (e) => {
@@ -563,21 +495,6 @@ Tipo de Carga: ${tipoCarga.tipoCarga}`;
             alert('Aconteceu um erro ao inserir a informação. Tente mais tarde.');
         }
     };
-
-    // Handle changes in checkboxes f
-    const handleCheckboxGuiaComandoChange = (event) => {
-        const { checked } = event.target;
-        setGuiaComandoState(checked);
-
-        // If unchecked, clear the description
-        if (!checked) {
-            setFormData((prevState) => ({
-                ...prevState,
-                descricao: '', // Clear description when checkbox is unchecked
-            }));
-        }
-    };
-
 
     const handleBackClick = () => {
         window.history.back(); // Go back to the previous page
@@ -730,7 +647,7 @@ Tipo de Carga: ${tipoCarga.tipoCarga}`;
                         ) && (
                                 <IncendiosUrbanosComponent
                                     pontosSituacao={pontosSituacao}
-                                    handleCheckboxChange={handlePontosSituacaoChange}
+                                    handleCheckboxChange={(e) => handleCheckboxChange(e, setPontosSituacao)}
                                     fogoVista={fogoVista}
                                     handleFogoVistaChange={handleFogoVistaChange}
                                     em={em}
@@ -747,8 +664,10 @@ Tipo de Carga: ${tipoCarga.tipoCarga}`;
                                     handleSolicito={handleSolicitoChange}
                                     elementoComando={elementoComando}
                                     handleElementoComando={handleElementoComandoChange}
+                                    cos={cos}
+                                    handleCOS={handleCOSChange}
                                     geolocationGMS={geolocationGMS}
-                                    estouEm={item.morada}
+                                    estouEm={item.requestList[0].morada + ', nº' + item.requestList[0].numero_morada + ', ' + item.requestList[0].localidade_morada}
                                     setEstouEm={setEstouEm}
                                     localidade={item.localidade}
                                     handleChange={handleChange}

@@ -20,6 +20,8 @@ const IncendiosUrbanosComponent = ({
     handleSolicito,
     elementoComando,
     handleElementoComando,
+    cos,
+    handleCOS,
     geolocationGMS,
     estouEm,
     setEstouEm,
@@ -40,7 +42,7 @@ const IncendiosUrbanosComponent = ({
                     alignItems: 'center',
                     writingMode: 'vertical-lr',
                     textAlign: 'center',
-                    backgroundColor: '#99CCFF',  // Optional background for visual separation
+                    backgroundColor: '#FF9933',  // Optional background for visual separation
                     padding: '10px',
                     fontWeight: 'bold',
                     flexShrink: 0,    // Prevents the column from shrinking,
@@ -122,7 +124,7 @@ const IncendiosUrbanosComponent = ({
                     alignItems: 'center',
                     writingMode: 'vertical-lr',
                     textAlign: 'center',
-                    backgroundColor: '#99CCFF',  // Optional background for visual separation
+                    backgroundColor: '#FF3333',  // Optional background for visual separation
                     padding: '10px',
                     fontWeight: 'bold',
                     flexShrink: 0,    // Prevents the column from shrinking,
@@ -219,7 +221,7 @@ const IncendiosUrbanosComponent = ({
                                         control={<Checkbox checked={em.outros} onChange={handleEmChange} name="outros" />}
                                         label="Outros"
                                     />
-                                </FormGroup>
+                                </FormGroup> 
                             </div>
                             <div style={styles.rowInfo}>
                                 <span style={styles.infoProp}>Tipo de Edifício: </span>
@@ -296,7 +298,7 @@ const IncendiosUrbanosComponent = ({
                     alignItems: 'center',
                     writingMode: 'vertical-lr',
                     textAlign: 'center',
-                    backgroundColor: '#99CCFF',  // Optional background for visual separation
+                    backgroundColor: '#0066CC',  // Optional background for visual separation
                     padding: '10px',
                     fontWeight: 'bold',
                     flexShrink: 0,    // Prevents the column from shrinking,
@@ -371,7 +373,7 @@ const IncendiosUrbanosComponent = ({
                     alignItems: 'center',
                     writingMode: 'vertical-lr',
                     textAlign: 'center',
-                    backgroundColor: '#99CCFF',  // Optional background for visual separation
+                    backgroundColor: '#A0A0A0',  // Optional background for visual separation
                     padding: '10px',
                     fontWeight: 'bold',
                     flexShrink: 0,    // Prevents the column from shrinking,
@@ -503,7 +505,7 @@ const IncendiosUrbanosComponent = ({
                     alignItems: 'center',
                     writingMode: 'vertical-lr',
                     textAlign: 'center',
-                    backgroundColor: '#99CCFF',  // Optional background for visual separation
+                    backgroundColor: '#FFFF00',  // Optional background for visual separation
                     padding: '10px',
                     fontWeight: 'bold',
                     flexShrink: 0,    // Prevents the column from shrinking,
@@ -529,8 +531,28 @@ const IncendiosUrbanosComponent = ({
                                             label='Categoria e Nome'
                                             variant="outlined"
                                             fullWidth
-                                            value={solicito.outrosQt}
-                                            onChange={(e) => handleSolicito('outrosQt', e.target.value)}
+                                            value={cos.categoriaNome}
+                                            onChange={(e) => handleCOS('categoriaNome', e.target.value)}
+                                        />
+                                    </div>
+                                    <div style={styles.solicitoRow}>
+                                        <div style={styles.solicitoLabel}>Designação COS:</div>
+                                        <TextField
+                                            style={styles.solicitoInputDesc}
+                                            label='Designação COS'
+                                            variant="outlined"
+                                            fullWidth
+                                            value={cos.designacaoCOS}
+                                            onChange={(e) => handleCOS('designacaoCOS', e.target.value)}
+                                        />
+                                        <div style={styles.solicitoLabel}>Nº Mecanográfico:</div>
+                                        <TextField
+                                            style={styles.solicitoInputDesc}
+                                            label='Nº Mecanográfico'
+                                            variant="outlined"
+                                            fullWidth
+                                            value={cos.numMecanografico}
+                                            onChange={(e) => handleCOS('numMecanografico', e.target.value)}
                                         />
                                     </div>
                                 </FormGroup>
