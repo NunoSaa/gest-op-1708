@@ -88,7 +88,7 @@ function OcorrenciasDetail() {
             const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getIncidentByID?id_ocorrencia=' + item.id);
             if (response.data) {
                 setEmergencies(response.data);
-                //console.log('Fetched Emergencies:', response.data);
+                console.log('Fetched Emergencies:', response.data);
 
                 //Set fetched Data into local storage
                 if (response.data.length > 0) {
@@ -465,7 +465,7 @@ function OcorrenciasDetail() {
             !isNaN(parseFloat(sadoLongitudeGps));
 
         if (hasAddress) {
-            const address = `${morada}, ${localidadeMorada}`;
+            const address = `${emergencies[0].requestList[0].morada}, ${emergencies[0].requestList[0].numero_morada}, ${emergencies[0].requestList[0].localidade_morada}`
             const encodedAddress = encodeURIComponent(address);
             window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
         } else if (hasCoordinates) {
