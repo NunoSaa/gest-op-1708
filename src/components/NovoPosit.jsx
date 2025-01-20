@@ -151,7 +151,8 @@ function NovoPosit() {
         rodoviarioLigeiroMercadorias: false,
         rodoviarioPesadoMercadorias: false,
         rodoviarioPesadosPassageiros: false,
-        rodoviarioOutros: false
+        rodoviarioOutros: false,
+        rodoviarioOutrosDesc: ""
     });
 
     const handleEmVeiculoChange = (event) => {
@@ -216,6 +217,8 @@ function NovoPosit() {
         rescaldo: false,
         vigilancia: false,
         protecaoExposicoes: false,
+        limpezaVia: false,
+        combateDirecto: false
     });
 
     const handleFacoChange = (event) => {
@@ -232,7 +235,9 @@ function NovoPosit() {
         vttuVALE: false,
         vttuVALEQt: '',
         veVP: false,
-        veVPQt: ''
+        veVPQt: '',
+        vsatVUCI: false,
+        vsatVUCIQt: ''
     });
 
     const handleSolicitoChange = (name, value) => {
@@ -324,6 +329,9 @@ Designação COS: ${cos.designacaoCOS}`;
     useEffect(() => {
         console.log(item);
 
+        /*
+        * INCÊNDIO URBANO / INDUSTRIAL
+        */
         if (['2101', '2111', '2115', '2127', '2129'].includes(item.classificacao)) {
             const pontosDescriptions = {
                 curso: "em curso",
@@ -425,8 +433,6 @@ Designação COS: ${cos.designacaoCOS}`;
                 }
             ];
 
-            console.log(cos.categoriaNome)
-
             const updatedDescricao = buildDescricao(item, geolocationGMS, descricaoSections, cos);
 
             setFormData((prevState) => ({
@@ -435,27 +441,110 @@ Designação COS: ${cos.designacaoCOS}`;
             }));
         }
 
+        /*
+        * INCÊNDIO RODOVIÀRIO
+        */
+
         if (item.classificacao === '2301') {
-            const tipoVeiculoDescriptions = {
-                rodoviario_ligeiro: "em Veículo ligeiro",
-                rodoviarioLigeiroMercadorias: "em Veículo ligeiro de mercadorias",
-                rodoviarioPesadoMercadorias: "em Veículo pesado de mercadorias",
-                rodoviarioPesadosPassageiros: "em Veículo pesado de passageiros",
-                rodoviarioOutros: "em outro tipo de Veículos"
+            
+            const pontosDescriptions = {
+                curso: "em curso",
+                resolucao: "em resolução",
+                conclusao: "em conclusão",
+                finalizado: "finalizado"
+            };
+
+            const fogoDescriptions = {
+                fogoVista: "com fogo à vista",
+                semFogo: "sem fogo à vista",
+            };
+
+            const tipoDescriptions = {
+                habitacoes: "em Habitação",
+                industria: "em Indústria",
+                comercio: "em Comércio",
+                outros: "em Outro tipo",
+            };
+
+            const pontosSensiveisDescriptions = {
+                habitacoes: "Habitação",
+                industria: "Indústria",
+                comercio: "Comércio",
+                outros: "Outro tipo",
+            };
+
+            const facoDescriptions = {
+                combateDirecto: "Combate Directo",
+                limpezaVia: "Limpeza de Via",
+                salvamentos: "Salvamentos",
+                protecaoExposicoes: "Proteção de exposições",
+            };
+
+            const propagacaoDescriptions = {
+                horizontal: "com Progapagção horizontal",
+                vertical: "com propagação vertical",
+            };
+
+            const solicitoDescriptions = {
+                vuciVECI: "VUCI / VECI",
+                vsatVUCI: "VSAT / VUCI",
+                vttuVALE: "VTTU / VALE",
+                veVP: "VE / VP",
+                absc: "ABSC",
+                vmer: "VMER",
+                outros: ""
+            };
+
+            const veiculoDescriptions = {
+                rodoviario_ligeiro: 'veículo Ligeiro',
+                rodoviarioLigeiroMercadorias: "Veículo Ligeiro de Mercadorias",
+                rodoviarioPesadoMercadorias: "Veículo Pesado de Mercadorias",
+                rodoviarioPesadosPassageiros: "Veiculo Pesado de Passageiros",
+                rodoviarioOutros: "Outro tipo de veículo",
+                rodoviarioOutrosDesc: ""
+            }
+
+            const elementoComandoDescriptions = {
+                elementoComando: "Elemento de comando para o local",
             };
 
             const descricaoSections = [
                 {
                     label: "Ponto de situação actual",
-                    //value: `Incêndio em ${item.desc_classificacao} ${getDescriptionFromState(pontosSituacao, pontosDescriptions)} ${getDescriptionFromState(emVeiculo, tipoVeiculoDescriptions)}`
+                    value: `Incêndio em ${item.desc_classificacao} ${getDescriptionFromState(pontosSituacao, pontosDescriptions)}em ${getDescriptionFromState(emVeiculo, veiculoDescriptions)} ${getDescriptionFromState(fogoVista, fogoDescriptions)} ${getDescriptionFromState(propagacao, propagacaoDescriptions)} ${getDescriptionFromState(em, tipoDescriptions)}`
                 },
                 {
-                    label: "Tipo de Carga",
-                    value: tipoCarga.tipoCarga
+                    label: "Pontos sensíveis",
+                    value: getDescriptionFromState(pontosSensiveis, pontosSensiveisDescriptions)
+                },
+                {
+                    label: "Faço",
+                    value: getDescriptionFromState(faco, facoDescriptions)
+                },
+                ...(Object.keys(solicito).some(key => solicito[key] && !key.includes('Qt')) ? [{
+                    label: "Solicito",
+                    value: getDescriptionFromState(solicito, solicitoDescriptions)
+                        .split(', ')
+                        .map((desc, index) => {
+                            const qtKey = `${Object.keys(solicito)[index]}Qt`;
+                            const quantity = solicito[qtKey];
+                
+                            // If quantity exists and is not undefined or empty, append it to the description
+                            if (quantity !== undefined && quantity !== '') {
+                                return `${desc}: ${quantity}`;
+                            }
+                            return desc; // If no quantity, just return the description itself
+                        })
+                        .filter((desc) => desc !== '') // Filter out empty entries
+                        .join(', ') // Join with a comma separating the descriptions
+                }] : []),
+                {
+                    label: "Solicito Elemento Comando",
+                    value: getDescriptionFromState(elementoComando, elementoComandoDescriptions)
                 }
             ];
 
-            const updatedDescricao = buildDescricao(item, geolocationGMS, descricaoSections);
+            const updatedDescricao = buildDescricao(item, geolocationGMS, descricaoSections, cos);
 
             setFormData((prevState) => ({
                 ...prevState,
@@ -689,6 +778,16 @@ Designação COS: ${cos.designacaoCOS}`;
                                     handleEmVeiculoChange={handleEmVeiculoChange}
                                     tipoCarga={tipoCarga}
                                     handleTipoCargaChange={handleTipoCargaChange}
+                                    pontosSensiveis={pontosSensiveis}
+                                    handlePontosSensiveis={handlePontosSensiveisChange}
+                                    cos={cos}
+                                    handleCOS={handleCOSChange}
+                                    faco={faco}
+                                    handleFaco={handleFacoChange}
+                                    solicito={solicito}
+                                    handleSolicito={handleSolicitoChange}
+                                    elementoComando={elementoComando}
+                                    handleElementoComando={handleElementoComandoChange}
                                 />
                             )}
                     </div>
