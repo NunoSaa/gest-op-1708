@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EmergencyDetails from '../components/OcorrenciasComponents/EmergencyDetails';
+import GeoLocation from '../utils/GeoLocation';
 
 function OcorrenciasDetail() {
 
@@ -35,6 +36,23 @@ function OcorrenciasDetail() {
     const descricao = localStorage.getItem('username');
     const incidentReport = JSON.parse(localStorage.getItem('IncidentReport'));
     const [kmFim, setKmFim] = useState(null);
+    const [geoLocation, setGeoLocation] = useState(null);
+
+
+    useEffect(() => {
+        const loadGeolocation = async () => {
+            try {
+                const locationData = await GeoLocation.fetchGeolocation();
+                setGeoLocation(locationData);
+            } catch (error) {
+                console.error("Geolocation error:", error);
+            }
+        };
+    
+        loadGeolocation();
+    }, []);
+    
+    //console.log(geoLocation.geolocation.latitude)
 
     // Load EmergencyData from localStorage if available on component start
     useEffect(() => {
@@ -104,7 +122,7 @@ function OcorrenciasDetail() {
 
         refreshItemData();
 
-        const intervalId = setInterval(refreshItemData, 60000);
+        const intervalId = setInterval(refreshItemData, 30000);
 
         return () => clearInterval(intervalId);
     }, [state]);
@@ -208,8 +226,8 @@ function OcorrenciasDetail() {
                 data_saida: vehicle.current[0].data_saida,
                 km_inicio: vehicle.current[0].km_inicio,
                 km_fim: '',
-                data_chegada_to: currentDate,
-                hora_chegada_to: currentHour
+                //data_chegada_to: currentDate,
+                //hora_chegada_to: currentHour
             });
 
             setIsChegadaLocalSet(true);
@@ -220,16 +238,34 @@ function OcorrenciasDetail() {
 
                 if (descricao === 'ABSC01' || descricao === 'ABSC02'
                     || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'ABSC09' || descricao === 'VOPE06') {
-                    await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
-                        id_ocorrencia: emergencies[0].id,
-                        id_estado: '5'
-                    });
+
+
+                    await Promise.allSettled([
+                        axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentCoordinates', {
+                            id_ocorrencia: emergencies[0].id,
+                            lat: geoLocation.geolocation.latitude,
+                            lon: geoLocation.geolocation.longitude
+                        }),
+                        axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
+                            id_ocorrencia: emergencies[0].id,
+                            id_estado: '5'
+                        })
+                    ]);   
+
                 }
                 else {
-                    await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
-                        id_ocorrencia: emergencies[0].id,
-                        id_estado: '5'
-                    });
+                    
+                    await Promise.allSettled([
+                        axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentCoordinates', {
+                            id_ocorrencia: emergencies[0].id,
+                            lat: geoLocation.geolocation.latitude,
+                            lon: geoLocation.geolocation.longitude
+                        }),
+                        axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
+                            id_ocorrencia: emergencies[0].id,
+                            id_estado: '5'
+                        })
+                    ]);   
                 }
 
 
@@ -467,7 +503,7 @@ function OcorrenciasDetail() {
                 });
 
                 if (response.data && response.data.status === 'success') {
-                    
+
                     alert(descricao + ' Ocorrencia Finalizada com Sucesso');
 
                     //CLEAN UP ALL LOCAL STORAGE DATA FROM INCIDENT
