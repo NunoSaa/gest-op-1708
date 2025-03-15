@@ -311,30 +311,23 @@ function VerbeteINEM() {
 
     useEffect(() => {
 
+        const saveInterval = setInterval(() => {
+
             const hora_chegada_local = localStorage.getItem('hora_chegada_local');
             const hora_saida_local = localStorage.getItem('hora_saida_local');
             const hora_chegada_unidade_hospitalar = localStorage.getItem('hora_chegada_unidade_hospitalar');
 
-            let horaVitima = formData.hora_vitima || ''; 
-            if (!horaVitima && hora_chegada_local && hora_chegada_local !== 'null' && hora_chegada_local.trim() !== '') {
-                horaVitima = hora_chegada_local;
-            }
+            updateFormData(prevFormData => ({
+                ...prevFormData,
+                hora_vitima: hora_chegada_local,
+                hora_caminho_hospital: hora_saida_local,
+                hora_chegada_unidade_hospitalar: hora_chegada_unidade_hospitalar
+            }));
 
-            let horaSaidaLocal = formData.hora_caminho_hospital || ''; 
-            if (!horaVitima && hora_saida_local && hora_saida_local !== 'null' && hora_saida_local.trim() !== '') {
-                horaVitima = hora_saida_local;
-            }
+        }, 1000); // 60000ms = 1 minute
 
-            let horaChegadaUniadeHosp = formData.hora_chegada_unidade_hospitalar || ''; 
-            if (!horaVitima && hora_chegada_unidade_hospitalar && hora_chegada_unidade_hospitalar !== 'null' && hora_chegada_unidade_hospitalar.trim() !== '') {
-                horaVitima = hora_chegada_unidade_hospitalar;
-            }
-
-            formData.hora_vitima = horaVitima;
-            formData.hora_caminho_hospital = horaSaidaLocal;
-            formData.hora_chegada_unidade_hospitalar = horaChegadaUniadeHosp;
-
-    }, []);
+        return () => clearInterval(saveInterval); // Clear interval on component unmount
+    }, [formData]);
 
     // Load data from localStorage when the component mounts
     useEffect(() => {
