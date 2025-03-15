@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
-import Button from '@mui/material/Button';
+import axios from 'axios'
 import { useNavigate, useLocation } from "react-router-dom";
 import { ClipLoader } from 'react-spinners';
 import AppBar from '@mui/material/AppBar';
@@ -9,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EmergencyDetails from '../components/OcorrenciasComponents/EmergencyDetails';
+
 function OcorrenciasDetail() {
 
     const navigate = useNavigate();
@@ -28,17 +28,19 @@ function OcorrenciasDetail() {
     const [saidaLocalTime, setSaidaLocalTime] = useState('');
     const [chegadaUnidadeTime, setChegadaUnidadeTime] = useState('');
     const [chegadaUnidadeHospTime, setChegadaUnidadeHospTime] = useState('');
-    const [isDisponivel, setDisponivel] = useState('');
+    const [isDisponivel, setIsDisponivel] = useState('');
+    const [disponivelTime, setDisponivelTime] = useState('');
     const [isChegadaHospSet, setChegadaHospSet] = useState('');
     const [emergencies, setEmergencies] = useState([]);
     const descricao = localStorage.getItem('username');
     const incidentReport = JSON.parse(localStorage.getItem('IncidentReport'));
-    // State for kmFim, initially set to null or false
     const [kmFim, setKmFim] = useState(null);
 
-    // Load EmergencyData from localStorage if available on component mount
+    // Load EmergencyData from localStorage if available on component start
     useEffect(() => {
+
         const localEmergencyData = localStorage.getItem('EmergencyData');
+
         if (localEmergencyData) {
             const parsedData = JSON.parse(localEmergencyData);
             setEmergencies(parsedData);
@@ -48,11 +50,35 @@ function OcorrenciasDetail() {
             fetchEmergencies();
         }
 
+        const hora_chegada_local = localStorage.getItem('hora_chegada_local');
+        if(hora_chegada_local){
+            setChegadaLocalTime(hora_chegada_local);
+            setIsChegadaLocalSet(true);
+        }
+
+        const hora_saida_local = localStorage.getItem('hora_saida_local');
+        if(hora_saida_local){
+            setSaidaLocalTime(hora_saida_local);
+            setIsSaidaLocalSet(true);
+        }
+
         const hora_chegada_unidade_hospitalar = localStorage.getItem('hora_chegada_unidade_hospitalar');
         if(hora_chegada_unidade_hospitalar)
         {
             setChegadaUnidadeHospTime(hora_chegada_unidade_hospitalar);
             setIsChegadaUnidadeHospSet(true);
+        }
+
+        const hora_saida_unidade_hospitalar = localStorage.getItem('hora_saida_unidade_hospitalar');
+        if(hora_saida_unidade_hospitalar){
+            setDisponivelTime(hora_saida_unidade_hospitalar);
+            setIsDisponivel(true);
+        }
+
+        const hora_chegada_unidade = localStorage.getItem('hora_chegada_unidade');
+        if(hora_chegada_unidade){
+            setChegadaUnidadeTime(hora_chegada_unidade);
+            setIsChegadaUnidadeSet(true);
         }
 
     }, []);
@@ -83,6 +109,7 @@ function OcorrenciasDetail() {
         return () => clearInterval(intervalId);
     }, [state]);
 
+    //FETCH EMERGENCIES
     const fetchEmergencies = async () => {
         try {
             const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getIncidentByID?id_ocorrencia=' + item.id);
@@ -151,7 +178,7 @@ function OcorrenciasDetail() {
 
         return () => clearInterval(intervalId); // Cleanup on unmount
 
-    }, [item.id]); // Depend on `item.id` to refetch data if `item` changes
+    }, [item.id]);
 
     const formatDateDDMMYYYY = (date) => {
         const day = String(date.getDate()).padStart(2, '0');
@@ -163,6 +190,7 @@ function OcorrenciasDetail() {
 
     //CHEGADA AO LOCAL
     const handleSetTimeChegadaLocal = async () => {
+
         const chegadaTime = new Date().toLocaleTimeString();
         setChegadaLocalTime(chegadaTime);
 
@@ -183,7 +211,9 @@ function OcorrenciasDetail() {
                 data_chegada_to: currentDate,
                 hora_chegada_to: currentHour
             });
+
             setIsChegadaLocalSet(true);
+            localStorage.setItem('hora_chegada_local', currentHour);
 
             if (response.data && response.data.status === 'success') {
                 alert('Chegada ao Local Enviada com Sucesso');
@@ -218,6 +248,7 @@ function OcorrenciasDetail() {
         }
     };
 
+    //SAIDA DO LOCAL
     const handleSetTimeSaidaLocal = async () => {
         const chegadaTime = new Date().toLocaleTimeString();
         setSaidaLocalTime(chegadaTime);
@@ -243,12 +274,15 @@ function OcorrenciasDetail() {
                 data_saida_to: currentDate,
                 hora_saida_to: currentHour
             });
+
             setIsSaidaLocalSet(true);
+            localStorage.setItem('hora_saida_local', currentHour);
 
             if (response.data && response.data.status === 'success') {
 
                 if (descricao === 'ABSC01' || descricao === 'ABSC02'
                     || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'ABSC09' || descricao === 'VOPE06') {
+                        
                     await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
                         id_ocorrencia: emergencies[0].id,
                         id_estado: '5'
@@ -276,6 +310,7 @@ function OcorrenciasDetail() {
         }
     };
 
+    //CHEGADA UNIDADE HOSPITALAR
     const handleSetTimeChegadaUnidadeHosp = async () => {
 
         const chegadaTime = new Date().toLocaleTimeString();
@@ -318,6 +353,7 @@ function OcorrenciasDetail() {
         }
     };
 
+    //DISPONIVEL
     const handleDisponivel = async () => {
         try {
             let response = null;
@@ -331,21 +367,21 @@ function OcorrenciasDetail() {
             if (descricao === 'ABSC01' || descricao === 'ABSC02'
                 || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'ABSC09' || descricao === 'VOPE06') {
 
-                localStorage.setItem('hora_chegada_unidade_hospitalar', currentHour);
+                localStorage.setItem('hora_saida_unidade_hospitalar', currentHour);
 
                 response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
                     id_ocorrencia: emergencies[0].id,
                     id_estado: '8'
                 });
 
-                setIsChegadaUnidadeHospSet(true);
-
                 if (response.data && response.data.status === 'success') {
-                    alert(descricao + ' Disponível com Sucesso');
+                    alert(descricao + ' Ambulância Disponível com Sucesso');
                 }
             }
 
-            setDisponivel(true);
+            disponivelTime(currentHour);
+            setIsDisponivel(true);
+            
             await fetchEmergencies();
 
         } catch (error) {
@@ -354,6 +390,7 @@ function OcorrenciasDetail() {
         }
     };
 
+    //CHEGADA UNIDADE
     const handleSetTimeChegadaUnidade = async () => {
         const chegadaTime = new Date().toLocaleTimeString();
         setChegadaUnidadeTime(chegadaTime);
@@ -381,7 +418,10 @@ function OcorrenciasDetail() {
                 data_chegada: currentDate,
                 hora_chegada: currentHour
             });
+
             setIsChegadaUnidadeSet(true);
+            localStorage.setItem('hora_chegada_unidade', currentHour);
+
 
             if (response.data && response.data.status === 'success') {
                 alert('Chegada à Unidade Enviada com Sucesso');
@@ -413,6 +453,7 @@ function OcorrenciasDetail() {
         }
     };
 
+    //FINALIZAR OCORRENCIA
     const handleFinalizarOcorrencia = async () => {
 
         if (incidentReport && incidentReport.descricao.length > 0 && kmFim != 0) {
@@ -426,16 +467,23 @@ function OcorrenciasDetail() {
                 });
 
                 if (response.data && response.data.status === 'success') {
+                    
                     alert(descricao + ' Ocorrencia Finalizada com Sucesso');
 
+                    //CLEAN UP ALL LOCAL STORAGE DATA FROM INCIDENT
                     localStorage.removeItem("IncidentReport");
                     localStorage.removeItem("EmergencyData");
                     localStorage.removeItem("DataNascimento");
+                    localStorage.removeItem("hora_chegada_local");
+                    localStorage.removeItem("hora_saida_local");
                     localStorage.removeItem("hora_chegada_unidade_hospitalar");
+                    localStorage.removeItem("hora_saida_unidade_hospitalar");
+                    localStorage.removeItem("hora_chegada_unidade");
                     localStorage.removeItem("assistido");
                     localStorage.removeItem("morto");
                     localStorage.removeItem("grave");
                     localStorage.removeItem("leve");
+
                     navigate('/homepage');
                 }
 
@@ -449,6 +497,7 @@ function OcorrenciasDetail() {
 
     }
 
+    //OPEN GOOGLE MAPS
     const openMaps = () => {
         if (!item) return;
 
@@ -523,6 +572,7 @@ function OcorrenciasDetail() {
                             isChegadaUnidadeSet={isChegadaUnidadeSet}
                             chegadaUnidadeTime={chegadaUnidadeTime}
                             isDisponivel={isDisponivel}
+                            disponivelTime={disponivelTime}
                             handleSetTimeChegadaLocal={handleSetTimeChegadaLocal}
                             handleSetTimeSaidaLocal={handleSetTimeSaidaLocal}
                             handleSetTimeChegadaUnidade={handleSetTimeChegadaUnidade}
@@ -544,6 +594,7 @@ function OcorrenciasDetail() {
     );
 };
 
+//CSS
 const styles = {
     container: {
         padding: '20px',

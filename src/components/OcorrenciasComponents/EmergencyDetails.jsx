@@ -19,6 +19,7 @@ const EmergencyDetails = ({
     handleSetTimeChegadaUnidade,
     handleDisponivel,
     isDisponivel,
+    disponivelTime,
     openMaps,
     navigate,
     descricao,
@@ -185,6 +186,7 @@ const EmergencyDetails = ({
                     </Button>
                 </div>
 
+                {/* CHEGADA LOCAL*/}
                 <div style={styles.row}>
                     <Button style={styles.button_ChegadaLocal} onClick={handleSetTimeChegadaLocal} disabled={isChegadaLocalSet}>
                         <p style={{ ...styles.buttonText, marginRight: '5px' }}>Chegada ao Local</p>
@@ -197,6 +199,7 @@ const EmergencyDetails = ({
                     </Button>
                 </div>
 
+                {/* SAIDA LOCAL */}
                 <div style={styles.row}>
                     <Button style={styles.button_SaidaLocal} onClick={handleSetTimeSaidaLocal} disabled={isSaidaLocalSet}>
                         <p style={{ ...styles.buttonText, marginRight: '5px' }}>Saída do Local </p>
@@ -223,6 +226,7 @@ const EmergencyDetails = ({
                     </>
                 )}
 
+                {/* CHEGADA UNIDADE ABSC*/}
                 {['ABSC01', 'ABSC02', 'ABSC03', 'ABSC04', 'ABSC09', 'VOPE06', 'USER_ADMIN'].includes(descricao) && (
                     <>
                         <div style={styles.row}>
@@ -252,6 +256,7 @@ const EmergencyDetails = ({
                         <div style={styles.row}>
                             <Button style={styles.button_Disponivel} onClick={handleDisponivel} disabled={isDisponivel}>
                                 <p style={{ ...styles.buttonText, marginRight: '5px' }}>Disponível</p>
+                                <p style={styles.buttonText}>{isDisponivel ? disponivelTime : currentTime}</p>
                             </Button>
                             <Button style={styles.button_InserirKms} onClick={() => navigate('/inserirKms', { state: item })} disabled={isInserirKmsDisabled}>
                                 <p style={styles.buttonText}>Inserir Km's Veículo</p>
@@ -261,6 +266,7 @@ const EmergencyDetails = ({
                     </>
                 )}
 
+                {/* CHEGADA UNIDADE*/}
                 <div style={styles.row}>
                     <Button style={styles.button_ChegadaUnidade} onClick={handleSetTimeChegadaUnidade} disabled={isChegadaUnidadeSet}>
                         <p style={{ ...styles.buttonText, marginRight: '5px' }}>Chegada à Unidade</p>
@@ -273,6 +279,7 @@ const EmergencyDetails = ({
                     </Button>
                 </div>
 
+                {/* FINALIZAR OCORRENCIA*/}
                 <div style={styles.row}>
                     <Button
                         title="Finalizar Ocorrência"
