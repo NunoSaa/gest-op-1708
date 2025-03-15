@@ -226,8 +226,8 @@ function OcorrenciasDetail() {
                 data_saida: vehicle.current[0].data_saida,
                 km_inicio: vehicle.current[0].km_inicio,
                 km_fim: '',
-                //data_chegada_to: currentDate,
-                //hora_chegada_to: currentHour
+                data_chegada_to: currentDate,
+                hora_chegada_to: currentHour
             });
 
             setIsChegadaLocalSet(true);
