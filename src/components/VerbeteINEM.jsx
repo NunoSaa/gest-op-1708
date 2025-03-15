@@ -301,11 +301,40 @@ function VerbeteINEM() {
     // Save formData to localStorage every minute
     useEffect(() => {
         const saveInterval = setInterval(() => {
+
             localStorage.setItem('VerbeteData', JSON.stringify(formData));
+
         }, 1000); // 60000ms = 1 minute
 
         return () => clearInterval(saveInterval); // Clear interval on component unmount
     }, [formData]); // Dependency ensures it tracks the latest `formData`
+
+    useEffect(() => {
+
+            const hora_chegada_local = localStorage.getItem('hora_chegada_local');
+            const hora_saida_local = localStorage.getItem('hora_saida_local');
+            const hora_chegada_unidade_hospitalar = localStorage.getItem('hora_chegada_unidade_hospitalar');
+
+            let horaVitima = formData.hora_vitima || ''; 
+            if (!horaVitima && hora_chegada_local && hora_chegada_local !== 'null' && hora_chegada_local.trim() !== '') {
+                horaVitima = hora_chegada_local;
+            }
+
+            let horaSaidaLocal = formData.hora_caminho_hospital || ''; 
+            if (!horaVitima && hora_saida_local && hora_saida_local !== 'null' && hora_saida_local.trim() !== '') {
+                horaVitima = hora_saida_local;
+            }
+
+            let horaChegadaUniadeHosp = formData.hora_chegada_unidade_hospitalar || ''; 
+            if (!horaVitima && hora_chegada_unidade_hospitalar && hora_chegada_unidade_hospitalar !== 'null' && hora_chegada_unidade_hospitalar.trim() !== '') {
+                horaVitima = hora_chegada_unidade_hospitalar;
+            }
+
+            formData.hora_vitima = horaVitima;
+            formData.hora_caminho_hospital = horaSaidaLocal;
+            formData.hora_chegada_unidade_hospitalar = horaChegadaUniadeHosp;
+
+    }, []);
 
     // Load data from localStorage when the component mounts
     useEffect(() => {
@@ -313,7 +342,14 @@ function VerbeteINEM() {
         const emergency = JSON.parse(localStorage.getItem('EmergencyData')) || {}; // Safely parse in case it's null
         const verbeteData = JSON.parse(localStorage.getItem("VerbeteData")) || {};
 
+        const hora_chegada_local = localStorage.getItem('hora_chegada_local');
+        const hora_saida_local = localStorage.getItem('hora_saida_local');
         const hora_chegada_unidade_hospitalar = localStorage.getItem('hora_chegada_unidade_hospitalar');
+
+        let horaVitima = verbeteData.hora_vitima || ''; 
+        if (!horaVitima && hora_chegada_local && hora_chegada_local !== 'null' && hora_chegada_local.trim() !== '') {
+            horaVitima = hora_chegada_local;
+        }
 
         // Extract and filter viaturas by descricao
         const vehicles = emergency[0].viaturas || [];
@@ -335,8 +371,8 @@ function VerbeteINEM() {
             nr_evento: emergency[0].requestList[0].numero_codu || '',
             //nr_vitimas: '1',
             hora_local: filteredVehicles[0].hora_saida !== null ? filteredVehicles[0].hora_saida : '',
-            hora_vitima: filteredVehicles[0].hora_chegada_to || '',
-            hora_caminho_hospital: filteredVehicles[0].hora_saida_to || '',
+            hora_vitima: horaVitima,
+            hora_caminho_hospital: hora_saida_local !== null ? hora_saida_local : '',
             hora_chegada_unidade_hospitalar: hora_chegada_unidade_hospitalar !== null ? hora_chegada_unidade_hospitalar : '',
         }));
 
@@ -476,7 +512,7 @@ function VerbeteINEM() {
         }
     }, []); // Empty dependency array ensures this runs only once
 
-
+    //SAVE TO DEVICE
     const saveToDevice = async (e) => {
 
         if (
@@ -588,6 +624,7 @@ function VerbeteINEM() {
         agricola: 'Comb. Agricola'
     };
 
+    //FETCH INCIDENT REPORT
     const fetchIncidentReport = async () => {
         try {
             const response = await axios.get('https://preventech-proxy-service.onrender.com/api/finalreport/getFinalReport?id_ocorrencia=' + item.id);
