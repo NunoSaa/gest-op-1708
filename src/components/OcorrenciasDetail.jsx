@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EmergencyDetails from '../components/OcorrenciasComponents/EmergencyDetails';
 import GeoLocation from '../utils/GeoLocation';
+import IncidentCoordinates from '../services/IncidentCoordinates'
 
 function OcorrenciasDetail() {
 
@@ -241,11 +242,10 @@ function OcorrenciasDetail() {
 
 
                     await Promise.allSettled([
-                        axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentCoordinates', {
-                            id_ocorrencia: emergencies[0].id,
-                            lat: geoLocation.geolocation.latitude,
-                            lon: geoLocation.geolocation.longitude
-                        }),
+                            IncidentCoordinates.updateIncidentCoordinates(emergencies[0].id,
+                                geoLocation.geolocation.latitude,
+                                geoLocation.geolocation.longitude)
+                    ,
                         axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
                             id_ocorrencia: emergencies[0].id,
                             id_estado: '5'
