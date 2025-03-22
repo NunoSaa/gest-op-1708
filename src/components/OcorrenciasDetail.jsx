@@ -10,6 +10,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EmergencyDetails from '../components/OcorrenciasComponents/EmergencyDetails';
 import GeoLocation from '../utils/GeoLocation';
 import IncidentCoordinates from '../services/IncidentCoordinates'
+import IncidentState from '../services/IncidentState';
 
 function OcorrenciasDetail() {
 
@@ -240,16 +241,13 @@ function OcorrenciasDetail() {
                 if (descricao === 'ABSC01' || descricao === 'ABSC02'
                     || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'ABSC09' || descricao === 'VOPE06') {
 
-
                     await Promise.allSettled([
+                        
                             IncidentCoordinates.updateIncidentCoordinates(emergencies[0].id,
                                 geoLocation.geolocation.latitude,
-                                geoLocation.geolocation.longitude)
-                    ,
-                        axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
-                            id_ocorrencia: emergencies[0].id,
-                            id_estado: '5'
-                        })
+                                geoLocation.geolocation.longitude),
+                    
+                            IncidentState.updateIncidentState(emergencies[0].id, '5')
                     ]);   
 
                 }
