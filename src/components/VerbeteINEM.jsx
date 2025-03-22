@@ -286,92 +286,71 @@ function VerbeteINEM() {
         transporte_nr_profissional: '',
     });
 
-    // Load data from localStorage when the component mounts
+    useEffect(() => {
+        // Load data from localStorage when the component mounts
+        const descricao = localStorage.getItem('username');
+        const emergency = JSON.parse(localStorage.getItem('EmergencyData')) || {}; 
+        const verbeteData = JSON.parse(localStorage.getItem("VerbeteData")) || {};
+    
+        // Get `hora_chegada` values from emergency request or fallback to localStorage
+        const hora_chegada_local = emergency[0]?.hora_chegada_local || localStorage.getItem('hora_chegada_local') || '';
+        const hora_saida_local = emergency[0]?.hora_saida_local || localStorage.getItem('hora_saida_local') || '';
+        const hora_chegada_unidade_hospitalar = emergency[0]?.hora_chegada_unidade_hospitalar || localStorage.getItem('hora_chegada_unidade_hospitalar') || '';
+    
+        // Prefer verbeteData, then emergency, then localStorage
+        let horaVitima = verbeteData.hora_vitima || hora_chegada_local || '';
+    
+        // Ensure missing fields are initialized in localStorage (only once)
+        if (!hora_saida_local) localStorage.setItem('hora_saida_local', '');
+        if (!hora_chegada_unidade_hospitalar) localStorage.setItem('hora_chegada_unidade_hospitalar', '');
+    
+        // Extract and filter viaturas by descricao
+        const vehicles = emergency[0]?.viaturas || [];
+        const filteredVehicles = vehicles.filter(vehicle => vehicle.descricao === descricao);
+    
+        // Extract morada and numero_morada and concatenate
+        const morada = emergency[0]?.requestList?.[0]?.morada || '';
+        const numero_morada = emergency[0]?.requestList?.[0]?.numero_morada || '';
+        const local = morada + (numero_morada ? ', nº ' + numero_morada : '');
+    
+        // Update formData only once on mount
+        updateFormData(prevFormData => ({
+            ...prevFormData,
+            freguesia: emergency[0]?.localidade || '',
+            concelho: emergency[0]?.localidade_morada || '',
+            local: local,
+            nr_evento: emergency[0]?.requestList?.[0]?.numero_codu || '',
+            hora_local: filteredVehicles[0]?.hora_saida || '',
+            hora_vitima: horaVitima,
+            hora_caminho_hospital: hora_saida_local,
+            hora_chegada_unidade_hospitalar: hora_chegada_unidade_hospitalar,
+        }));
+    
+    }, []); // Runs only once on mount
+    
+    // Auto-save formData every minute
+    useEffect(() => {
+        const saveInterval = setInterval(() => {
+            localStorage.setItem('VerbeteData', JSON.stringify(formData));
+        }, 6000); // 1 minute
+    
+        return () => clearInterval(saveInterval); // Cleanup
+    }, [formData]);
+    
+    // Load VerbeteData periodically
     useEffect(() => {
         const intervalId = setInterval(() => {
             const savedData = localStorage.getItem('VerbeteData');
             if (savedData) {
-                updateFormData(JSON.parse(savedData)); // Load saved data periodically
+                updateFormData(prevFormData => ({
+                    ...prevFormData,
+                    ...JSON.parse(savedData),
+                })); 
             }
-        }, 30000); // Runs every 30 seconds
-
+        }, 15000); // Runs every 30 seconds
+    
         return () => clearInterval(intervalId); // Cleanup interval on component unmount
     }, []);
-
-    // Save formData to localStorage every minute
-    useEffect(() => {
-        const saveInterval = setInterval(() => {
-
-            localStorage.setItem('VerbeteData', JSON.stringify(formData));
-
-        }, 1000); // 60000ms = 1 minute
-
-        return () => clearInterval(saveInterval); // Clear interval on component unmount
-    }, [formData]); // Dependency ensures it tracks the latest `formData`
-
-    useEffect(() => {
-
-        const saveInterval = setInterval(() => {
-
-            const hora_chegada_local = localStorage.getItem('hora_chegada_local');
-            const hora_saida_local = localStorage.getItem('hora_saida_local');
-            const hora_chegada_unidade_hospitalar = localStorage.getItem('hora_chegada_unidade_hospitalar');
-
-            updateFormData(prevFormData => ({
-                ...prevFormData,
-                hora_vitima: hora_chegada_local,
-                hora_caminho_hospital: hora_saida_local,
-                hora_chegada_unidade_hospitalar: hora_chegada_unidade_hospitalar
-            }));
-
-        }, 1000); // 60000ms = 1 minute
-
-        return () => clearInterval(saveInterval); // Clear interval on component unmount
-    }, [formData]);
-
-    // Load data from localStorage when the component mounts
-    useEffect(() => {
-        const descricao = localStorage.getItem('username');
-        const emergency = JSON.parse(localStorage.getItem('EmergencyData')) || {}; // Safely parse in case it's null
-        const verbeteData = JSON.parse(localStorage.getItem("VerbeteData")) || {};
-
-        const hora_chegada_local = localStorage.getItem('hora_chegada_local');
-        const hora_saida_local = localStorage.getItem('hora_saida_local');
-        const hora_chegada_unidade_hospitalar = localStorage.getItem('hora_chegada_unidade_hospitalar');
-
-        let horaVitima = verbeteData.hora_vitima || ''; 
-        if (!horaVitima && hora_chegada_local && hora_chegada_local !== 'null' && hora_chegada_local.trim() !== '') {
-            horaVitima = hora_chegada_local;
-        }
-
-        // Extract and filter viaturas by descricao
-        const vehicles = emergency[0].viaturas || [];
-        const filteredVehicles = vehicles.filter(
-            (vehicle) => vehicle.descricao === descricao
-        );
-
-        // Extract morada and numero_morada and concatenate
-        const morada = emergency[0].requestList?.[0]?.morada || '';
-        const numero_morada = emergency[0].requestList?.[0]?.numero_morada || '';
-        const local = morada + (numero_morada ? ', nº ' + numero_morada : ''); // Concatenate morada and numero_morada
-
-        // Update formData with emergency data for local and freguesia
-        updateFormData(prevFormData => ({
-            ...prevFormData,
-            freguesia: emergency[0].localidade || '',
-            concelho: emergency[0].localidade_morada || '',
-            local: local,
-            nr_evento: emergency[0].requestList[0].numero_codu || '',
-            //nr_vitimas: '1',
-            hora_local: filteredVehicles[0].hora_saida !== null ? filteredVehicles[0].hora_saida : '',
-            hora_vitima: horaVitima,
-            hora_caminho_hospital: hora_saida_local !== null ? hora_saida_local : '',
-            hora_chegada_unidade_hospitalar: hora_chegada_unidade_hospitalar !== null ? hora_chegada_unidade_hospitalar : '',
-        }));
-
-        console.log('formData', formData)
-
-    }, [item]);
 
     let message_sinais_sintomas = '';
     let message_observacoes = '';
