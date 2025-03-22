@@ -59,6 +59,20 @@ function RelatorioFinal() {
         aa_valor5: ''
     });
 
+    const [verbeteData, setVerbeteData] = useState(() => {
+        // Try to load initial state from localStorage
+        const savedData = localStorage.getItem('VerbeteData');
+        return savedData ? JSON.parse(savedData) : {}; // Parse JSON or default to an empty object
+    });
+
+    useEffect(() => {
+            const intervalId = setInterval(() => {
+                setVerbeteData(localStorage.getItem('VerbeteData'));
+            }, 2000); // Runs every 30 seconds
+        
+            return () => clearInterval(intervalId); // Cleanup interval on component unmount
+        }, []);
+
     const handleDropdownChange = (event) => {
         const value = event.target.value;
         setSelectedValue(value);
@@ -155,8 +169,12 @@ function RelatorioFinal() {
                 setReportData({
                     id: response.data[0].id || '',
                     id_relatorio: response.data[0].id_relatorio || '',
-                    descricao: response.data[0].descricao || '',
-                    trabalho_desenvolvido: response.data[0].trabalho_desenvolvido || '',
+                    descricao: 
+                        (verbeteData.sinais_sintomas ? verbeteData.sinais_sintomas + ' ' : '') + 
+                        (response.data[0].descricao ? response.data[0].descricao : ''),
+                    trabalho_desenvolvido: 
+                        (verbeteData.observacoes ? verbeteData.observacoes + ' ' : '') + 
+                        (response.data[0].trabalho_desenvolvido ? response.data[0].trabalho_desenvolvido : ''),
                     danos_causados: response.data[0].danos_causados || '',
                     desalojados_num: response.data[0].desalojados_num || '',
                     desalojados_descricao: response.data[0].desalojados_descricao || '',
