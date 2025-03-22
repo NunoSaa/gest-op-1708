@@ -332,12 +332,13 @@ function VerbeteINEM() {
     useEffect(() => {
         const saveInterval = setInterval(() => {
             localStorage.setItem('VerbeteData', JSON.stringify(formData));
-        }, 6000); // 1 minute
+        }, 1000); // 1 second
     
         return () => clearInterval(saveInterval); // Cleanup
     }, [formData]);
     
     // Load VerbeteData periodically
+    /*
     useEffect(() => {
         const intervalId = setInterval(() => {
             const savedData = localStorage.getItem('VerbeteData');
@@ -347,10 +348,12 @@ function VerbeteINEM() {
                     ...JSON.parse(savedData),
                 })); 
             }
-        }, 15000); // Runs every 30 seconds
+        }, 5000); // Runs every 5 seconds
     
         return () => clearInterval(intervalId); // Cleanup interval on component unmount
     }, []);
+
+    */
 
     let message_sinais_sintomas = '';
     let message_observacoes = '';
