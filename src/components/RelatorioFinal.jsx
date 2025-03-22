@@ -598,7 +598,7 @@ function RelatorioFinal() {
                                 style={styles.button_SAVE}
                                 onClick={updateIncidentsReport}
                             >
-                                <p style={styles.buttonText}>Guardar</p>
+                                <p style={styles.buttonText}>Submeter Relatório Final</p>
                             </Button>
                         </div>
 
