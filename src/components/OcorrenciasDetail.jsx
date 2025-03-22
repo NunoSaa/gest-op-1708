@@ -119,7 +119,6 @@ function OcorrenciasDetail() {
         const refreshItemData = () => {
             const refreshedItem = { ...state, timestamp: new Date().toISOString() };
             setItem(refreshedItem);
-            //console.log('Item refreshed:', refreshedItem);
         };
 
         refreshItemData();
@@ -142,9 +141,7 @@ function OcorrenciasDetail() {
                     // Set data to localStorage
                     try {
                         localStorage.setItem('EmergencyData', JSON.stringify(response.data));
-                        //console.log('Emergency data saved to localStorage successfully');
                     } catch (e) {
-                        //console.error('Error saving data to localStorage:', e);
                     }
                 } else {
                     console.log('No emergencies data to save.');
@@ -242,7 +239,7 @@ function OcorrenciasDetail() {
                     || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'ABSC09' || descricao === 'VOPE06') {
 
                     await Promise.allSettled([
-                        
+
                             IncidentCoordinates.updateIncidentCoordinates(emergencies[0].id,
                                 geoLocation.geolocation.latitude,
                                 geoLocation.geolocation.longitude),
@@ -254,16 +251,13 @@ function OcorrenciasDetail() {
                 else {
                     
                     await Promise.allSettled([
-                        axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentCoordinates', {
-                            id_ocorrencia: emergencies[0].id,
-                            lat: geoLocation.geolocation.latitude,
-                            lon: geoLocation.geolocation.longitude
-                        }),
-                        axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
-                            id_ocorrencia: emergencies[0].id,
-                            id_estado: '5'
-                        })
-                    ]);   
+
+                        IncidentCoordinates.updateIncidentCoordinates(emergencies[0].id,
+                            geoLocation.geolocation.latitude,
+                            geoLocation.geolocation.longitude),
+                
+                        IncidentState.updateIncidentState(emergencies[0].id, '5')
+                    ]);  
                 }
 
 
@@ -284,13 +278,11 @@ function OcorrenciasDetail() {
 
     //SAIDA DO LOCAL
     const handleSetTimeSaidaLocal = async () => {
+        
         const chegadaTime = new Date().toLocaleTimeString();
-        setSaidaLocalTime(chegadaTime);
-
         const now = new Date();
         // Get the current date in the format "YYYY-MM-DD"
         const currentDate = formatDateDDMMYYYY(now);
-
         // Get the current time in the format "HH:MM"
         const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
 
@@ -309,35 +301,57 @@ function OcorrenciasDetail() {
                 hora_saida_to: currentHour
             });
 
-            setIsSaidaLocalSet(true);
-            localStorage.setItem('hora_saida_local', currentHour);
-
             if (response.data && response.data.status === 'success') {
 
                 if (descricao === 'ABSC01' || descricao === 'ABSC02'
                     || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'ABSC09' || descricao === 'VOPE06') {
                         
-                    await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
-                        id_ocorrencia: emergencies[0].id,
-                        id_estado: '5'
-                    });
+                    try {
+
+                        const result = await IncidentState.updateIncidentState(emergencies[0].id, '5');
+
+                        if (result.status === 'success') {
+
+                            setSaidaLocalTime(chegadaTime);
+                            setIsSaidaLocalSet(true);
+                            localStorage.setItem('hora_saida_local', currentHour);
+    
+                            alert('Saida do Local Enviada com Sucesso');
+                        }
+                    } 
+                    catch (error) {
+                        alert(error.message);
+                    }
+                    
                 }
                 else {
-                    await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
-                        id_ocorrencia: emergencies[0].id,
-                        id_estado: '7'
-                    });
+
+                    try {
+
+                        const result = await IncidentState.updateIncidentState(emergencies[0].id, '7');
+
+                        if (result.status === 'success') {
+                            
+                            setSaidaLocalTime(chegadaTime);
+                            setIsSaidaLocalSet(true);
+                            localStorage.setItem('hora_saida_local', currentHour);
+    
+                            alert('Saida do Local Enviada com Sucesso');
+                        }
+                    } 
+                    catch (error) {
+                        alert(error.message);
+                    }
                 }
 
-                alert('Saida do Local Enviada com Sucesso');
             } else {
-                // Handle any other cases (like errors in the response)
                 console.error('Unexpected response:', response.data);
                 alert('Aconteceu um erro ao inserir a informação. Tente mais tarde.');
             }
 
             await fetchEmergencies();
             console.log('Chegada time updated:', response.data);
+            
         } catch (error) {
             console.error('Error updating chegada time:', error);
             setError('Error updating chegada time');
@@ -348,38 +362,37 @@ function OcorrenciasDetail() {
     const handleSetTimeChegadaUnidadeHosp = async () => {
 
         const chegadaTime = new Date().toLocaleTimeString();
-        setChegadaUnidadeHospTime(chegadaTime);
+        const now = new Date();
+        // Get the current date in the format "YYYY-MM-DD"
+        const currentDate = formatDateDDMMYYYY(now);
+        // Get the current time in the format "HH:MM"
+        const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
 
         try {
-            let response = null;
-            const now = new Date();
-            // Get the current date in the format "YYYY-MM-DD"
-            const currentDate = formatDateDDMMYYYY(now);
-
-            // Get the current time in the format "HH:MM"
-            const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
 
             if (descricao === 'ABSC01' || descricao === 'ABSC02'
                 || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'ABSC09' || descricao === 'VOPE06') {
 
-                localStorage.setItem('hora_chegada_unidade_hospitalar', currentHour);
+                try {
 
-                response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
-                    id_ocorrencia: emergencies[0].id,
-                    id_estado: '7'
-                });
+                    const result = await IncidentState.updateIncidentState(emergencies[0].id, '7');
 
-                setIsChegadaUnidadeHospSet(true);
+                    if (result.status === 'success') {
 
-                if (response.data && response.data.status === 'success') {
-                    alert('Chegada à Unidade Hospitalar Enviada com Sucesso');
+                        setChegadaUnidadeHospTime(chegadaTime);
+                        setIsChegadaUnidadeHospSet(true);
+
+                        localStorage.setItem('hora_chegada_unidade_hospitalar', currentHour);
+
+                        alert('Chegada à Unidade Hospitalar Enviada com Sucesso');
+                    }
+                
+                } catch (error) {
+                    alert(error.message);
                 }
             }
 
             await fetchEmergencies();
-
-            console.log(chegadaUnidadeHospTime)
-            console.log(isChegadaHospSet)
 
         } catch (error) {
             console.error('Error updating chegada time:', error);
@@ -403,13 +416,16 @@ function OcorrenciasDetail() {
 
                 localStorage.setItem('hora_saida_unidade_hospitalar', currentHour);
 
-                response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
-                    id_ocorrencia: emergencies[0].id,
-                    id_estado: '8'
-                });
+                try{
 
-                if (response.data && response.data.status === 'success') {
-                    alert(descricao + ' Ambulância Disponível com Sucesso');
+                    const result = await IncidentState.updateIncidentState(emergencies[0].id, '8');
+
+                    if (result.status === 'success') {
+                        alert(descricao + ' Ambulância Disponível com Sucesso');
+                    }
+                
+                } catch (error) {
+                    alert(error.message);
                 }
             }
 
@@ -462,17 +478,13 @@ function OcorrenciasDetail() {
 
                 if (descricao === 'ABSC01' || descricao === 'ABSC02'
                     || descricao === 'ABSC03' || descricao === 'ABSC04' || descricao === 'ABSC09' || descricao === 'VOPE06') {
-                    await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
-                        id_ocorrencia: emergencies[0].id,
-                        //id_estado: '10'
-                        id_estado: '8'
-                    });
+                    
+                    await IncidentState.updateIncidentState(emergencies[0].id, '8');
                 }
                 else {
-                    await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
-                        id_ocorrencia: emergencies[0].id,
-                        id_estado: '8'
-                    });
+
+                    await IncidentState.updateIncidentState(emergencies[0].id, '8');
+
                 }
             } else {
                 console.error('Unexpected response:', response.data);
@@ -492,15 +504,20 @@ function OcorrenciasDetail() {
 
         if (incidentReport && incidentReport.descricao.length > 0 && kmFim != 0) {
 
+
+            //Send Verbete to Google Drive
+
+            //Attach Verbete info to IncidentReport
+
+            //Change Incident State to "Encerrada"
+
+            //Clear all LocalStorage Metadata referent to this Incident
+
             try {
-                let response = null;
 
-                response = await axios.put('https://preventech-proxy-service.onrender.com/api/emergency/updateIncidentState', {
-                    id_ocorrencia: emergencies[0].id,
-                    id_estado: '10'
-                });
+                const result = await IncidentState.updateIncidentState(emergencies[0].id, '10');
 
-                if (response.data && response.data.status === 'success') {
+                if (result.status === 'success') {
 
                     alert(descricao + ' Ocorrencia Finalizada com Sucesso');
 
