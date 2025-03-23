@@ -7,10 +7,12 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Box, CircularProgress, Card, Grid } from '@mui/material';
 import EmergencyDetails from '../components/OcorrenciasComponents/EmergencyDetails';
 import GeoLocation from '../utils/GeoLocation';
 import IncidentCoordinates from '../services/IncidentCoordinates'
 import IncidentState from '../services/IncidentState';
+import SendToGoogleDrive from '../utils/SendToGoogleDrive.js';
 
 function OcorrenciasDetail() {
 
@@ -39,7 +41,20 @@ function OcorrenciasDetail() {
     const incidentReport = JSON.parse(localStorage.getItem('IncidentReport'));
     const [kmFim, setKmFim] = useState(null);
     const [geoLocation, setGeoLocation] = useState(null);
+    const [pdfBlob, setPdfBlob] = useState(null);
+    const [uploadProgress, setUploadProgress] = useState(0); // Upload progress
+    const [isUploading, setIsUploading] = useState(false); // Uploading state
 
+    const now = new Date();
+    // Get the current date in the format "YYYY-MM-DD"
+    const currentDate = now.toISOString().split('T')[0];
+    // Get the current time in the format "HH:MM"
+    const currentHour = now.toTimeString().split(' ')[0].substring(0, 5);
+    //Buld the FileName
+    let fileName = item.numero + '_VERBETE_INEM_' + currentDate + '_' + currentHour + '.pdf';
+
+    const formData = JSON.parse(localStorage.getItem("VerbeteData"))
+    const num_ocorrencia = item.numero;
 
     useEffect(() => {
         const loadGeolocation = async () => {
@@ -54,8 +69,6 @@ function OcorrenciasDetail() {
         loadGeolocation();
     }, []);
     
-    //console.log(geoLocation.geolocation.latitude)
-
     // Load EmergencyData from localStorage if available on component start
     useEffect(() => {
 
@@ -504,11 +517,11 @@ function OcorrenciasDetail() {
 
         if (incidentReport && incidentReport.descricao.length > 0 && kmFim != 0) {
 
-
             //Send Verbete to Google Drive
+            SendToGoogleDrive.sendToDrive(pdfBlob, fileName, formData, num_ocorrencia, setIsUploading, setUploadProgress, item);
 
-            //Attach Verbete info to IncidentReport
-
+            //Send Victm Data to GESCORP
+            
             //Change Incident State to "Encerrada"
 
             //Clear all LocalStorage Metadata referent to this Incident
@@ -641,6 +654,74 @@ function OcorrenciasDetail() {
                     ))
                 )}
             </div>
+
+            {
+                isUploading && (
+                    <Box
+                        sx={{
+                            position: "fixed",
+                            top: 0,
+                            left: 0,
+                            width: "100%",
+                            height: "100%",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            backgroundColor: "rgba(0, 0, 0, 0.7)", // Dark overlay
+                            zIndex: 1300, // Ensure it's above other elements
+                        }}
+                    >
+                        <Card
+                            sx={{
+                                padding: 4,
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                backgroundColor: "white",
+                                borderRadius: "16px",
+                                boxShadow: 5,
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    position: "relative",
+                                    display: "inline-flex",
+                                    width: "150px",
+                                    height: "150px",
+                                }}
+                            >
+                                <CircularProgress
+                                    variant="determinate"
+                                    value={uploadProgress}
+                                    size={150}
+                                    thickness={5}
+                                />
+                                <Box
+                                    sx={{
+                                        top: 0,
+                                        left: 0,
+                                        bottom: 0,
+                                        right: 0,
+                                        position: "absolute",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                    }}
+                                >
+                                    <Typography variant="h6" component="div" color="text.secondary">
+                                        {`${uploadProgress}%`}
+                                    </Typography>
+                                </Box>
+                            </Box>
+                            <Typography variant="body1" sx={{ marginTop: 2 }}>
+                                A enviar para Google Drive, por favor aguarde...
+                            </Typography>
+                        </Card>
+                    </Box>
+                )
+            }
+
         </div>
     );
 };
