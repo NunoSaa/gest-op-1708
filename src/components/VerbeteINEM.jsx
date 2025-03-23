@@ -336,27 +336,6 @@ function VerbeteINEM() {
     
         return () => clearInterval(saveInterval); // Cleanup
     }, [formData]);
-    
-    // Load VerbeteData periodically
-    /*
-    useEffect(() => {
-        const intervalId = setInterval(() => {
-            const savedData = localStorage.getItem('VerbeteData');
-            if (savedData) {
-                updateFormData(prevFormData => ({
-                    ...prevFormData,
-                    ...JSON.parse(savedData),
-                })); 
-            }
-        }, 5000); // Runs every 5 seconds
-    
-        return () => clearInterval(intervalId); // Cleanup interval on component unmount
-    }, []);
-
-    */
-
-    let message_sinais_sintomas = '';
-    let message_observacoes = '';
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -453,40 +432,6 @@ function VerbeteINEM() {
         });
 
     };
-
-    const handleBlur = () => {
-        const updatedMessageSinaisSintomas =
-            `${reportData.descricao}\nNr. CODU:  ${nr_codu} - ${formData.sinais_sintomas}`;
-
-        const updatedMessageObservacoes =
-            `${reportData.trabalho_desenvolvido}\nNr. CODU:  ${nr_codu} - ${formData.observacoes}`;
-
-        setReportData((prevReportData) => ({
-            ...prevReportData,
-            descricao: updatedMessageSinaisSintomas || '',
-            trabalho_desenvolvido: updatedMessageObservacoes || '',
-        }));
-    };
-
-    useEffect(() => {
-        const storedData = localStorage.getItem('VerbeteData');
-        if (storedData) {
-            const parsedData = JSON.parse(storedData);
-            updateFormData(parsedData);
-
-            const messageSinaisSintomas =
-                `${reportData.descricao}\nNr. CODU: ${nr_codu} - ${parsedData.sinais_sintomas || ''}`;
-            const messageObservacoes =
-                `${reportData.trabalho_desenvolvido}\nNr. CODU: ${nr_codu} - ${parsedData.observacoes || ''}`;
-
-            setReportData((prevReportData) => ({
-                ...prevReportData,
-                descricao: messageSinaisSintomas,
-                trabalho_desenvolvido: messageObservacoes,
-            }));
-        }
-    }, []); // Empty dependency array ensures this runs only once
-
     
     const handleBackClick = () => {
         window.history.back(); // Go back to the previous page
@@ -495,7 +440,7 @@ function VerbeteINEM() {
     // Upload the filled PDF to Google Drive
     const sendToDrive = async () => {
 
-        SendToGoogleDrive.sendToDrive(pdfBlob, fileName, formData, num_ocorrencia, setIsUploading, setUploadProgress, reportData, item);
+        SendToGoogleDrive.sendToDrive(pdfBlob, fileName, formData, num_ocorrencia, setIsUploading, setUploadProgress, item);
         
     };
 
@@ -513,8 +458,6 @@ function VerbeteINEM() {
             </AppBar>
 
             <div className="container">
-                <form onSubmit={saveToDevice}>
-
                     {/* Ocorrência */}
                     <div style={{ display: 'flex', alignItems: 'stretch' }}>
                         <div style={{
@@ -632,12 +575,12 @@ function VerbeteINEM() {
                             <GravidadeVitimaComponent />
 
                             {/* Sinais e Sintomas */}
-                            <SinaisSintomasComponent formData={formData} handleChange={handleChange} handleBlur={handleBlur} />
+                            <SinaisSintomasComponent formData={formData} handleChange={handleChange} />
 
                             {/* Farmacologia */}
                             <FarmacologiaComponent formData={formData} handleChange={handleChange} />
 
-                            <ObservacoesComponent formData={formData} handleChange={handleChange} handleBlur={handleBlur} />
+                            <ObservacoesComponent formData={formData} handleChange={handleChange} />
 
                         </div>
                     </div>
@@ -686,6 +629,7 @@ function VerbeteINEM() {
                         </div>
                     </div>
 
+{/**  
                     <Grid item xs={12} md={8}>
                         <Grid container spacing={2} justifyContent="center">
                             <Grid item xs={12} sm={5}>
@@ -694,7 +638,7 @@ function VerbeteINEM() {
                                     color="primary"
                                     fullWidth
                                     sx={{ height: 60 }}
-                                    onClick={saveToDevice}>
+                                    >
                                     Guardar no dispositivo
                                     <DownloadIcon sx={{ marginRight: 1 }} /> 
                                 </Button>
@@ -712,6 +656,8 @@ function VerbeteINEM() {
                             </Grid>
                         </Grid>
                     </Grid >
+
+                    */}
 
                     {
                         isUploading && (
@@ -779,9 +725,6 @@ function VerbeteINEM() {
                             </Box>
                         )
                     }
-
-
-                </form >
             </div >
 
             <div

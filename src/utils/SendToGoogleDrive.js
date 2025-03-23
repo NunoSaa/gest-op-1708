@@ -43,10 +43,12 @@ class SendToGoogleDrive {
      * @param {string} num_ocorrencia - Folder name (incident number)
      * @param {function} setIsUploading - Function to toggle uploading state
      * @param {function} setUploadProgress - Function to set upload progress
-     * @param {object} reportData - Data for incident report
      * @param {object} item - Incident item
      */
-    static sendToDrive = async (pdfBlob, fileName, formData, num_ocorrencia, setIsUploading, setUploadProgress, reportData, item) => {
+    static sendToDrive = async (pdfBlob, fileName, formData, num_ocorrencia, setIsUploading, setUploadProgress, item) => {
+
+        const reportData = localStorage.getItem('IncidentReport');
+
         try {
             if (
                 formData.hora_vitima !== '' && formData.hora_vitima !== null &&
