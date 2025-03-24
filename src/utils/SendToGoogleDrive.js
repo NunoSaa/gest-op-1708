@@ -12,16 +12,23 @@ class SendToGoogleDrive {
      */
     static initializeGapi = () => {
         return new Promise((resolve, reject) => {
-            gapi.load('client:auth2', () => {
-                gapi.client
-                    .init({
+            if (!gapi) {
+                reject(new Error("Google API script is not loaded."));
+                return;
+            }
+    
+            gapi.load('client:auth2', async () => {
+                try {
+                    await gapi.client.init({
                         apiKey: SendToGoogleDrive.API_KEY,
                         clientId: SendToGoogleDrive.CLIENT_ID,
                         discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
                         scope: SendToGoogleDrive.SCOPES,
-                    })
-                    .then(() => resolve())
-                    .catch((error) => reject(error));
+                    });
+                    resolve();
+                } catch (error) {
+                    reject(error);
+                }
             });
         });
     };
@@ -29,9 +36,29 @@ class SendToGoogleDrive {
     /**
      * Authenticate user with Google
      */
-    static authenticateUser = () => {
-        const authInstance = gapi.auth2.getAuthInstance();
-        return authInstance.signIn().then(() => authInstance.isSignedIn.get());
+    static authenticateUser = async () => {
+        try {
+            if (!gapi.client) {
+                throw new Error("Google API client is not initialized.");
+            }
+    
+            const user = gapi.auth2?.getAuthInstance()?.currentUser?.get();
+            
+            if (user && user.isSignedIn()) {
+                return true;
+            }
+    
+            const authInstance = gapi.auth2?.getAuthInstance();
+            if (!authInstance) {
+                throw new Error("Auth instance is undefined. Ensure gapi is initialized.");
+            }
+    
+            await authInstance.signIn();
+            return authInstance.isSignedIn.get();
+        } catch (error) {
+            console.error("Authentication error:", error);
+            throw error;
+        }
     };
 
     /**
@@ -104,8 +131,6 @@ class SendToGoogleDrive {
                     xhr.onload = () => {
                         if (xhr.status === 200) {
                             alert('Ficheiro enviado com sucesso para o Google Drive!');
-                            localStorage.removeItem("VerbeteData");
-                            localStorage.removeItem("hora_chegada_unidade_hospitalar");
                             setIsUploading(false); // Stop spinner
                             setUploadProgress(0); // Reset progress
     

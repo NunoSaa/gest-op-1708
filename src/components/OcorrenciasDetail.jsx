@@ -14,6 +14,7 @@ import IncidentCoordinates from '../services/IncidentCoordinates'
 import IncidentState from '../services/IncidentState';
 import SendToGoogleDrive from '../utils/SendToGoogleDrive.js';
 import IncidentReportService from '../services/IncidentReportService.js';
+import { gapi } from 'gapi-script';
 
 function OcorrenciasDetail() {
 
@@ -523,45 +524,47 @@ function OcorrenciasDetail() {
 
         try {
             // Send Victim Data to GESCORP
-            await IncidentReportService.updateIncidentVictim();
-        } catch (error) {
-            console.error("Erro ao atualizar dados da vítima:", error);
-            setError("Erro ao atualizar dados da vítima");
-            return;
-        }
-
-        try {
+            await IncidentReportService.insertVictim(emergencies, formData);
+    
             // Send Verbete to Google Drive
-            await SendToGoogleDrive.sendToDrive(
-                pdfBlob, fileName, formData, num_ocorrencia, setIsUploading, setUploadProgress, item
-            );
-        } catch (error) {
-            console.error("Erro ao enviar arquivo para o Google Drive:", error);
-            setError("Erro ao enviar arquivo para o Google Drive");
-            return;
-        }
-
-        try {
+            try {
+                await SendToGoogleDrive.initializeGapi(); // Ensure gapi is initialized
+                const isAuthenticated = await SendToGoogleDrive.authenticateUser(); // Ensure user is signed in
+            
+                if (isAuthenticated) {
+                    await SendToGoogleDrive.sendToDrive(
+                        pdfBlob, fileName, formData, num_ocorrencia, setIsUploading, setUploadProgress, item
+                    );
+                } else {
+                    console.error("User authentication failed.");
+                }
+            } catch (error) {
+                console.error("Error initializing Google API:", error);
+            }
+    
             // Change Incident State to "Encerrada"
+            
             const result = await IncidentState.updateIncidentState(emergencies[0].id, '10');
             if (result.status === 'success') {
                 alert(`${descricao} Ocorrência Finalizada com Sucesso`);
                 navigate('/homepage');
+            } else {
+                throw new Error("Erro ao atualizar estado da ocorrência");
             }
+    
+            // Clear all LocalStorage Metadata referent to this Incident
+            const localStorageKeys = [
+                "IncidentReport", "EmergencyData", "DataNascimento", "hora_chegada_local",
+                "hora_saida_local", "hora_chegada_unidade_hospitalar", "hora_saida_unidade_hospitalar",
+                "hora_chegada_unidade", "assistido", "morto", "grave", "leve"
+            ];
+            localStorageKeys.forEach(key => localStorage.removeItem(key));
+            
+    
         } catch (error) {
-            console.error("Erro ao atualizar estado da ocorrência:", error);
-            setError("Erro ao atualizar estado da ocorrência");
-            return;
+            console.error("Erro no processo de finalização:", error);
+            setError(error.message || "Ocorreu um erro ao finalizar a ocorrência");
         }
-        
-        // Clear all LocalStorage Metadata referent to this Incident
-        const localStorageKeys = [
-            "IncidentReport", "EmergencyData", "DataNascimento", "hora_chegada_local",
-            "hora_saida_local", "hora_chegada_unidade_hospitalar", "hora_saida_unidade_hospitalar",
-            "hora_chegada_unidade", "assistido", "morto", "grave", "leve"
-        ];
-
-        localStorageKeys.forEach(key => localStorage.removeItem(key));
     }
 
     //OPEN GOOGLE MAPS
