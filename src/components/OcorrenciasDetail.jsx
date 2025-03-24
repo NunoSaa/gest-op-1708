@@ -517,6 +517,12 @@ function OcorrenciasDetail() {
     //FINALIZAR OCORRENCIA
     const handleFinalizarOcorrencia = async () => {
 
+        // Confirm the action with a Yes/No dialog
+        const isConfirmed = window.confirm("Você tem certeza que deseja finalizar a ocorrência?");
+        if (!isConfirmed) {
+            return; // If user clicks "No", stop the function
+        }
+
         if (!incidentReport || incidentReport.descricao.length === 0 || kmFim === 0) {
             alert("Dados não preenchidos (Km's veículo / Relatório Final). Por favor, preencha antes de finalizar.");
             return;
