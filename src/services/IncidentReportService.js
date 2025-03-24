@@ -35,7 +35,19 @@ class IncidentReportService {
     };    
 
     // POST: insertVictim
-    static insertVictim = async (item, verbeteData, gravidadeValue) => {
+    static insertVictim = async (item, verbeteData, gravidadeValue, tipoVitimaValue) => {
+
+        // Get current date and time
+        const now = new Date();
+
+        // Format date as DD-MM-YYYY (Portuguese format - pt-PT)
+        const date = now.getDate().toString().padStart(2, '0') + '-' + 
+             (now.getMonth() + 1).toString().padStart(2, '0') + '-' + 
+             now.getFullYear();
+             
+        // Format time as HH:mm (24-hour format)
+        const time = now.toLocaleTimeString('pt-PT', { hour12: false }).slice(0, 5); // This will return the time in the format HH:mm
+
 
         var id_ocorrencia = item[0].id;
         var id_viatura = item[0].viaturas[0].id_viatura;
@@ -55,9 +67,9 @@ class IncidentReportService {
             const response = await axios.post('https://preventech-proxy-service.onrender.com/api/victims/insertVictim', {
                 id_ocorrencia: id_ocorrencia,
                 id_viatura: id_viatura,
-                data: "24-03-2025",
-                hora: "13:25",
-                //tipo: '',
+                data: date,
+                hora: time,
+                tipo: tipoVitimaValue,
                 gravidade: gravidadeValue,
                 nome: verbeteData.nome,
                 destino: verbeteData.transporte_unidade_destino,

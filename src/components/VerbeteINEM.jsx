@@ -33,6 +33,7 @@ import '../css/Login.css';
 import '../css/EmergencyForm.css';
 import '../css/VerbeteINEM.css'
 import GravidadeVitimaComponent from './VerbeteINEMComponents/GravidadeVitimaComponent.jsx';
+import TipoVitimaComponent from './VerbeteINEMComponents/TipoVitimaComponet.jsx';
 import SendToGoogleDrive from '../utils/SendToGoogleDrive.js';
 
 
@@ -50,7 +51,8 @@ function VerbeteINEM() {
     const SCOPES = 'https://www.googleapis.com/auth/drive.file'; // Scope to upload file
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [selectedGravidade, setSelectedGravidade] = useState(localStorage.getItem("selectedGravidade") || "");
-    
+    const [selectedTipoVitima, setSelectedTipoVitima] = useState(localStorage.getItem("selectedTipoVitima") || "");
+
     //send the info to report
     let emergency = JSON.parse(localStorage.getItem('EmergencyData')) || {}; // Safely parse in case it's null
     let nr_codu = emergency[0].requestList[0].numero_codu || '';
@@ -436,9 +438,11 @@ function VerbeteINEM() {
 
     const handleGravidadeChange = (updatedSelection) => {
       setSelectedGravidade(updatedSelection);
-      //console.log("Selected Gravidade:", updatedSelection);
-
     };
+
+    const handleTipoVitimaChange = (updatedSelection) => {
+        setSelectedTipoVitima(updatedSelection);
+      };
     
     const handleBackClick = () => {
         window.history.back(); // Go back to the previous page
@@ -507,6 +511,29 @@ function VerbeteINEM() {
                         </div>
 
                         <IdentificacaoComponent formData={formData} handleChange={handleChange} data_nascimento={data_nascimento} />
+
+                    </div>
+
+                    {/* Tipologia da Vitima */}
+                    <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                        <div style={{
+                            width: '25px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            writingMode: 'vertical-lr',
+                            textAlign: 'center',
+                            backgroundColor: '#99CCFF',
+                            padding: '10px',
+                            fontWeight: 'bold',
+                            flexShrink: 0,
+                            marginBottom: "25px",
+                            transform: 'rotate(180deg)'
+                        }}>
+                            Tipologia
+                        </div>
+
+                        <TipoVitimaComponent onSelectionChange={handleTipoVitimaChange} />
 
                     </div>
 

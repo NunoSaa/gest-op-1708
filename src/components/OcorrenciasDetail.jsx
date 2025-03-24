@@ -58,11 +58,7 @@ function OcorrenciasDetail() {
     const formData = JSON.parse(localStorage.getItem("VerbeteData"))
     const num_ocorrencia = item.numero;
     const gravidadeValue = localStorage.getItem("selectedGravidade");
-
-    const sexoMap = {
-        "": "Feminino",
-        "X": "Masculino"
-      };
+    const tipoVitimaValue = localStorage.getItem("selectedTipoVitima");
 
     useEffect(() => {
         const loadGeolocation = async () => {
@@ -536,7 +532,7 @@ function OcorrenciasDetail() {
 
         try {
             // Send Victim Data to GESCORP
-            await IncidentReportService.insertVictim(emergencies, formData, gravidadeValue);
+            await IncidentReportService.insertVictim(emergencies, formData, gravidadeValue, tipoVitimaValue);
     
             // Send Verbete to Google Drive
             try {
@@ -555,7 +551,6 @@ function OcorrenciasDetail() {
             }
     
             // Change Incident State to "Encerrada"
-            /*
             const result = await IncidentState.updateIncidentState(emergencies[0].id, '10');
             if (result.status === 'success') {
                 alert(`${descricao} Ocorrência Finalizada com Sucesso`);
@@ -568,10 +563,9 @@ function OcorrenciasDetail() {
             const localStorageKeys = [
                 "IncidentReport", "EmergencyData", "DataNascimento", "hora_chegada_local",
                 "hora_saida_local", "hora_chegada_unidade_hospitalar", "hora_saida_unidade_hospitalar",
-                "hora_chegada_unidade", "assistido", "morto", "grave", "leve"
+                "hora_chegada_unidade", "assistido", "morto", "grave", "leve", "selectedGravidade", "selectedTipoVitima"
             ];
             localStorageKeys.forEach(key => localStorage.removeItem(key));
-            */
     
         } catch (error) {
             console.error("Erro no processo de finalização:", error);
