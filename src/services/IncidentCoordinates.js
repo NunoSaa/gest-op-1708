@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-class IncidentReportService {
+class IncidentCoordinates {
 
     static updateIncidentCoordinates = async (id_ocorrencia, lat, lon) => {
         try{
@@ -17,4 +17,4 @@ class IncidentReportService {
 
 }
 
-export default IncidentReportService;
+export default IncidentCoordinates;

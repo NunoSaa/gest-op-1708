@@ -33,6 +33,9 @@ class IncidentReportService {
         }
     };    
 
+    static updateIncidentVictim = async () => {
+
+    };
 }
 
 export default IncidentReportService;

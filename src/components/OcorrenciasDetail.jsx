@@ -13,6 +13,7 @@ import GeoLocation from '../utils/GeoLocation';
 import IncidentCoordinates from '../services/IncidentCoordinates'
 import IncidentState from '../services/IncidentState';
 import SendToGoogleDrive from '../utils/SendToGoogleDrive.js';
+import IncidentReportService from '../services/IncidentReportService.js';
 
 function OcorrenciasDetail() {
 
@@ -515,50 +516,52 @@ function OcorrenciasDetail() {
     //FINALIZAR OCORRENCIA
     const handleFinalizarOcorrencia = async () => {
 
-        if (incidentReport && incidentReport.descricao.length > 0 && kmFim != 0) {
-
-            //Send Verbete to Google Drive
-            SendToGoogleDrive.sendToDrive(pdfBlob, fileName, formData, num_ocorrencia, setIsUploading, setUploadProgress, item);
-
-            //Send Victm Data to GESCORP
-            
-            //Change Incident State to "Encerrada"
-
-            //Clear all LocalStorage Metadata referent to this Incident
-
-            try {
-
-                const result = await IncidentState.updateIncidentState(emergencies[0].id, '10');
-
-                if (result.status === 'success') {
-
-                    alert(descricao + ' Ocorrencia Finalizada com Sucesso');
-
-                    //CLEAN UP ALL LOCAL STORAGE DATA FROM INCIDENT
-                    localStorage.removeItem("IncidentReport");
-                    localStorage.removeItem("EmergencyData");
-                    localStorage.removeItem("DataNascimento");
-                    localStorage.removeItem("hora_chegada_local");
-                    localStorage.removeItem("hora_saida_local");
-                    localStorage.removeItem("hora_chegada_unidade_hospitalar");
-                    localStorage.removeItem("hora_saida_unidade_hospitalar");
-                    localStorage.removeItem("hora_chegada_unidade");
-                    localStorage.removeItem("assistido");
-                    localStorage.removeItem("morto");
-                    localStorage.removeItem("grave");
-                    localStorage.removeItem("leve");
-
-                    navigate('/homepage');
-                }
-
-            } catch (error) {
-                console.error('Error updating chegada time:', error);
-                setError('Error updating chegada time');
-            }
-        } else {
+        if (!incidentReport || incidentReport.descricao.length === 0 || kmFim === 0) {
             alert("Dados não preenchidos (Km's veículo / Relatório Final). Por favor, preencha antes de finalizar.");
+            return;
         }
 
+        try {
+            // Send Victim Data to GESCORP
+            await IncidentReportService.updateIncidentVictim();
+        } catch (error) {
+            console.error("Erro ao atualizar dados da vítima:", error);
+            setError("Erro ao atualizar dados da vítima");
+            return;
+        }
+
+        try {
+            // Send Verbete to Google Drive
+            await SendToGoogleDrive.sendToDrive(
+                pdfBlob, fileName, formData, num_ocorrencia, setIsUploading, setUploadProgress, item
+            );
+        } catch (error) {
+            console.error("Erro ao enviar arquivo para o Google Drive:", error);
+            setError("Erro ao enviar arquivo para o Google Drive");
+            return;
+        }
+
+        try {
+            // Change Incident State to "Encerrada"
+            const result = await IncidentState.updateIncidentState(emergencies[0].id, '10');
+            if (result.status === 'success') {
+                alert(`${descricao} Ocorrência Finalizada com Sucesso`);
+                navigate('/homepage');
+            }
+        } catch (error) {
+            console.error("Erro ao atualizar estado da ocorrência:", error);
+            setError("Erro ao atualizar estado da ocorrência");
+            return;
+        }
+        
+        // Clear all LocalStorage Metadata referent to this Incident
+        const localStorageKeys = [
+            "IncidentReport", "EmergencyData", "DataNascimento", "hora_chegada_local",
+            "hora_saida_local", "hora_chegada_unidade_hospitalar", "hora_saida_unidade_hospitalar",
+            "hora_chegada_unidade", "assistido", "morto", "grave", "leve"
+        ];
+
+        localStorageKeys.forEach(key => localStorage.removeItem(key));
     }
 
     //OPEN GOOGLE MAPS
