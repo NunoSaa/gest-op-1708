@@ -1,6 +1,5 @@
 import { gapi } from 'gapi-script';
 import Utils from './utils';
-import IncidentReportService from '../services/IncidentReportService.js';
 import pdfFile from '../assets/Verbete-INEM.pdf';
 
 class SendToGoogleDrive {
@@ -46,8 +45,6 @@ class SendToGoogleDrive {
      * @param {object} item - Incident item
      */
     static sendToDrive = async (pdfBlob, fileName, formData, num_ocorrencia, setIsUploading, setUploadProgress, item) => {
-
-        const reportData = localStorage.getItem('IncidentReport');
 
         try {
             if (
@@ -111,14 +108,6 @@ class SendToGoogleDrive {
                             localStorage.removeItem("hora_chegada_unidade_hospitalar");
                             setIsUploading(false); // Stop spinner
                             setUploadProgress(0); // Reset progress
-    
-                            // Update incident report after successful upload
-                            try {
-                                console.log('updates: ', reportData);
-                                IncidentReportService.updateIncidentsReport(item, reportData);
-                            } catch (error) {
-                                console.error('Error updating incident report: ', error);
-                            }
     
                         } else {
                             console.error('Erro no upload do ficheiro para o Google Drive: ', xhr.responseText);

@@ -33,7 +33,6 @@ const EmergencyDetails = ({
 }) => {
 
     const isInserirKmsDisabled = viaturas !== descricao;
-    const incidentReport = JSON.parse(localStorage.getItem('IncidentReport'));
     const emergency = JSON.parse(localStorage.getItem('EmergencyData'));
 
     //console.log("emergencies = ", emergencies)

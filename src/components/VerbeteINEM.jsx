@@ -5,7 +5,6 @@ import { gapi } from 'gapi-script';
 import pdfFile from '../assets/Verbete-INEM.pdf';
 import legendaImage from '../assets/LegendaVerbete.jpg';
 import Utils from '../utils/utils.js';
-import IncidentReportService from '../services/IncidentReportService.js';
 import { Box, CircularProgress, Card, Grid } from '@mui/material';
 import Button from '@mui/material/Button';
 import AppBar from '@mui/material/AppBar';
