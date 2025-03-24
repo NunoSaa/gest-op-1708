@@ -49,7 +49,8 @@ function VerbeteINEM() {
     const API_KEY = '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';  // Replace with your Google Cloud API Key
     const SCOPES = 'https://www.googleapis.com/auth/drive.file'; // Scope to upload file
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+    const [selectedGravidade, setSelectedGravidade] = useState(localStorage.getItem("selectedGravidade") || "");
+    
     //send the info to report
     let emergency = JSON.parse(localStorage.getItem('EmergencyData')) || {}; // Safely parse in case it's null
     let nr_codu = emergency[0].requestList[0].numero_codu || '';
@@ -315,6 +316,7 @@ function VerbeteINEM() {
         // Update formData only once on mount
         updateFormData(prevFormData => ({
             ...prevFormData,
+            ...verbeteData, // Load saved data first
             freguesia: emergency[0]?.localidade || '',
             concelho: emergency[0]?.localidade_morada || '',
             local: local,
@@ -429,6 +431,12 @@ function VerbeteINEM() {
 
             return updatedData;
         });
+
+    };
+
+    const handleGravidadeChange = (updatedSelection) => {
+      setSelectedGravidade(updatedSelection);
+      //console.log("Selected Gravidade:", updatedSelection);
 
     };
     
@@ -571,7 +579,7 @@ function VerbeteINEM() {
                         <div className="event-form" style={{ flexGrow: 1 }}>
 
                             {/* Gravidade Vitima */}
-                            <GravidadeVitimaComponent />
+                            <GravidadeVitimaComponent onSelectionChange={handleGravidadeChange} />
 
                             {/* Sinais e Sintomas */}
                             <SinaisSintomasComponent formData={formData} handleChange={handleChange} />

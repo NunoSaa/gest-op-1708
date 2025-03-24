@@ -35,10 +35,21 @@ class IncidentReportService {
     };    
 
     // POST: insertVictim
-    static insertVictim = async (item, verbeteData) => {
+    static insertVictim = async (item, verbeteData, gravidadeValue) => {
 
         var id_ocorrencia = item[0].id;
         var id_viatura = item[0].viaturas[0].id_viatura;
+
+        let sexoM = verbeteData.sexoM;  
+        let sexoF = verbeteData.sexoF;
+
+        let genero;
+
+        if (sexoM === "X") {
+            genero = "Masculino";
+        } else if (sexoF === "X") {
+            genero = "Feminino";
+        }
         
         try {
             const response = await axios.post('https://preventech-proxy-service.onrender.com/api/victims/insertVictim', {
@@ -47,28 +58,25 @@ class IncidentReportService {
                 data: "24-03-2025",
                 hora: "13:25",
                 //tipo: '',
-                //gravidade: '',
+                gravidade: gravidadeValue,
                 nome: verbeteData.nome,
                 destino: verbeteData.transporte_unidade_destino,
                 idade: verbeteData.idade,
-                genero: verbeteData.genero
+                genero: genero
             });
 
             if (response.data && response.data.status === 'success') {
 
                 alert('Vitima inserida com Sucesso');
-                setTimeout(() => window.history.back(), 0);
 
             }
             else if (response.status === 200) {
 
                 alert('Vitima inserida com Sucesso');
-                setTimeout(() => window.history.back(), 0); 
 
             } else {
 
                 console.error('Unexpected response:', response.data);
-                setTimeout(() => window.history.back(), 0); 
                 
             }
 

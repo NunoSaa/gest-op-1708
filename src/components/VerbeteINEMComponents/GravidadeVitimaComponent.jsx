@@ -1,25 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { Checkbox } from "@mui/material"; // Assuming you're using Material UI
 
-const GravidadeVitimaComponent = () => {
+const GravidadeVitimaComponent = ({ onSelectionChange }) => {
   // Initialize state from localStorage or set defaults
-  const [gravidadeVitimaData, setGravidadeVitimaData] = useState({
-    leve: localStorage.getItem("leve") === "true",
-    grave: localStorage.getItem("grave") === "true",
-    morto: localStorage.getItem("morto") === "true",
-    assistido: localStorage.getItem("assistido") === "true",
-  });
+  const [selectedOption, setSelectedOption] = useState(localStorage.getItem("selectedGravidade") || "");
 
-  // Function to handle checkbox changes and save to localStorage
+  // Function to handle checkbox selection (only one at a time)
   const handleChangeGravidade = (e) => {
-    const { name, checked } = e.target;
+    const { name } = e.target;
 
-    // Update the state
-    const updatedData = { ...gravidadeVitimaData, [name]: checked };
-    setGravidadeVitimaData(updatedData);
+    // Update the selected option
+    setSelectedOption(name);
 
-    // Save the updated value in localStorage
-    localStorage.setItem(name, checked);
+    // Save the selected option in localStorage
+    localStorage.setItem("selectedGravidade", name);
+
+    // Notify the parent component
+    if (onSelectionChange) {
+      onSelectionChange(name);
+    }
   };
 
   return (
@@ -43,34 +42,15 @@ const GravidadeVitimaComponent = () => {
               </thead>
               <tbody>
                 <tr>
-                  <td style={styles.td}>
-                    <Checkbox
-                      name="leve"
-                      checked={gravidadeVitimaData.leve}
-                      onChange={handleChangeGravidade}
-                    />
-                  </td>
-                  <td style={styles.td}>
-                    <Checkbox
-                      name="grave"
-                      checked={gravidadeVitimaData.grave}
-                      onChange={handleChangeGravidade}
-                    />
-                  </td>
-                  <td style={styles.td}>
-                    <Checkbox
-                      name="morto"
-                      checked={gravidadeVitimaData.morto}
-                      onChange={handleChangeGravidade}
-                    />
-                  </td>
-                  <td style={styles.td}>
-                    <Checkbox
-                      name="assistido"
-                      checked={gravidadeVitimaData.assistido}
-                      onChange={handleChangeGravidade}
-                    />
-                  </td>
+                  {["Leve", "Grave", "Morto", "Assistido"].map((key) => (
+                    <td key={key} style={styles.td}>
+                      <Checkbox
+                        name={key}
+                        checked={selectedOption === key}
+                        onChange={handleChangeGravidade}
+                      />
+                    </td>
+                  ))}
                 </tr>
               </tbody>
             </table>

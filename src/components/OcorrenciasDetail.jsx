@@ -57,6 +57,12 @@ function OcorrenciasDetail() {
 
     const formData = JSON.parse(localStorage.getItem("VerbeteData"))
     const num_ocorrencia = item.numero;
+    const gravidadeValue = localStorage.getItem("selectedGravidade");
+
+    const sexoMap = {
+        "": "Feminino",
+        "X": "Masculino"
+      };
 
     useEffect(() => {
         const loadGeolocation = async () => {
@@ -138,7 +144,7 @@ function OcorrenciasDetail() {
 
         refreshItemData();
 
-        const intervalId = setInterval(refreshItemData, 30000);
+        const intervalId = setInterval(refreshItemData, 10000);
 
         return () => clearInterval(intervalId);
     }, [state]);
@@ -530,7 +536,7 @@ function OcorrenciasDetail() {
 
         try {
             // Send Victim Data to GESCORP
-            await IncidentReportService.insertVictim(emergencies, formData);
+            await IncidentReportService.insertVictim(emergencies, formData, gravidadeValue);
     
             // Send Verbete to Google Drive
             try {
@@ -549,7 +555,7 @@ function OcorrenciasDetail() {
             }
     
             // Change Incident State to "Encerrada"
-            
+            /*
             const result = await IncidentState.updateIncidentState(emergencies[0].id, '10');
             if (result.status === 'success') {
                 alert(`${descricao} Ocorrência Finalizada com Sucesso`);
@@ -565,7 +571,7 @@ function OcorrenciasDetail() {
                 "hora_chegada_unidade", "assistido", "morto", "grave", "leve"
             ];
             localStorageKeys.forEach(key => localStorage.removeItem(key));
-            
+            */
     
         } catch (error) {
             console.error("Erro no processo de finalização:", error);
