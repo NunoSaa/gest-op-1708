@@ -9,6 +9,7 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useMediaQuery } from '@mui/material'; // Import to handle responsiveness
+import { Button, Chip, Stack, Checkbox } from '@mui/material';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyDwPtarKsroUHdTRU1mWDXSHHCXElmTJgk';
 
@@ -24,49 +25,54 @@ const EmergencyCard = ({ data }) => {
                     position: "relative",
                 }}
             >
+
+                {/* Top Bar */}
+                <Box
+                    sx={{
+                        backgroundColor: data.requestList && data.requestList.length > 0
+                            ? data.requestList[0].tipo_pedido === "emergenciaph"
+                                ? "primary.main" // Background color for "emergenciaph"
+                                : data.requestList[0].tipo_pedido === "incendio"
+                                ? "red" // Red background for "incendio"
+                                : "grey" // Default grey if tipo_pedido is not matched
+                            : "grey", // Grey background if requestList does not exist
+                        color: "white",
+                        padding: "8px",
+                        textAlign: "center",
+                        fontWeight: "bold",
+                        marginBottom: "15px"
+                    }}
+                >
+                    {data.descClassificacao}
+                </Box>
+
                 {/* Top Section */}
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 2 }}>
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", gap: 1 }}>
+                        <Chip
+                            label={data.estado}
+                            style={{
+                                fontSize: 16,
+                                color: "black",
+                                backgroundColor: data.corEstado,
+                            }}
+                        />
                         <Typography
                             variant="h4"
-                            sx={{ marginRight: 1, fontWeight: "bold" }}
+                            sx={{ fontWeight: "bold", display: "flex", alignItems: "center" }}
                         >
                             {data.dataHoraAlerta}
                         </Typography>
-                        <Typography variant="h6" sx={{ color: "gray" }}>
-                            {data.descClassificacao}
-                        </Typography>
-                    </Box>
-                    <Box sx={{ display: "flex", gap: 1 }}>
-                        {/* 
-                        {data.tags.map((tag, index) => (
-                            <Typography
-                                key={index}
-                                variant="subtitle2"
-                                sx={{
-                                    padding: "2px 8px",
-                                    borderRadius: "5px",
-                                    backgroundColor: tag.color,
-                                    color: "white",
-                                    fontWeight: "bold",
-                                }}
-                            >
-                                {tag.label}
-                            </Typography>
-                        ))}
-                            */}
                     </Box>
                 </Box>
 
                 {/* Location and Description */}
-                <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: 1 }}>
-                    {data.morada}
-                </Typography>
-                <Typography variant="h6" sx={{marginBottom: 1 }}>
-                    {data.localidadeMorada}
-                </Typography>
-                <Typography variant="subtitle1" sx={{ marginBottom: 2 }}>
-                    {data.estado}
+                <Typography variant="h6" sx={{ marginBottom: 1 }}>
+                    <Box component="span" sx={{ fontWeight: "bold" }}>
+                        {data.requestList && data.requestList.length > 0
+                            ? `${data.requestList[0].morada} nº ${data.requestList[0].numero_morada}, ${data.requestList[0].localidade_morada}`
+                            : `${data.morada}, ${data.localidadeMorada}`}
+                    </Box>
                 </Typography>
 
                 {/* Map Section */}
@@ -79,10 +85,37 @@ const EmergencyCard = ({ data }) => {
                     }}
                 >
                     <img
-                        src={`https://maps.googleapis.com/maps/api/staticmap?center=Berkeley,CA&zoom=14&size=400x400&key=${GOOGLE_MAPS_API_KEY}`}
+                        src={`https://maps.googleapis.com/maps/api/staticmap?center=${encodeURIComponent(
+                            data.requestList && data.requestList.length > 0
+                                ? `${data.requestList[0].morada} nº ${data.requestList[0].numero_morada}, ${data.requestList[0].localidade_morada}`
+                                : `${data.morada}, ${data.localidadeMorada}`
+                        )}
+                        &zoom=16
+                        &size=400x400
+                        &maptype=satellite
+                        &markers=color:red|${encodeURIComponent(
+                            data.requestList && data.requestList.length > 0
+                                ? `${data.requestList[0].morada} nº ${data.requestList[0].numero_morada}, ${data.requestList[0].localidade_morada}`
+                                : `${data.morada}, ${data.localidadeMorada}`
+                        )}
+                        &key=${GOOGLE_MAPS_API_KEY}`}
                         alt="Location map"
-                        style={{ width: "100%", height: "150px", objectFit: "cover" }}
+                        style={{ width: "100%", height: "200px", objectFit: "cover" }}
                     />
+                </Box>
+
+                {/* Vehicles Section */}
+                {/* List of Vehicles (IDs) */}
+                <Box sx={{ marginBottom: 2 }}>
+                    {data.viaturas && data.viaturas.length > 0 ? (
+                        <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                            {data.viaturas[0].join(", ")}
+                        </Typography>
+                    ) : (
+                        <Typography variant="body2" sx={{ color: "gray" }}>
+                            No vehicles available.
+                        </Typography>
+                    )}
                 </Box>
 
                 {/* Footer Section */}
@@ -127,7 +160,7 @@ const OcorrenciasDashboad = () => {
 
         const fetchData = async () => {
             try {
-                const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getIncidentsByDate');
+                const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getIncidentsWithDetails');
                 let fetchedEmergencies = response.data;
 
                 console.log("Fetched emergencies: ", fetchedEmergencies); // Log fetched data
