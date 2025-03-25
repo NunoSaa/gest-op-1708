@@ -133,10 +133,7 @@ const EmergencyCard = ({ data }) => {
                     POSIT
                 </Typography>
                 <Typography variant="caption" sx={{ display: "block", marginTop: 1 }}>
-                    Coordenadas: "coordenadas"
-                </Typography>
-                <Typography variant="caption" sx={{ display: "block" }}>
-                    Detalhes
+                    {data.timeTapeList[1]?.descricao || ""}
                 </Typography>
             </Card>
         </Grid>
