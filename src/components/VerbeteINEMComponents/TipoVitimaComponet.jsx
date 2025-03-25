@@ -27,30 +27,30 @@ const TipoVitimaComponent = ({ onSelectionChange }) => {
             {/* Event Form */}
             <section className="header-section">
                 <div style={styles.rowInfo}>
-                    <div style={{ ...styles.inputGroup, flex: 3}}>
-                        
-                                    <table style={styles.table}>
-                                        <thead>
-                                            <tr>
-                                                <th style={styles.th_1}>Civil</th>
-                                                <th style={styles.th_1}>Bombeiro</th>
-                                                <th style={styles.th_1}>APC</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                {["Civil", "Bombeiro", "APC"].map((key) => (
-                                                    <td key={key} style={styles.td}>
-                                                        <Checkbox
-                                                            name={key}
-                                                            checked={selectedTipoVitimaOption === key}
-                                                            onChange={handleChangeTipoVitima}
-                                                        />
-                                                    </td>
-                                                ))}
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                    <div style={{ ...styles.inputGroup, flex: 3 }}>
+
+                        <table style={styles.table}>
+                            <thead>
+                                <tr>
+                                    <th style={styles.th_1}>Civil</th>
+                                    <th style={styles.th_1}>Bombeiro</th>
+                                    <th style={styles.th_1}>APC</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    {["Civil", "Bombeiro", "APC"].map((key) => (
+                                        <td key={key} style={styles.td}>
+                                            <Checkbox
+                                                name={key}
+                                                checked={selectedTipoVitimaOption === key}
+                                                onChange={handleChangeTipoVitima}
+                                            />
+                                        </td>
+                                    ))}
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </section>

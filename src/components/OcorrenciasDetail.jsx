@@ -551,7 +551,6 @@ function OcorrenciasDetail() {
             }
     
             // Change Incident State to "Encerrada"
-            /*
             const result = await IncidentState.updateIncidentState(emergencies[0].id, '10');
             if (result.status === 'success') {
                 alert(`${descricao} Ocorrência Finalizada com Sucesso`);
@@ -567,7 +566,6 @@ function OcorrenciasDetail() {
                 "hora_chegada_unidade", "assistido", "morto", "grave", "leve", "selectedGravidade", "selectedTipoVitima"
             ];
             localStorageKeys.forEach(key => localStorage.removeItem(key));
-            */
     
         } catch (error) {
             console.error("Erro no processo de finalização:", error);
