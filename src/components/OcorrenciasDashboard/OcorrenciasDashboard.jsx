@@ -14,6 +14,10 @@ import { Button, Chip, Stack, Checkbox } from '@mui/material';
 const GOOGLE_MAPS_API_KEY = 'AIzaSyDwPtarKsroUHdTRU1mWDXSHHCXElmTJgk';
 
 const EmergencyCard = ({ data }) => {
+
+    // Split the date and time
+    const [date, time] = data.dataHoraAlerta.split(' ');
+
     return (
         <Grid item xs={12} sm={6} md={4}>
             <Card
@@ -33,8 +37,8 @@ const EmergencyCard = ({ data }) => {
                             ? data.requestList[0].tipo_pedido === "emergenciaph"
                                 ? "primary.main" // Background color for "emergenciaph"
                                 : data.requestList[0].tipo_pedido === "incendio"
-                                ? "red" // Red background for "incendio"
-                                : "grey" // Default grey if tipo_pedido is not matched
+                                    ? "red" // Red background for "incendio"
+                                    : "grey" // Default grey if tipo_pedido is not matched
                             : "grey", // Grey background if requestList does not exist
                         color: "white",
                         padding: "8px",
@@ -57,11 +61,16 @@ const EmergencyCard = ({ data }) => {
                                 backgroundColor: data.corEstado,
                             }}
                         />
-                        <Typography
-                            variant="h4"
-                            sx={{ fontWeight: "bold", display: "flex", alignItems: "center" }}
-                        >
-                            {data.dataHoraAlerta}
+                        <Typography variant="h4" sx={{ display: 'flex', alignItems: 'center' }}>
+                            {/* Date in gray */}
+                            <Typography sx={{ color: 'gray', mr: 1, fontSize: '1.2rem' }}>
+                                {date}
+                            </Typography>
+
+                            {/* Time in bold */}
+                            <Typography sx={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
+                                {time}
+                            </Typography>
                         </Typography>
                     </Box>
                 </Box>
@@ -175,103 +184,6 @@ const OcorrenciasDashboad = () => {
         return () => clearInterval(interval); // Cleanup the interval on unmount
 
     }, [username]);
-
-    const emergencyData = [
-        {
-            time: "11:33",
-            status: "ACIDENTE",
-            tags: [
-                { label: "VECIO2", color: "red" },
-                { label: "ABSC01", color: "blue" },
-                { label: "ABSC02", color: "blue" },
-            ],
-            location: {
-                street: "Rua Dr. Antonio Gil",
-                city: "Vila Pouca de Aguiar",
-            },
-            description: "Colisão dois Veiculos Ligeiros, 1 ferido",
-            mapImage: "https://static1.anpoimages.com/wordpress/wp-content/uploads/2022/07/googleMapsTricksHero.jpg",
-            coordinates: "41.01.0215N, 007.45.2555W",
-            details: "Colisão entre dois veículos ligeiros",
-        },
-        {
-            time: "12:45",
-            status: "INCÊNDIO",
-            tags: [
-                { label: "BOM01", color: "orange" },
-                { label: "EQU03", color: "green" },
-            ],
-            location: {
-                street: "Rua do Mercado",
-                city: "Vila Real",
-            },
-            description: "Fogo em área comercial",
-            mapImage: "https://static1.anpoimages.com/wordpress/wp-content/uploads/2022/07/googleMapsTricksHero.jpg",
-            coordinates: "41.29.0321N, 007.44.1234W",
-            details: "Incêndio controlado, sem vítimas.",
-        },
-        {
-            time: "13:20",
-            status: "DESASTRE",
-            tags: [
-                { label: "EQU05", color: "purple" },
-                { label: "MED01", color: "yellow" },
-            ],
-            location: {
-                street: "Avenida Central",
-                city: "Braga",
-            },
-            description: "Desabamento de estrutura, vítimas no local",
-            mapImage: "https://static1.anpoimages.com/wordpress/wp-content/uploads/2022/07/googleMapsTricksHero.jpg",
-            coordinates: "41.55.0456N, 008.25.7890W",
-            details: "Equipes de resgate em ação.",
-        },
-        {
-            time: "09:15",
-            status: "ACIDENTE",
-            tags: [
-                { label: "VEC03", color: "red" },
-            ],
-            location: {
-                street: "Rua das Flores",
-                city: "Lisboa",
-            },
-            description: "Colisão entre bicicleta e carro",
-            mapImage: "https://static1.anpoimages.com/wordpress/wp-content/uploads/2022/07/googleMapsTricksHero.jpg",
-            coordinates: "38.71.0145N, 009.13.2555W",
-            details: "Sem ferimentos graves relatados.",
-        },
-        {
-            time: "17:00",
-            status: "ALAGAMENTO",
-            tags: [
-                { label: "PROT01", color: "blue" },
-            ],
-            location: {
-                street: "Rua das Águas",
-                city: "Porto",
-            },
-            description: "Inundação em área residencial",
-            mapImage: "https://static1.anpoimages.com/wordpress/wp-content/uploads/2022/07/googleMapsTricksHero.jpg",
-            coordinates: "41.08.5567N, 008.36.4545W",
-            details: "Área isolada, evacuação em andamento.",
-        },
-        {
-            time: "15:40",
-            status: "ASSALTO",
-            tags: [
-                { label: "POL01", color: "black" },
-            ],
-            location: {
-                street: "Praça dos Heróis",
-                city: "Coimbra",
-            },
-            description: "Assalto à mão armada em banco",
-            mapImage: "https://static1.anpoimages.com/wordpress/wp-content/uploads/2022/07/googleMapsTricksHero.jpg",
-            coordinates: "40.20.3544N, 008.25.5678W",
-            details: "Suspeitos fugiram, polícia no local.",
-        },
-    ];
 
     return (
         <Box sx={{ padding: 2 }}>
