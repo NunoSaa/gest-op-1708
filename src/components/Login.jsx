@@ -3,61 +3,60 @@ import axios from 'axios';
 import logo from '../assets/Logo.png';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { useNavigate } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
 import { eyeOff, eye } from 'react-icons-kit/feather';
-import { Icon as IconKit } from 'react-icons-kit';
+import { Icon } from 'react-icons-kit';
 
 
-function Login({ history }) {
+function Login(){
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [wrong, setWrong] = useState('');
-    const [icon] = useState(eyeOff);
 
     const handleShowPassword = () => {
         setShowPassword(!showPassword);
     };
 
-    let navigate = useNavigate();
-
     const handleSubmit = async (e) => {
+
         e.preventDefault();
         setLoading(true);
+
         try {
-            const response = await axios.post('https://preventech-proxy-service.onrender.com/api/login/authentication', { username, password });
+
+            const response = await axios.post('https://preventech-proxy-service.onrender.com/api/login/authentication', { 
+                username, 
+                password 
+            });
+
             console.log('response = ', response);
-            if (response.status !== 200) {
-                if (response.status === 401) {
-                    setWrong('Username ou password incorrectas...');
+
+            if (response.status === 200) {
+                const { user, token } = response.data;
+    
+                localStorage.setItem('token', token); // Use a consistent token key
+                localStorage.setItem('username', user.username);
+                localStorage.setItem('userRole', user.role); // Store role for better role-based access control
+    
+                // Redirect based on user role
+                if (user.role === 'admin') {
+                    window.location.href = '/adminHomePage';
+                } else if (user.role === 'user') {
+                    window.location.href = '/homepage';
+                } else if (user.role === 'dashboard') {
+                    window.location.href = '/dashboard';
                 } else {
-                    setWrong('An error occurred. Please try again later.');
+                    setWrong('Parâmetro do utilizador Inválido');
                 }
             } else {
-                // Assuming your API returns a token upon successful login
-                //navigate('/homepage');
-                if (response.data.user.role === 'admin') {
-                    localStorage.setItem('tokenAdmin', response.data.token);
-                    localStorage.setItem('username', response.data.user.username);
-                    window.location.href = '/adminHomePage';
-                    
-                } else if (response.data.user.role === 'user') {
-                    localStorage.setItem('token', response.data.token);
-                    localStorage.setItem('username', response.data.user.username);
-                    window.location.href = '/homepage';
-
-                } else if (response.data.user.role === 'dashboard') {
-                    localStorage.setItem('token', response.data.token);
-                    localStorage.setItem('username', response.data.user.username);
-
-                    window.location.href = '/dashboard';
-                }
+                setWrong('Ocorreu um erro inesperado. Tente de novo.');
             }
         } catch (error) {
-            setWrong(error.response.data.error);
-            console.error('Error:', error.response.data.error);
+            setWrong(error.response?.data?.error || 'Ocorreu um erro inesperado. Tente de novo.');
+            console.error('Erro:', error);
         } finally {
             setLoading(false);
         }
@@ -72,39 +71,35 @@ function Login({ history }) {
 
     return (
         <div style={styles.container}>
-            <img alt='Logo' src={logo} style={styles.image} />
-            <div style={styles.title}>Bombeiros Vila Pouca de Aguiar</div>
-            <div style={styles.title2}>Entrar</div>
-            <div style={styles.title1}>Olá. Bem Vindo!</div>
-            <div style={styles.formContainer}>
-                <div className="mb-4 flex" style={styles.inputContainer}>
+            <div style={styles.formContainer} onKeyDown={handleKeyDown}>
+                <img alt="Logo" src={logo} style={styles.image} />
+                <div style={styles.title}>Bombeiros Vila Pouca de Aguiar</div>
+                <div style={styles.subtitle}>Entrar</div>
+                <div style={styles.welcomeText}>Olá, bem-vindo!</div>
+
+                <TextField
+                    style={styles.inputText}
+                    label="Username"
+                    variant="outlined"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+
+                <div style={styles.passwordContainer}>
                     <TextField
-                        style={styles.inputLogin}
-                        id="standard-basic"
-                        label="Username"
-                        variant="standard"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        onKeyDown={handleKeyDown}
+                        style={styles.inputText}
+                        type={showPassword ? 'text' : 'password'}
+                        label="Password"
+                        variant="outlined"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
-                    <div style={{ position: 'relative' }}>
-                        <TextField
-                            style={styles.inputLogin}
-                            type={showPassword ? 'text' : 'password'}
-                            id="password"
-                            label="Password"
-                            variant="standard"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                        />
-                        <span style={styles.icon} onClick={handleShowPassword}>
-                            <IconKit className="absolute" icon={showPassword ? eye : eyeOff} size={24} />
-                        </span>
-                    </div>
+                    <span style={styles.icon} onClick={handleShowPassword}>
+                        <Icon icon={showPassword ? eye : eyeOff} size={20} />
+                    </span>
                 </div>
 
-                {wrong && <p style={{ color: 'red' }}>{wrong}</p>}
+                {wrong && <p style={styles.errorText}>{wrong}</p>}
 
                 <Button
                     style={styles.button}
@@ -123,71 +118,84 @@ const styles = {
     container: {
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
         alignItems: 'center',
-        height: '100vh', // Full height to center vertically
+        justifyContent: 'center',
+        height: '100vh',
         backgroundColor: '#fff',
-        padding: 0,
-        margin: 0,
-        overflow: 'hidden', // Prevent any overflow that might cause scrolling
+        padding: 20,
     },
     formContainer: {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center', // Center horizontally
+        alignItems: 'center',
+        padding: 30,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
         width: '100%',
-        maxWidth: 300, // Restrict width for better layout
+        maxWidth: 320,
     },
     title: {
-        fontSize: 16,
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#444',
         marginBottom: 10,
-        textAlign: "center", // Center title text
-        color: '#959191',
+        textAlign: 'center',
     },
-    title1: {
+    subtitle: {
+        fontSize: 22,
+        fontWeight: '600',
+        color: '#222',
+        marginBottom: 10,
+    },
+    welcomeText: {
         fontSize: 14,
-        marginBottom: 40,
-        textAlign: "center", // Center text
-        color: '#959191',
+        color: '#666',
+        marginBottom: 20,
+        textAlign: 'center',
     },
-    title2: {
-        fontSize: 24,
-        marginBottom: 10,
-        textAlign: 'center', // Center text
-        color: '#000000',
+    inputText: {
+        width: '100%',  // Ensure both fields take full width
+        height: 50,     // Same height for both fields
+        marginBottom: 15,
+        borderRadius: 8,  // Consistent border radius for both fields
+        padding: '0 12px', // Consistent padding inside the fields
+        boxSizing: 'border-box', // Ensures padding is inside the width and height
     },
-    inputContainer: {
-        flexDirection: 'column',
+    passwordContainer: {
+        position: 'relative',
+        width: '100%',  // Ensures password field has same width as username
+        display: 'flex',
         alignItems: 'center',
-        marginBottom: 30,
-    },
-    inputLogin: {
-        width: 250,
-        height: 40,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 8,
-        marginBottom: 10,
-        paddingHorizontal: 10,
-    },
-    button: {
-        width: 250,
-        height: 40,
-        backgroundColor: '#FF5D55',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 5,
-        marginTop: 20,
-    },
-    image: {
-        width: 200,
-        height: 200,
-        resizeMode: 'contain',
-        marginBottom: 30,
     },
     icon: {
-        marginLeft: 15,
-        cursor: 'pointer', // Make the icon clickable
+        position: 'absolute',
+        right: 12,       // Position the icon 12px from the right edge of the field
+        top: '50%',      // Vertically center the icon
+        transform: 'translateY(-50%)',  // Ensure the icon is exactly centered
+        cursor: 'pointer',
+        color: '#666',
+        transition: 'color 0.3s ease', // Smooth transition when toggling icon
+    },
+    iconHover: {
+        color: '#FF5D55', // Change color on hover for better user interaction
+    },
+    button: {
+        width: '100%',
+        height: 40,
+        backgroundColor: '#FF5D55',
+        color: '#fff',
+        borderRadius: 5,
+        marginTop: 50,
+    },
+    errorText: {
+        color: 'red',
+        fontSize: 14,
+        marginBottom: 10,
+    },
+    image: {
+        width: 180,
+        marginBottom: 20,
     },
 };
 

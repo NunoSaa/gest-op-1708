@@ -17,16 +17,18 @@ import RecordPositAudio from './components/RecordPositAudio';
 import TakePicturePosit from './components/TakePicturePosit';
 import InserirKms from './components/InserirKms'
 import OcorrenciasDashboad from './components/OcorrenciasDashboard/OcorrenciasDashboard';
-import ProtectedRoute from './components/ProtectedRoute'; // Import ProtectedRoute
+import ProtectedRoute from './components/ProtectedRoute';
 
 const isAuthenticated = () => {
-  // Example authentication logic (check if a token exists)
-  return localStorage.getItem('token') !== null;
+  return localStorage.getItem('token') !== null && localStorage.getItem('userRole') === "user";
 };
 
 const isAuthenticatedAdmin = () => {
-  // Example admin authentication logic
-  return localStorage.getItem('tokenAdmin') !== null;
+  return localStorage.getItem('token') !== null && localStorage.getItem('userRole') === "admin";
+};
+
+const isAuthenticatedDashboardUser = () => {
+  return localStorage.getItem('token') !== null && localStorage.getItem('userRole') === "dashboard";
 };
 
 function App() {
@@ -167,7 +169,7 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated()}>
+            <ProtectedRoute isAuthenticated={isAuthenticatedDashboardUser()}>
               <OcorrenciasDashboad />
             </ProtectedRoute>
           }
