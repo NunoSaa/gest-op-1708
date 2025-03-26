@@ -1,15 +1,9 @@
-import { Grid, Card, CardContent, Typography, Box } from "@mui/material";
+import { Grid, Card, CircularProgress, Typography, Box, Chip } from "@mui/material";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../css/Login.css';
 import { useNavigate } from "react-router-dom";
-import { ClipLoader } from 'react-spinners';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useMediaQuery } from '@mui/material'; // Import to handle responsiveness
-import { Button, Chip, Stack, Checkbox } from '@mui/material';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyDwPtarKsroUHdTRU1mWDXSHHCXElmTJgk';
 
@@ -25,7 +19,7 @@ const EmergencyCard = ({ data }) => {
                     display: "flex",
                     flexDirection: "column",
                     padding: 2,
-                    boxShadow: 3,
+                    boxShadow: 7,
                     position: "relative",
                 }}
             >
@@ -38,7 +32,9 @@ const EmergencyCard = ({ data }) => {
                                 ? "primary.main" // Background color for "emergenciaph"
                                 : data.requestList[0].tipo_pedido === "incendio"
                                     ? "red" // Red background for "incendio"
-                                    : "grey" // Default grey if tipo_pedido is not matched
+                                    : data.requestList[0].tipo_pedido === "acidente"
+                                        ? "orange" // Orange background for "acidente"
+                                        : "grey" // Default grey if tipo_pedido is not matched
                             : "grey", // Grey background if requestList does not exist
                         color: "white",
                         padding: "8px",
@@ -49,7 +45,6 @@ const EmergencyCard = ({ data }) => {
                 >
                     {data.descClassificacao}
                 </Box>
-
                 {/* Top Section */}
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 2 }}>
                     <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", gap: 1 }}>
@@ -80,7 +75,7 @@ const EmergencyCard = ({ data }) => {
                     <Box component="span" sx={{ fontWeight: "bold" }}>
                         {data.requestList && data.requestList.length > 0
                             ? `${data.requestList[0].morada} nº ${data.requestList[0].numero_morada}, ${data.requestList[0].localidade_morada}`
-                            : `${data.morada}, ${data.localidadeMorada}`}
+                            : `${data.morada}, ${data.localidadeMorada || data.localidade}`}
                     </Box>
                 </Typography>
 
@@ -97,15 +92,15 @@ const EmergencyCard = ({ data }) => {
                         src={`https://maps.googleapis.com/maps/api/staticmap?center=${encodeURIComponent(
                             data.requestList && data.requestList.length > 0
                                 ? `${data.requestList[0].morada} nº ${data.requestList[0].numero_morada}, ${data.requestList[0].localidade_morada}`
-                                : `${data.morada}, ${data.localidadeMorada}`
+                                : `${data.morada}, ${data.localidadeMorada || data.localidade}`
                         )}
-                        &zoom=16
+                        &zoom=14
                         &size=400x400
                         &maptype=satellite
                         &markers=color:red|${encodeURIComponent(
                             data.requestList && data.requestList.length > 0
                                 ? `${data.requestList[0].morada} nº ${data.requestList[0].numero_morada}, ${data.requestList[0].localidade_morada}`
-                                : `${data.morada}, ${data.localidadeMorada}`
+                                : `${data.morada}, ${data.localidadeMorada || data.localidade}`
                         )}
                         &key=${GOOGLE_MAPS_API_KEY}`}
                         alt="Location map"
@@ -132,7 +127,7 @@ const EmergencyCard = ({ data }) => {
                     variant="button"
                     sx={{
                         display: "inline-block",
-                        backgroundColor: "red",
+                        backgroundColor: "#f44336",
                         color: "white",
                         padding: "6px 12px",
                         borderRadius: "4px",
@@ -154,40 +149,55 @@ const OcorrenciasDashboad = () => {
     const [emergencies, setEmergencies] = useState([]);
     let navigate = useNavigate()
     const [loading, setLoading] = useState(true);
-    const username = localStorage.username;
 
     // Use media queries to detect screen size
     const isMobile = useMediaQuery('(max-width:600px)');
 
+    // Function to fetch data with retry mechanism
+    const fetchData = async (retryCount = 5) => {
+        try {
+            const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getIncidentsWithDetails');
+            const fetchedEmergencies = response.data;
+
+            console.log("Fetched emergencies: ", fetchedEmergencies); // Log fetched data
+            setEmergencies(fetchedEmergencies); // Set the emergencies data
+            setLoading(false); // Data loaded, set loading to false
+        } catch (error) {
+            console.error('Error fetching data:', error);
+
+            if (retryCount > 0) {
+                console.log(`Retrying... Attempts left: ${retryCount}`);
+                setTimeout(() => fetchData(retryCount - 1), 3000); // Retry after 3 seconds
+            } else {
+                console.log("Max retry attempts reached.");
+                setLoading(false); // Stop loading after max retries
+            }
+        }
+    };
+
     useEffect(() => {
         const interval = setInterval(() => {
             window.location.reload();
-        }, 60000); // Refresh every minute (60000 milliseconds)
+        }, 180000); // Refresh every 3 minutes (180000 milliseconds)
 
-        const fetchData = async () => {
-            try {
-                const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getIncidentsWithDetails');
-                let fetchedEmergencies = response.data;
-
-                console.log("Fetched emergencies: ", fetchedEmergencies); // Log fetched data
-                setEmergencies(fetchedEmergencies); // Set the emergencies data
-                setLoading(false); // Data loaded, set loading to false
-            } catch (error) {
-                console.error('Error:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
+        // Initial fetch
         fetchData();
 
         return () => clearInterval(interval); // Cleanup the interval on unmount
-
-    }, [username]);
+    }, []);
 
     return (
         <Box sx={{ padding: 2 }}>
-            {emergencies.length === 0 ? (
+            {loading ? (
+                // Show loading spinner while data is being fetched
+                <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 6 }}>
+                    <CircularProgress />
+                    <Typography sx={{ marginTop: 2, color: 'gray' }}>
+                        A carregar...
+                    </Typography>
+                </Box>
+            ) : emergencies.length === 0 ? (
+                // If no emergencies are found after loading
                 <Typography
                     variant="h4"
                     sx={{ textAlign: "center", color: "gray", marginTop: 6 }}
@@ -195,9 +205,10 @@ const OcorrenciasDashboad = () => {
                     Não foram encontradas ocorrências.
                 </Typography>
             ) : (
+                // Render emergency cards once data is loaded
                 <Grid container spacing={2}>
-                    {emergencies.slice(0, 6).map((emergency, index) => (
-                        <EmergencyCard key={index} data={emergency} />
+                    {emergencies.slice(0, 6).map((emergency) => (
+                        <EmergencyCard key={emergency.id} data={emergency} />
                     ))}
                 </Grid>
             )}
