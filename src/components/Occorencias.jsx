@@ -17,41 +17,55 @@ function Ocorrencias() {
     const [loading, setLoading] = useState(true);
     const username = localStorage.username;
 
+    const maxRetries = 5; // Maximum retry attempts
+    const retryDelay = 6000; // Delay between retries (5 seconds)
+    const [error, setError] = useState(null);
+
     // Use media queries to detect screen size
     const isMobile = useMediaQuery('(max-width:600px)');
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            window.location.reload();
-        }, 60000); // Refresh every minute (60000 milliseconds)
+    // Function to fetch data with retry logic
+    const fetchData = async (retryCount = maxRetries) => {
+        setLoading(true); // Set loading state to true before fetching
+        setError(null); // Clear any previous errors
 
-        const fetchData = async () => {
-            try {
-                const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getIncidentsByDate');
-                let fetchedEmergencies = response.data;
+        try {
+            const response = await axios.get('https://preventech-proxy-service.onrender.com/api/emergency/getIncidentsByDate');
+            let fetchedEmergencies = response.data;
 
-                // Filter based on the username
-                if (username !== "ADMIN" && username !== "USER_ADMIN") {
-                    fetchedEmergencies = fetchedEmergencies.filter(item =>
-                        item.viaturas && item.viaturas.some(vehicle => vehicle.includes(username))
-                    );
-                }
-
-                console.log("Fetched emergencies: ", fetchedEmergencies); // Log fetched data
-                setEmergencies(fetchedEmergencies); // Set the emergencies data
-                setLoading(false); // Data loaded, set loading to false
-            } catch (error) {
-                console.error('Error:', error);
-            } finally {
-                setLoading(false);
+            // Filter based on the username if not ADMIN or USER_ADMIN
+            if (username !== "ADMIN" && username !== "USER_ADMIN") {
+                fetchedEmergencies = fetchedEmergencies.filter(item =>
+                    item.viaturas && item.viaturas.some(vehicle => vehicle.includes(username))
+                );
             }
-        };
 
-        fetchData();
+            console.log("Fetched emergencies: ", fetchedEmergencies);
+            setEmergencies(fetchedEmergencies); // Set the emergencies data
+            setLoading(false); // Data is loaded, set loading to false
+        } catch (error) {
+            console.error('Error fetching data:', error);
 
-        return () => clearInterval(interval); // Cleanup the interval on unmount
+            if (retryCount > 0) {
+                console.log(`Retrying... Attempts left: ${retryCount}`);
+                setTimeout(() => fetchData(retryCount - 1), retryDelay); // Retry after the specified delay
+            } else {
+                console.log("Max retry attempts reached.");
+                setError("Failed to load data after multiple attempts."); // Show error message after max retries
+                setLoading(false); // Stop loading state after max retries
+            }
+        }
+    };
 
-    }, [username]);
+    useEffect(() => {
+        fetchData(); // Initial data fetch on mount or when username changes
+
+        // Set an interval to re-fetch data every minute (60000ms)
+        const interval = setInterval(fetchData, 60000); // Refresh every 1 minute
+
+        // Cleanup the interval on unmount
+        return () => clearInterval(interval);
+    }, [username]); // Re-fetch when `username` changes
 
     const renderItem = (item) => {
         const array = item.viaturas[0] || [];
