@@ -2,8 +2,6 @@ import { Grid, Card, CircularProgress, Typography, Box, Chip } from "@mui/materi
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../css/Login.css';
-import { useNavigate } from "react-router-dom";
-import { useMediaQuery } from '@mui/material'; // Import to handle responsiveness
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyDwPtarKsroUHdTRU1mWDXSHHCXElmTJgk';
 
@@ -147,11 +145,7 @@ const EmergencyCard = ({ data }) => {
 const OcorrenciasDashboad = () => {
 
     const [emergencies, setEmergencies] = useState([]);
-    let navigate = useNavigate()
     const [loading, setLoading] = useState(true);
-
-    // Use media queries to detect screen size
-    const isMobile = useMediaQuery('(max-width:600px)');
 
     // Function to fetch data with retry mechanism
     const fetchData = async (retryCount = 5) => {
@@ -184,7 +178,7 @@ const OcorrenciasDashboad = () => {
         fetchData();
 
         return () => clearInterval(interval); // Cleanup the interval on unmount
-    }, []);
+    });
 
     return (
         <Box sx={{ padding: 2 }}>
@@ -214,102 +208,6 @@ const OcorrenciasDashboad = () => {
             )}
         </Box>
     );
-};
-
-const styles = {
-    center: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-    },
-    container: {
-        marginLeft: 25,
-        marginRight: 25,
-        flex: 1,
-        backgroundColor: 'white',
-    },
-    content: {
-        flex: 1,
-        marginLeft: 25,
-    },
-    item: {
-        display: 'flex', // Flexbox layout
-        alignItems: 'center', // Center vertically
-        backgroundColor: '#E0E0E0',
-        padding: 20,
-        marginVertical: 5,
-        marginHorizontal: 20,
-        borderColor: '#C0C0C0',
-        border: '1px solid #C0C0C0',
-        borderWidth: 1,
-        borderRadius: 5,
-        marginTop: 15,
-        flexDirection: 'row', // Default for desktop, adjusted for mobile in renderItem
-        transition: '0.3s ease', // Smooth transition for better UX
-    },
-    title: {
-        fontSize: '1.5em', // Use responsive units for fonts
-        paddingBottom: 5,
-    },
-    description: {
-        fontSize: '1.2em',
-        paddingBottom: 5,
-    },
-    vehicle: {
-        marginTop: 5,
-        fontSize: '1em',
-        fontWeight: 'bold'
-    },
-    rightContainer: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center', // Center vertically
-        alignItems: 'flex-end', // Align to the right
-        textAlign: 'right',
-        paddingRight: 25 // Add padding to the right
-    },
-    timestamp: {
-        color: '#888',
-        fontSize: '1em',
-        marginTop: 10 // Add some spacing between estado and timestamp
-    },
-    estado: {
-        fontWeight: 'bold',
-        fontSize: '1.2em',
-    },
-    image: {
-        width: 75,
-        height: 75,
-        resizeMode: 'contain',
-    },
-    // Media query for mobile responsiveness
-    '@media (max-width: 600px)': {
-        container: {
-            marginLeft: 10,
-            marginRight: 10,
-        },
-        item: {
-            flexDirection: 'column', // Stack elements for mobile
-            padding: 10,
-            marginHorizontal: 10,
-        },
-        title: {
-            fontSize: '1.2em',
-        },
-        description: {
-            fontSize: '1em',
-        },
-        vehicle: {
-            fontSize: '0.9em',
-        },
-        timestamp: {
-            fontSize: '0.8em',
-        },
-        estado: {
-            fontSize: '1em',
-        }
-    }
 };
 
 export default OcorrenciasDashboad;
