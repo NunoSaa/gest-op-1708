@@ -161,7 +161,7 @@ const OcorrenciasDashboad = () => {
 
             if (retryCount > 0) {
                 console.log(`Retrying... Attempts left: ${retryCount}`);
-                setTimeout(() => fetchData(retryCount - 1), 3000); // Retry after 3 seconds
+                setTimeout(() => fetchData(retryCount - 1), 5000); // Retry after 5 seconds
             } else {
                 console.log("Max retry attempts reached.");
                 setLoading(false); // Stop loading after max retries
@@ -178,7 +178,7 @@ const OcorrenciasDashboad = () => {
         fetchData();
 
         return () => clearInterval(interval); // Cleanup the interval on unmount
-    });
+    }, []);
 
     return (
         <Box sx={{ padding: 2 }}>
