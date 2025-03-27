@@ -8,7 +8,7 @@ import CheckList from './components/Checklist';
 import Posit from './components/Posit';
 import MateriasPerigosas from './components/MateriasPerigosas';
 import MateriasPerigosasResult from './components/MateriasPerigosasResult';
-import AdminHomePage from './components/AdminHomePage';
+import AdminHomePage from './components/AdminDashboard/AdminHomePage';
 import FitaTempo from './components/FitaTempo';
 import NovoPosit from './components/NovoPosit';
 import VerbeteINEM from './components/VerbeteINEM';
@@ -28,7 +28,9 @@ const isAuthenticatedAdmin = () => {
 };
 
 const isAuthenticatedDashboardUser = () => {
-  return localStorage.getItem('token') !== null && localStorage.getItem('userRole') === "dashboard";
+  const token = localStorage.getItem('token');
+  const role = localStorage.getItem('userRole');
+  return token !== null && (role === "dashboard" || role === "admin");
 };
 
 function App() {
@@ -55,7 +57,7 @@ function App() {
           }
         />
         <Route
-          path="/adminHomePage"
+          path="/adminHomePage/*"
           element={
             <ProtectedRoute isAuthenticated={isAuthenticatedAdmin()}>
               <AdminHomePage />
