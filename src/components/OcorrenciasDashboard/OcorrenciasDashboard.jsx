@@ -96,7 +96,7 @@ const EmergencyCard = ({ data }) => {
                                 : `${data.morada}, ${data.localidadeMorada || data.localidade}`
                         )}
                         &zoom=15
-                        &size=400x400
+                        &size=800x800
                         &maptype=satellite&format=jpg
                         &markers=color:red|${encodeURIComponent(
                             data.requestList && data.requestList.length > 0
