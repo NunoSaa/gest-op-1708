@@ -9,6 +9,9 @@ const EmergencyCard = ({ data }) => {
 
     // Split the date and time
     const [date, time] = data.dataHoraAlerta.split(' ');
+    const filteredItems = data.timeTapeList
+        .filter(item => item.tipo === 'posit') // Filter by 'posit'
+        .slice(-3); // Take the last 3 items
 
     return (
         <Grid item xs={12} sm={6} md={4}>
@@ -92,9 +95,9 @@ const EmergencyCard = ({ data }) => {
                                 ? `${data.requestList[0].morada} nº ${data.requestList[0].numero_morada}, ${data.requestList[0].localidade_morada}`
                                 : `${data.morada}, ${data.localidadeMorada || data.localidade}`
                         )}
-                        &zoom=14
+                        &zoom=15
                         &size=400x400
-                        &maptype=satellite
+                        &maptype=satellite&format=jpg
                         &markers=color:red|${encodeURIComponent(
                             data.requestList && data.requestList.length > 0
                                 ? `${data.requestList[0].morada} nº ${data.requestList[0].numero_morada}, ${data.requestList[0].localidade_morada}`
@@ -134,9 +137,28 @@ const EmergencyCard = ({ data }) => {
                 >
                     POSIT
                 </Typography>
-                <Typography variant="caption" sx={{ display: "block", marginTop: 1 }}>
-                    {data.timeTapeList[1]?.descricao || ""}
-                </Typography>
+
+                <Box sx={{ borderRadius: 2, overflow: "hidden", boxShadow: 2, marginTop: "10px" }}>
+                    {filteredItems.map((item, index) => (
+                        <Box
+                            key={item.id}
+                            sx={{
+                                padding: 1,
+                                backgroundColor: index % 2 === 0 ? "grey.100" : "grey.300", // Alternate colors
+                            }}
+                        >
+                            {/* Time on the left */}
+                            <Typography variant="caption" sx={{ fontWeight: "bold", width: "80px", textAlign: "left", marginRight: "10px" }}>
+                                {time}
+                            </Typography>
+
+                            {/* Description */}
+                            <Typography variant="caption" sx={{ fontWeight: 500, flex: 1 }}>
+                                {item.descricao}
+                            </Typography>
+                        </Box>
+                    ))}
+                </Box>
             </Card>
         </Grid>
     );
